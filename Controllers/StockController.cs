@@ -17,8 +17,28 @@ namespace aksjehandel.Controllers
         {
             _db = db;
         }
-
         
+             public async Task<List<Order>> getAllOrders()
+        {
+            try
+            {
+                List<Order> allShareholdings = await _db.Orders.Select(o => new Order
+                {
+                    Id = o.Id,
+                    Company = o.Company.Name,
+                    Portfolio = o.Portfolio.DisplayName,
+                    Type = o.Type,
+                    Price = o.Price,
+                    Amount = o.Amount
+                }).ToListAsync();
+                return allShareholdings;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
 
         public async Task<List<Shareholding>> GetAllShareholdings()
         {
@@ -27,10 +47,11 @@ namespace aksjehandel.Controllers
                 List<Shareholding> allShareholdings = await _db.Shareholdings.Select(s => new Shareholding
                 {
                     Id = s.Id,
-                    DisplayName = s.DisplayName,
-                    PurchasingPower = s.PurchasingPower
+                    Amount = s.Amount,
+                    Company = s.Company.Name,
+                    Portfolio = s.Portfolio.DisplayName
                 }).ToListAsync();
-                return allPortfolios;
+                return allShareholdings;
             }
             catch
             {

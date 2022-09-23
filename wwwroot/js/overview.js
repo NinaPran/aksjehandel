@@ -1,18 +1,18 @@
 ﻿$(function () {
     getAllShareholdings();
-    getAllActiveOrders();
+    getAllOrders();
 });
 
-function getAllPortfolios() {
+function getAllShareholdings() {
     $.get("stock/getAllShareholdings", function (shareholdings) {
         formatShareholdings(shareholdings);
         
     });
 }
 
-function getAllPortfolios() {
-    $.get("stock/getAllActiveOrders", function (activeOrders) {
-        formatActiveOrders(activeOrders);
+function getAllOrders() {
+    $.get("stock/getAllOrders", function (orders) {
+        formatOrders(orders);
 
     });
 }
@@ -35,12 +35,12 @@ function formatShareholdings(shareholdings) {
 
 }
 
-function formatActiveOrders(activeOrders) {
+function formatOrders(orders) {
     let out = "<table class'table table-striped'>" +
         "<tr>" +
         "<th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +
         "</tr>";
-    for (let order of activeOrders) {
+    for (let order of orders) {
         out += "<tr>" +
             "<td>" + order.company + "</td>" +
             "<td>" + order.type + "</td>" +
@@ -52,5 +52,5 @@ function formatActiveOrders(activeOrders) {
     }
 
     out += "<table>";
-    $("#activeOrderContainer").html(out);
+    $("#orderContainer").html(out);
 }
