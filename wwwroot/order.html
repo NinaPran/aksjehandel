@@ -5,14 +5,13 @@
     <title></title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
-    <script defer src="js/change.js"></script>
+    <script defer src="js/order.js"></script>
     <script defer src="js/portfolioSelect.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Endre Ordre</h1>
+        <h1>Lag en ny ordre</h1>
         <form class="form">
-            <input type="hidden" id="id" />
             <div>
                 <label for="portfolioSelect">Portefølge</label>
                 <select class="form-control" name="portfolioSelect" id="portfolioSelect">
@@ -43,7 +42,7 @@
                 <input type="text" id="amount" />
             </div>
             <div class="form-group">
-                <input type="button" id="regChange" value="Endre" class="btn btn-primary" onclick="changeOrder()" />
+                <input type="button" id="reg" value="Lagre" onclick="regOrder()" class="btn" />
             </div>
             <div id="error" style="color: red"></div>
         </form>

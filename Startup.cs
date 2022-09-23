@@ -36,6 +36,7 @@ namespace aksjehandel
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                DBInit.Initializer(app);
             }
 
             app.UseRouting();
