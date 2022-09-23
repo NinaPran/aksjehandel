@@ -1,31 +1,33 @@
 ﻿using aksjehandel.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace aksjehandel.Controllers
 {
     [Route("[controller]/[action]")]
     public class StockController : ControllerBase
     {
-        public List<Portfolio> GetAllPorfolios()
+        private readonly StockContext _db;
+
+        public StockController(StockContext db)
         {
-            var portfolios = new List<Portfolio>();
-
-            var portfolio1 = new Portfolio();
-            portfolio1.Symbol = "EQNR";
-            portfolio1.Name = "EQUINOR";
-
-            var portfolio2 = new Portfolio();
-            portfolio2.Symbol = "ORKLA";
-            portfolio2.Name = "ORK";
-
-            portfolios.Add(portfolio1);
-            portfolios.Add(portfolio2);
-
-            return portfolios;
-
+            _db = db;
         }
-        
+
+        public List<Portfolio> GetAllPortfolios()
+        {
+            try
+            {
+                List<Portfolio> portfolios = _db.Portfolio.ToList();
+                return portfolios;
+            }
+            catch
+            {
+                return null;
+            }         
+
+        }      
 
 
     }
