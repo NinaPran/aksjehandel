@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace aksjehandel.Models
+namespace aksjehandel.DAL
 {
     public static class DBInit
     {
@@ -25,7 +25,7 @@ namespace aksjehandel.Models
                 var shareholding1 = new Shareholdings { Portfolio = portfolio1, Company = company1, Amount = 40 };
                 var shareholding2 = new Shareholdings { Portfolio = portfolio2, Company = company2, Amount = 400 };
 
-                var order1 = new Orders { Company = company1, Amount = 2, Type = "buy", Portfolio = portfolio1, Price= 10 };
+                var order1 = new Orders { Company = company1, Amount = 2, Type = "buy", Portfolio = portfolio1, Price = 10 };
                 var order2 = new Orders { Company = company2, Amount = 10, Type = "sell", Portfolio = portfolio1, Price = 10 };
 
 

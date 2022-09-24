@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace aksjehandel.Models
+namespace aksjehandel.DAL
 {
     public class Companies
     {
@@ -32,9 +32,9 @@ namespace aksjehandel.Models
         virtual public Companies Company { get; set; }
         virtual public Portfolios Portfolio { get; set; }
     }
-    public class StockContext :DbContext
+    public class StockContext : DbContext
     {
-        public StockContext (DbContextOptions<StockContext> options) : base(options)
+        public StockContext(DbContextOptions<StockContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
@@ -49,5 +49,5 @@ namespace aksjehandel.Models
             optionsBuilder.UseLazyLoadingProxies();
         }
     }
-    
+
 }

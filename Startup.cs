@@ -1,4 +1,4 @@
-using aksjehandel.Models;
+using aksjehandel.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +28,7 @@ namespace aksjehandel
         {
             services.AddControllers();
             services.AddDbContext<StockContext>(options => options.UseSqlite("Data source=Stock.db"));
+            services.AddScoped<IStockRepository, StockRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
