@@ -42,7 +42,7 @@ function formatOrders(orders) {
         "</tr>";
     for (let order of orders) {
         out += "<tr>" +
-            "<td>" + order.company + "</td>" +
+            "<td>" + order.companyName + "</td>" +
             "<td>" + order.type + "</td>" +
             "<td>" + order.price + "</td>" +
             "<td>" + order.amount + "</td>" +
@@ -54,3 +54,16 @@ function formatOrders(orders) {
     out += "<table>";
     $("#orderContainer").html(out);
 }
+
+function deleteOrder(id) {
+    const url = "stock/deleteOrder?id=" + id;
+    $.get(url, function (OK) {
+        if (OK) {
+            window.location.href = 'overview.html';
+        }
+        else {
+            $("#feil").html("Feil i db - prøv igjen senere");
+        }
+
+    });
+};
