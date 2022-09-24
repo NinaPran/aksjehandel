@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace aksjehandel.Controllers
@@ -17,7 +18,51 @@ namespace aksjehandel.Controllers
         {
             _db = db;
         }
-        
+
+        public async Task<bool> ChangeOrder(Order changeOrder)
+        {
+            try
+            {
+                Orders oneOrder = await _db.Orders.FindAsync(changeOrder.Id);
+                oneOrder.Price = changeOrder.Price;
+                oneOrder.Amount = changeOrder.Amount;
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+
+            public async Task<Order> GetOneOrder(int id)
+        {
+            try
+            {
+                Orders oneOrder = await _db.Orders.FindAsync(id);
+                var collectedOrder = new Order()
+                {
+                    Id = oneOrder.Id,
+                    Company = oneOrder.Company.Name,
+                    Portfolio = oneOrder.Portfolio.DisplayName,
+                    Type = oneOrder.Type,
+                    Price = oneOrder.Price,
+                    Amount = oneOrder.Amount
+
+
+                };
+                return collectedOrder;
+            }
+            catch
+            {
+                return null;
+            }
+           
+        }
+
+        // Må endre getAllOrders så den kun henter til gjeldende portfolio
              public async Task<List<Order>> getAllOrders()
         {
             try
@@ -39,7 +84,7 @@ namespace aksjehandel.Controllers
             }
 
         }
-
+        // Må endre getAllShareholdings så den kun henter til gjeldende portfolio
         public async Task<List<Shareholding>> GetAllShareholdings()
         {
             try

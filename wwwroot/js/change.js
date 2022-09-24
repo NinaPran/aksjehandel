@@ -11,15 +11,14 @@
 });
 
 function changeOrder() {
-    const kunde = {
+    const order = {
         id: $("#id").val(),
-        fornavn: $("#fornavn").val(),
-        etternavn: $("#etternavn").val(),
-        adresse: $("#adresse").val(),
-        postnr: $("#postnr").val(),
-        poststed: $("#poststed").val()
+        compayny: $("#company").val(),
+        type: $('input[name=type]:checked').val(),
+        price: $("#price").val(),
+        amount: $("#amount").val()
     }
-    $.post("Kunde/Endre", kunde, function (OK) {
+    $.post("stock/changeOrder", order, function (OK) {
         if (OK) {
             window.location.href = 'index.html';
         }
