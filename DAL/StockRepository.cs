@@ -20,23 +20,7 @@ namespace aksjehandel.DAL
             _db = db;
         }
 
-        private async Task<bool> executeMatchingOrders(Orders buyOrder, Orders sellOrder, double price, int amount)
-        {
-            Portfolios buyerPortfolio = buyOrder.Portfolio;
-            Portfolios sellerPortfolio = sellOrder.Portfolio;
-            Companies company = buyOrder.Company;
-
-            buyOrder.Amount -= amount;
-            sellOrder.Amount -= amount;
-
-            await adjustShareholding(buyerPortfolio, company, price, amount);
-            await adjustShareholding(sellerPortfolio, company, price, -amount);
-
-            return true;
-
-        }
-
-        private async Task<bool> adjustShareholding(Portfolios portfolio, Companies company, double price, int amount)
+        private async Task<bool> AdjustShareholding(Portfolios portfolio, Companies company, double price, int amount)
         {
             // Henter inn shareholding som skal justeres
             Shareholdings shareholding = await _db.Shareholdings.FirstOrDefaultAsync(s => s.Company.Id == company.Id && s.Portfolio.Id == portfolio.Id);
@@ -54,7 +38,7 @@ namespace aksjehandel.DAL
             shareholding.Amount += amount;
 
             // Justerer purchasing power
-            portfolio.PurchasingPower += totalPrice;
+            portfolio.Cash += totalPrice;
 
             if (shareholding.Amount == 0)
             {
@@ -64,7 +48,7 @@ namespace aksjehandel.DAL
             return true;
         }
 
-        private async Task<bool> executeTrade(Orders newOrder, Orders matchingOrder, bool isBuyOrder)
+        private async Task<bool> ExecuteTrade(Orders newOrder, Orders matchingOrder, bool isBuyOrder)
         {
             // Kall denne når to ordre matcher.
             // Denne skal oppdatere shareholdinglist for begge parter
@@ -86,10 +70,10 @@ namespace aksjehandel.DAL
             int matchingAmount = Math.Min(newOrder.Amount, matchingOrder.Amount);
 
             // Kaller funskjon som legger til aksjer og trekker purchase power for kjøper       
-            await adjustShareholding(buyerPortfolio, company, matchingOrder.Price, matchingAmount);
+            await AdjustShareholding(buyerPortfolio, company, matchingOrder.Price, matchingAmount);
 
             // Kaller funksjon som trekker fra aksjer og øker purchase power for selger
-            await adjustShareholding(sellerPortfolio, company, matchingOrder.Price, -matchingAmount);
+            await AdjustShareholding(sellerPortfolio, company, matchingOrder.Price, -matchingAmount);
 
             // Justerer antall aksjer som er igjen på ordrene etter trade   
             buyOrder.Amount -= matchingAmount;
@@ -104,10 +88,10 @@ namespace aksjehandel.DAL
             return true;
         }
 
-        public async Task<bool> regOrder(Order newOrder)
+        public async Task<bool> RegOrder(Order newOrder)
         {
             // Lager en Orders av innkommende newOrder
-            Orders newOrders = createOrdersFromOrder(newOrder);
+            Orders newOrders = CreateOrdersFromOrder(newOrder);
 
             // Henter inn Shareholding tilhørende ordren som kommer inn
             List<Shareholdings> newOrderShareholdingList = _db.Shareholdings.Where(s => s.Company.Id == newOrders.Company.Id && s.Portfolio.Id == newOrders.Portfolio.Id).ToList();
@@ -145,12 +129,12 @@ namespace aksjehandel.DAL
                 if (newOrders.Type == "buy")
                 {
                     // Kaller funksjon som utfører trade av to ordre der innkommende er av typen kjøp
-                    await executeTrade(newOrders, candidateOrders[i], true);
+                    await ExecuteTrade(newOrders, candidateOrders[i], true);
                 }
                 else
                 {
                     // Kaller funksjon som utfører trade av to ordre der innkommende er av typen salg
-                    await executeTrade(candidateOrders[i], newOrders, false);
+                    await ExecuteTrade(candidateOrders[i], newOrders, false);
                 }
                 if (newOrders.Amount == 0)
                 {
@@ -173,7 +157,7 @@ namespace aksjehandel.DAL
 
         }
 
-        private Orders createOrdersFromOrder(Order newOrder)
+        private Orders CreateOrdersFromOrder(Order newOrder)
         {
             try
             {
@@ -283,7 +267,7 @@ namespace aksjehandel.DAL
                     CompanySymbol = oneOrder.Company.Symbol,
                     PortfolioId = oneOrder.Portfolio.Id,
                     PortfolioDisplayName = oneOrder.Portfolio.DisplayName,
-                    PortfolioPurchasingPower = oneOrder.Portfolio.PurchasingPower,
+                    PortfolioCash = oneOrder.Portfolio.Cash,
                     Type = oneOrder.Type,
                     Price = oneOrder.Price,
                     Amount = oneOrder.Amount
@@ -299,7 +283,7 @@ namespace aksjehandel.DAL
 
         }
 
-        public async Task<List<Order>> getAllOrders()
+        public async Task<List<Order>> GetAllOrders()
         {
             try
             {
@@ -311,7 +295,7 @@ namespace aksjehandel.DAL
                     CompanySymbol = o.Company.Symbol,
                     PortfolioId = o.Portfolio.Id,
                     PortfolioDisplayName = o.Portfolio.DisplayName,
-                    PortfolioPurchasingPower = o.Portfolio.PurchasingPower,
+                    PortfolioCash = o.Portfolio.Cash,
                     Type = o.Type,
                     Price = o.Price,
                     Amount = o.Amount
@@ -353,12 +337,14 @@ namespace aksjehandel.DAL
                 {
                     Id = p.Id,
                     DisplayName = p.DisplayName,
-                    PurchasingPower = p.PurchasingPower
+                    Cash = p.Cash,
+                    PurchasingPower = StockRepository.CalculatePurchasingPower(p, _db)
                 }).ToListAsync();
                 return allPortfolios;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 return null;
             }
 
@@ -382,6 +368,12 @@ namespace aksjehandel.DAL
                 return null;
             }
 
+        }
+
+        private static double CalculatePurchasingPower(Portfolios portfolio, StockContext db)
+        {
+            // returnerer cash minus summen av alle kjøpsordre tilhørende portfølgen sine aksjer * prisen
+            return portfolio.Cash - db.Orders.Where(o=> o.Portfolio.Id == portfolio.Id && o.Type == "buy").Sum(o=> o.Amount*o.Price);
         }
     }
 }

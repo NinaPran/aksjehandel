@@ -16,8 +16,8 @@ namespace aksjehandel.DAL
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
-                var portfolio1 = new Portfolios { DisplayName = "Axis", PurchasingPower = 12345 };
-                var portfolio2 = new Portfolios { DisplayName = "Allies", PurchasingPower = 67890.5 };
+                var portfolio1 = new Portfolios { DisplayName = "Axis", Cash = 12345 };
+                var portfolio2 = new Portfolios { DisplayName = "Allies", Cash = 67890.5 };
 
                 var company1 = new Companies { Name = "EQINOR", Symbol = "EQNR" };
                 var company2 = new Companies { Name = "YARA", Symbol = "YARIY" };

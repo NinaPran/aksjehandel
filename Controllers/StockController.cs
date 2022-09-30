@@ -22,7 +22,7 @@ namespace aksjehandel.Controllers
         }
        public async Task<bool> regOrder(Order newOrder)
         {
-            return await _db.regOrder(newOrder);
+            return await _db.RegOrder(newOrder);
         }
         public async Task<bool> DeleteOrder(int id)
         {
@@ -38,7 +38,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<List<Order>> getAllOrders()
         {
-            return await _db.getAllOrders();
+            return await _db.GetAllOrders();
         }
         public async Task<List<Shareholding>> GetAllShareholdings()
         {

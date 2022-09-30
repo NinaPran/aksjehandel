@@ -1,7 +1,14 @@
 ﻿$(function () {
     getAllShareholdings();
     getAllOrders();
+    addPortfolioListener(onPortfolioChanged);
 });
+
+// Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
+function onPortfolioChanged(portfolio) {
+    $("#purchasingPower").html(portfolio.purchasingPower);
+    // Legg inn getAll her for å filtrere på portfolio.id
+}
 
 function getAllShareholdings() {
     $.get("stock/getAllShareholdings", function (shareholdings) {

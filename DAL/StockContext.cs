@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace aksjehandel.DAL
 {
@@ -22,7 +24,7 @@ namespace aksjehandel.DAL
     {
         public int Id { get; set; }
         public string DisplayName { get; set; }
-        public double PurchasingPower { get; set; }
+        public double Cash { get; set; }
 
     }
     public class Shareholdings

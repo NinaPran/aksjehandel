@@ -4,7 +4,8 @@
     {
         public int Id { get; set; }
         public string DisplayName { get; set; }
+        public double Cash { get; set; }
         public double PurchasingPower { get; set; }
-        
+
     }
 }

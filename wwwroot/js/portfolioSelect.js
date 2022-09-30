@@ -3,6 +3,7 @@ const SELECTEDPORTFOLIOKEY = "selected-portfolio";
 let allPortfolios;
 let currentPortfolioId = -1;
 let currentPortfolio;
+const portfolioListeners = [];
 
 $(function () {
     getAllPortfolios();
@@ -14,7 +15,7 @@ function getAllPortfolios() {
         allPortfolios = portfolios;
         formatPortfolios(portfolios);
         loadSelectePortfolio();
-        portfolioSelect.change(saveSelectedPortfolio);
+        portfolioSelect.change(setSelectedPortfolio);
     });
 }
 
@@ -28,10 +29,12 @@ function formatPortfolios(portfolios) {
 }
 
 
-function saveSelectedPortfolio() {
+function setSelectedPortfolio() {
     currentPortfolioId = portfolioSelect.val();    
     currentPortfolio = getPortfolioFromId(currentPortfolioId);
     window.localStorage.setItem(SELECTEDPORTFOLIOKEY, currentPortfolioId);
+    notifyPortfolioListeners();
+
 }
 
 function loadSelectePortfolio() {
@@ -40,6 +43,7 @@ function loadSelectePortfolio() {
         currentPortfolioId = portfolioId;
         currentPortfolio = getPortfolioFromId(currentPortfolioId);
         portfolioSelect.val(currentPortfolioId);
+        notifyPortfolioListeners();
     }
 }
 
@@ -54,4 +58,17 @@ function getPortfolioId() {
 
 function getCurrentPortfolio() {
     return currentPortfolio;
+}
+
+// Brukes for å registrere funksjoner som kalles med nåværende portefølge hver gang den endres
+function addPortfolioListener(listener) {
+    portfolioListeners.push(listener);
+}
+
+// Kaller alle registrerte listeners som funksjoner og sender med currentPortfolio
+// Vi trenger dette fordi portfolio ikke er klar ved ready og fordi den kan endre seg underveis
+function notifyPortfolioListeners() {
+    portfolioListeners.forEach(listener => {
+        listener(currentPortfolio);
+    })
 }
