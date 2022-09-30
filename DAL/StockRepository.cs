@@ -1,9 +1,12 @@
 ﻿using aksjehandel.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace aksjehandel.DAL
 {
@@ -17,7 +20,142 @@ namespace aksjehandel.DAL
             _db = db;
         }
 
+        private async Task<bool> executeMatchingOrders(Orders buyOrder, Orders sellOrder, double price, int amount)
+        {
+            Portfolios buyerPortfolio = buyOrder.Portfolio;
+            Portfolios sellerPortfolio = sellOrder.Portfolio;
+            Companies company = buyOrder.Company;
+
+            buyOrder.Amount -= amount;
+            sellOrder.Amount -= amount;
+
+            await adjustShareholding(buyerPortfolio, company, price, amount);
+            await adjustShareholding(sellerPortfolio, company, price, -amount);
+
+            return true;
+
+        }
+
+        private async Task<bool> adjustShareholding(Portfolios portfolio, Companies company, double price, int amount)
+        {
+            Shareholdings shareholding = await _db.Shareholdings.FirstOrDefaultAsync(s => s.Company.Id == company.Id && s.Portfolio.Id == portfolio.Id);
+            double totalPrice = price * amount;
+            if (shareholding == null)
+            {
+                shareholding = new Shareholdings() { Company = company, Portfolio = portfolio, Amount = 0 };
+                _db.Shareholdings.Add(shareholding);
+            }
+            shareholding.Amount += amount;
+            portfolio.PurchasingPower += totalPrice;
+            if (shareholding.Amount == 0)
+            {
+                _db.Shareholdings.Remove(shareholding);
+            }
+            return true;
+        }
+
+        private async Task<bool> executeTrade(Orders newOrder, Orders matchingOrder, bool isBuyOrder)
+        {
+            // Kall denne når to ordre matcher.
+            // Denne skal oppdatere shareholdinglist for begge parter
+            // Samt justere purchasingpower og evt slette ordre
+            // Setter antall ordre motparten tilbyr
+            Orders buyOrder = isBuyOrder ? newOrder : matchingOrder;
+            Orders sellOrder = !isBuyOrder ? newOrder : matchingOrder;
+            Portfolios buyerPortfolio = buyOrder.Portfolio;
+            Portfolios sellerPortfolio = sellOrder.Portfolio;
+            Companies company = buyOrder.Company;
+
+            int amountCounterparty = matchingOrder.Amount;
+            // Finner den laveste verdien av antall aksjer blandt de som er i den innkommende ordren mot motpartens ordre
+            int matchingAmount = Math.Min(newOrder.Amount, matchingOrder.Amount);
+            // Setter value til verdien av alle aksjene som blir handlet ganget med prisen satt av motpart.
+            // Trekker fra den laveste verdien av antall aksjer på både innkommende og motparts antall
+
+
+            buyOrder.Amount -= matchingAmount;
+            sellOrder.Amount -= matchingAmount;
+
+            await adjustShareholding(buyerPortfolio, company, matchingOrder.Price, matchingAmount);
+            await adjustShareholding(sellerPortfolio, company, matchingOrder.Price, -matchingAmount);
+
+            if(matchingOrder.Amount == 0)
+            {
+                // Fjerner matching-order fra DB om den er tom
+                _db.Orders.Remove(matchingOrder);
+            }
+
+            return true;
+        }
+
         public async Task<bool> regOrder(Order newOrder)
+        {
+            // Lager en Orders av innkommende newOrder
+            Orders newOrders = createOrdersFromOrder(newOrder);
+
+            // Henter inn Shareholding tilhørende ordren som kommer inn
+            List<Shareholdings> newOrderShareholdingList = _db.Shareholdings.Where(s => s.Company.Id == newOrders.Company.Id && s.Portfolio.Id == newOrders.Portfolio.Id).ToList();
+
+            // Henter inn Portfolio tilhørende ordren som kommer inn
+            Portfolios newOrderPortfolio = newOrders.Portfolio;
+
+            // Anntall som ønskes å kjøpe/selge i den innkommende ordren
+            int amountOrder = newOrders.Amount;
+
+            // En liste til å putte ordre som ligger i databasen som matcher innkommende ordre
+            List<Orders> candidateOrders = new List<Orders>();
+
+            // Hvis ordren gjelder kjøp av aksjer:
+            if (newOrders.Type == "buy")
+            {
+                // Henter alle salgsordre som ligger i databasen som matcher kjøpers Company og har lavere eller lik pris
+                candidateOrders = _db.Orders.Where(o => o.Company.Id == newOrders.Company.Id && o.Type == "sell" && o.Price <= newOrders.Price).ToList();
+                // Sorterer de etter pris med den laveste prisen først
+                candidateOrders = candidateOrders.OrderBy(a => a.Price).ToList();
+            }
+            // Hvis ordren gjelder salg av aksjer
+            else
+            {
+                // Henter alle kjøpsordre som ligger i databasen som matcher selgers Companyy og har lik eller høyere pris
+                candidateOrders = _db.Orders.Where(o => o.Company.Id == newOrders.Company.Id && o.Type == "buy" && o.Price >= newOrders.Price).ToList();
+                // Sorderer så de med høyest pris kommer først
+                candidateOrders = candidateOrders.OrderByDescending(a => a.Price).ToList();
+            }
+
+            // Løper igjennom listen med aktuelle ordre fra databasen
+            for (int i = 0; i < candidateOrders.Count; i++)
+            {
+                // Utfør ordrene
+                if (newOrders.Type == "buy")
+                {
+                    await executeTrade(newOrders, candidateOrders[i], true);
+                }
+                else
+                {
+                    await executeTrade(candidateOrders[i], newOrders, false);
+                }
+                if (newOrders.Amount == 0)
+                {
+                    // stopper hvis ordren er tom
+                    break;
+                }
+
+            }
+            // Hvis det er noen aksjer igjen på ordren registreres den i databasen
+            if (newOrders.Amount > 0)
+            {
+                _db.Orders.Add(newOrders);
+
+            }
+
+            // Lagre alle endringer vi har gjort på databasen
+            await _db.SaveChangesAsync();
+
+            return true;
+
+        }
+
+        private Orders createOrdersFromOrder(Order newOrder)
         {
             try
             {
@@ -25,13 +163,13 @@ namespace aksjehandel.DAL
                 if (chosenPortfolio == null)
                 {
                     Debug.WriteLine("Fant ikke portfolio med id " + newOrder.PortfolioId);
-                    return false;
+                    throw new ArgumentException("Invalid portfolio ID");
                 }
                 Companies chosenCompany = _db.Companies.Find(newOrder.CompanyId);
                 if (chosenCompany == null)
                 {
                     Debug.WriteLine("Fant ikke company med id " + newOrder.CompanyId);
-                    return false;
+                    throw new ArgumentException("Invalid company ID");
                 }
                 var newOrderRow = new Orders();
                 newOrderRow.Type = newOrder.Type;
@@ -39,8 +177,39 @@ namespace aksjehandel.DAL
                 newOrderRow.Amount = newOrder.Amount;
                 newOrderRow.Portfolio = chosenPortfolio;
                 newOrderRow.Company = chosenCompany;
+                return newOrderRow;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
-                _db.Orders.Add(newOrderRow);
+        private async Task<bool> NewShareholding(int amount, Portfolios portfolio, Companies company)
+        {
+            try
+            {
+                var newSharholdingRow = new Shareholdings();
+                newSharholdingRow.Amount = amount;
+                newSharholdingRow.Portfolio = portfolio;
+                newSharholdingRow.Company = company;
+                _db.Shareholdings.Add(newSharholdingRow);
+                await _db.SaveChangesAsync();
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> DeleteShareholding(int id)
+        {
+            try
+            {
+                Shareholdings oneShareholding = await _db.Shareholdings.FindAsync(id);
+                _db.Shareholdings.Remove(oneShareholding);
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -112,7 +281,6 @@ namespace aksjehandel.DAL
 
         }
 
-        // Må endre getAllOrders så den kun henter til gjeldende portfolio
         public async Task<List<Order>> getAllOrders()
         {
             try
@@ -138,7 +306,7 @@ namespace aksjehandel.DAL
             }
 
         }
-        // Må endre getAllShareholdings så den kun henter til gjeldende portfolio
+
         public async Task<List<Shareholding>> GetAllShareholdings()
         {
             try
