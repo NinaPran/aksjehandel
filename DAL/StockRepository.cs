@@ -38,17 +38,27 @@ namespace aksjehandel.DAL
 
         private async Task<bool> adjustShareholding(Portfolios portfolio, Companies company, double price, int amount)
         {
+            // Henter inn shareholding som skal justeres
             Shareholdings shareholding = await _db.Shareholdings.FirstOrDefaultAsync(s => s.Company.Id == company.Id && s.Portfolio.Id == portfolio.Id);
+            
+            // Regner ut den totale verdien av aksjene
             double totalPrice = price * amount;
             if (shareholding == null)
             {
+                // Oppretter shareholding hvis den ikke eksisterer fra før
                 shareholding = new Shareholdings() { Company = company, Portfolio = portfolio, Amount = 0 };
                 _db.Shareholdings.Add(shareholding);
             }
+            
+            // Justerer antall aksjer på shareholding
             shareholding.Amount += amount;
+
+            // Justerer purchasing power
             portfolio.PurchasingPower += totalPrice;
+
             if (shareholding.Amount == 0)
             {
+                // Fjerner tomme shareholdings
                 _db.Shareholdings.Remove(shareholding);
             }
             return true;
@@ -60,26 +70,32 @@ namespace aksjehandel.DAL
             // Denne skal oppdatere shareholdinglist for begge parter
             // Samt justere purchasingpower og evt slette ordre
             // Setter antall ordre motparten tilbyr
+
+            // Setter hvilken ordre som er kjøp og salg
             Orders buyOrder = isBuyOrder ? newOrder : matchingOrder;
             Orders sellOrder = !isBuyOrder ? newOrder : matchingOrder;
+
+            // Henter inn kjøp og salgs portefølge
             Portfolios buyerPortfolio = buyOrder.Portfolio;
             Portfolios sellerPortfolio = sellOrder.Portfolio;
+
+            // Henter inn selskapet som handles
             Companies company = buyOrder.Company;
 
-            int amountCounterparty = matchingOrder.Amount;
             // Finner den laveste verdien av antall aksjer blandt de som er i den innkommende ordren mot motpartens ordre
             int matchingAmount = Math.Min(newOrder.Amount, matchingOrder.Amount);
-            // Setter value til verdien av alle aksjene som blir handlet ganget med prisen satt av motpart.
-            // Trekker fra den laveste verdien av antall aksjer på både innkommende og motparts antall
 
+            // Kaller funskjon som legger til aksjer og trekker purchase power for kjøper       
+            await adjustShareholding(buyerPortfolio, company, matchingOrder.Price, matchingAmount);
 
+            // Kaller funksjon som trekker fra aksjer og øker purchase power for selger
+            await adjustShareholding(sellerPortfolio, company, matchingOrder.Price, -matchingAmount);
+
+            // Justerer antall aksjer som er igjen på ordrene etter trade   
             buyOrder.Amount -= matchingAmount;
             sellOrder.Amount -= matchingAmount;
 
-            await adjustShareholding(buyerPortfolio, company, matchingOrder.Price, matchingAmount);
-            await adjustShareholding(sellerPortfolio, company, matchingOrder.Price, -matchingAmount);
-
-            if(matchingOrder.Amount == 0)
+            if (matchingOrder.Amount == 0)
             {
                 // Fjerner matching-order fra DB om den er tom
                 _db.Orders.Remove(matchingOrder);
@@ -128,10 +144,12 @@ namespace aksjehandel.DAL
                 // Utfør ordrene
                 if (newOrders.Type == "buy")
                 {
+                    // Kaller funksjon som utfører trade av to ordre der innkommende er av typen kjøp
                     await executeTrade(newOrders, candidateOrders[i], true);
                 }
                 else
                 {
+                    // Kaller funksjon som utfører trade av to ordre der innkommende er av typen salg
                     await executeTrade(candidateOrders[i], newOrders, false);
                 }
                 if (newOrders.Amount == 0)
