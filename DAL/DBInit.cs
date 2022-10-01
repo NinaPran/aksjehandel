@@ -19,8 +19,8 @@ namespace aksjehandel.DAL
                 var portfolio1 = new Portfolios { DisplayName = "Axis", Cash = 12345 };
                 var portfolio2 = new Portfolios { DisplayName = "Allies", Cash = 67890.5 };
 
-                var company1 = new Companies { Name = "EQINOR", Symbol = "EQNR" };
-                var company2 = new Companies { Name = "YARA", Symbol = "YARIY" };
+                var company1 = new Companies { Name = "EQUINOR", Symbol = "EQNR" };
+                var company2 = new Companies { Name = "YARA", Symbol = "YAR" };
 
                 var shareholding1 = new Shareholdings { Portfolio = portfolio1, Company = company1, Amount = 40 };
                 var shareholding2 = new Shareholdings { Portfolio = portfolio1, Company = company2, Amount = 100 };

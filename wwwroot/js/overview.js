@@ -1,6 +1,6 @@
 ﻿$(function () {
     getAllShareholdings();
-    getAllOrders();
+    getAllCompanies();
     addPortfolioListener(onPortfolioChanged);
 });
 
@@ -17,9 +17,9 @@ function getAllShareholdings() {
     });
 }
 
-function getAllOrders() {
+function getAllCompanies() {
     $.get("stock/getAllOrders", function (orders) {
-        formatOrders(orders);
+        formatCompanies(orders);
 
     });
 }
@@ -42,7 +42,7 @@ function formatShareholdings(shareholdings) {
 
 }
 
-function formatOrders(orders) {
+function formatCompanies(orders) {
     let out = "<table class'table table-striped'>" +
         "<tr>" +
         "<th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +

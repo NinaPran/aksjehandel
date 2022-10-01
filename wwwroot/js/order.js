@@ -13,11 +13,28 @@ function getAllCompanies() {
 }
 
 function formatCompanies(companies) {
+    const url = new URL(location.href); // lager url objekt
+    const id = url.searchParams.get('id'); // leter etter id'en i url'en 
+    const type = url.searchParams.get('type'); // leter etter type i url'en
+
     for (const company of companies) {
+
         companySelect
             .append($("<option></option>")
                 .attr("value", company.id)
                 .text(company.symbol + " - " + company.name));
+    }
+
+  
+    if (id != "") {
+        companySelect.val(id);
+
+    }
+    if (type == "sell") {
+        $("#type-sell").prop("checked", true);
+    }
+    else {
+        $("#type-buy").prop("checked", true);
     }
 }
 function regOrder() {
