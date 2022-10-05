@@ -3,7 +3,7 @@ const SELECTEDPORTFOLIOKEY = "selected-portfolio";
 let allPortfolios;
 let currentPortfolioId = -1;
 let currentPortfolio;
-const portfolioListeners = [];
+let onPortfolioChangeListener;
 
 $(function () {
     getAllPortfolios();
@@ -30,7 +30,7 @@ function formatPortfolios(portfolios) {
 
 
 function setSelectedPortfolio() {
-    currentPortfolioId = portfolioSelect.val();    
+    currentPortfolioId = portfolioSelect.val();
     currentPortfolio = getPortfolioFromId(currentPortfolioId);
     window.localStorage.setItem(SELECTEDPORTFOLIOKEY, currentPortfolioId);
     notifyPortfolioListeners();
@@ -60,15 +60,10 @@ function getCurrentPortfolio() {
     return currentPortfolio;
 }
 
-// Brukes for å registrere funksjoner som kalles med nåværende portefølge hver gang den endres
-function addPortfolioListener(listener) {
-    portfolioListeners.push(listener);
-}
-
-// Kaller alle registrerte listeners som funksjoner og sender med currentPortfolio
+// Kaller onPortfolioChangeListener og sender med currentPortfolio
 // Vi trenger dette fordi portfolio ikke er klar ved ready og fordi den kan endre seg underveis
 function notifyPortfolioListeners() {
-    portfolioListeners.forEach(listener => {
-        listener(currentPortfolio);
-    })
+    if (onPortfolioChangeListener) {
+        onPortfolioChangeListener(currentPortfolio);
+    }
 }

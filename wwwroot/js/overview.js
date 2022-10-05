@@ -1,7 +1,7 @@
 ﻿$(function () {
     getAllShareholdings();
     getAllCompanies();
-    addPortfolioListener(onPortfolioChanged);
+    onPortfolioChangeListener = onPortfolioChanged;
 });
 
 // Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
