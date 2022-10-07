@@ -1,7 +1,9 @@
 ﻿using aksjehandel.DAL;
 using aksjehandel.Models;
+using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,9 +18,12 @@ namespace aksjehandel.Controllers
     public class StockController : ControllerBase
     {
         private readonly IStockRepository _db;
-        public StockController(IStockRepository db)
+
+        private ILogger<StockController> _log;
+        public StockController(IStockRepository db, ILogger<StockController> log)
         {
             _db = db;
+            _log = log;
         }
        public async Task<bool> regOrder(Order newOrder)
         {
@@ -38,7 +43,9 @@ namespace aksjehandel.Controllers
         }
         public async Task<List<Order>> getAllOrders()
         {
+            _log.LogInformation("Test Log");
             return await _db.GetAllOrders();
+
         }
         public async Task<List<Shareholding>> GetAllShareholdings()
         {
@@ -51,6 +58,7 @@ namespace aksjehandel.Controllers
         public async Task<List<Company>> GetAllCompanies()
         {
             return await _db.GetAllCompanies();
+            
         }
     }
 }
