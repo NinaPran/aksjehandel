@@ -1,4 +1,6 @@
-﻿namespace aksjehandel.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace aksjehandel.Models
 {
     public class Order
     {
@@ -10,7 +12,9 @@
         public string PortfolioDisplayName { get; set; }
         public double PortfolioCash { get; set; }
         public string Type { get; set; }
+        [RegularExpression(@"[0-9]{2,20}")]
         public double Price { get; set; }
+        [RegularExpression(@"[0-9]{2,20}")]
         public int Amount { get; set; }
     }
 }
