@@ -258,8 +258,31 @@ namespace aksjehandel.DAL
             try
             {
                 Orders oneOrder = await _db.Orders.FindAsync(changeOrder.Id);
+                // Tar vare på den gamle prisen
+                double oldPrice = oneOrder.Price;
+
+                // Endrer ev. pris og antall på ordren
                 oneOrder.Price = changeOrder.Price;
                 oneOrder.Amount = changeOrder.Amount;
+
+                // Kaller funksjon som sjekker om det er mulighet for å utføre trade og gjennomfører dette om mulige hvis man nå krever lavere pris på salgsordre
+                if(oneOrder.Price < oldPrice && oneOrder.Type == "sell")
+                {
+                    oneOrder = await CheckForAndExecuteTrade(oneOrder);
+                }
+
+                // Kaller funksjon som sjekker om det er mulighet for å utføre trade og gjennomfører dette om mulige hvis man nå tilbyr høyere pris på kjøpsordre
+                if (oneOrder.Price > oldPrice && oneOrder.Type == "buy")
+                {
+                    oneOrder = await CheckForAndExecuteTrade(oneOrder);
+                }
+
+                // Sletter ordren om den er tom
+                if(oneOrder.Amount == 0)
+                {
+                    await DeleteOrder(oneOrder.Id);
+                }
+
                 await _db.SaveChangesAsync();
                 return true;
             }
