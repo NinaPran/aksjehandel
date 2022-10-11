@@ -88,11 +88,8 @@ namespace aksjehandel.DAL
             return true;
         }
 
-        public async Task<bool> RegOrder(Order newOrder)
+        private async Task<Orders> CheckForAndExecuteTrade(Orders newOrders)
         {
-            // Lager en Orders av innkommende newOrder
-            Orders newOrders = CreateOrdersFromOrder(newOrder);
-
             // Henter inn Shareholding tilhørende ordren som kommer inn
             List<Shareholdings> newOrderShareholdingList = _db.Shareholdings.Where(s => s.Company.Id == newOrders.Company.Id && s.Portfolio.Id == newOrders.Portfolio.Id).ToList();
 
@@ -143,17 +140,37 @@ namespace aksjehandel.DAL
                 }
 
             }
-            // Hvis det er noen aksjer igjen på ordren registreres den i databasen
-            if (newOrders.Amount > 0)
+            return newOrders;
+
+        }
+        public async Task<bool> RegOrder(Order newOrder)
+        {
+            try
             {
-                _db.Orders.Add(newOrders);
+
+                // Lager en Orders av innkommende newOrder
+                Orders newOrders = CreateOrdersFromOrder(newOrder);
+
+                // Kaller funksjonen som sjekker om det er mulig å utføre trade og utfører de om mulig
+                newOrders = await CheckForAndExecuteTrade(newOrders);
+
+                // Hvis det er noen aksjer igjen på ordren registreres den i databasen
+                if (newOrders.Amount > 0)
+                {
+                    _db.Orders.Add(newOrders);
+
+                }
+
+                // Lagre alle endringer vi har gjort på databasen
+                await _db.SaveChangesAsync();
+
+                return true;
 
             }
-
-            // Lagre alle endringer vi har gjort på databasen
-            await _db.SaveChangesAsync();
-
-            return true;
+            catch
+            {
+                return false;
+            }
 
         }
 
