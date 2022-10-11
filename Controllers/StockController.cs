@@ -27,13 +27,18 @@ namespace aksjehandel.Controllers
         }
        public async Task<ActionResult> regOrder(Order newOrder)
         {
-            bool returnOK = await _db.RegOrder(newOrder);
-            if (!returnOK)
+            if (ModelState.IsValid)
             {
-                _log.LogInformation("Ordren ble ikke lagret");
-                return BadRequest("Ordren ble ikke lagret");
+                bool returnOK = await _db.RegOrder(newOrder);
+                if (!returnOK)
+                {
+                    _log.LogInformation("Ordren ble ikke lagret");
+                    return BadRequest("Ordren ble ikke lagret");
+                }
+                return Ok("Ordre lagret");
             }
-            return Ok("Ordre lagret");
+            _log.LogInformation("Feil i inputvalidering");
+            return BadRequest("Feil i inputvalidering");
         }
         public async Task<ActionResult> DeleteOrder(int id)
         {
@@ -47,13 +52,18 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> ChangeOrder(Order changeOrder)
         {
-            bool returnOk = await _db.ChangeOrder(changeOrder);
-            if (!returnOk)
+            if (ModelState.IsValid)
             {
-                _log.LogInformation("Ordren ble ikke endret");
-                return NotFound("Ordren ble ikke endret");
+                bool returnOk = await _db.ChangeOrder(changeOrder);
+                if (!returnOk)
+                {
+                    _log.LogInformation("Ordren ble ikke endret");
+                    return NotFound("Ordren ble ikke endret");
+                }
+                return Ok("Ordren endret");
             }
-            return Ok("Ordren endret");
+            _log.LogInformation("Feil i inputvalidering");
+            return BadRequest("Feil i inputvalidering");
         }
         public async Task<ActionResult> GetOneOrder(int id)
         {
