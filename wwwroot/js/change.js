@@ -21,13 +21,10 @@ function changeOrder() {
         price: $("#price").val(),
         amount: $("#amount").val()
     }
-    $.post("stock/changeOrder", order, function (OK) {
-        if (OK) {
+    $.post("stock/changeOrder", order, function () {        
             window.location.href = 'overview.html';
-        }
-        else {
+    })
+        .fail(function () {
             $("#error").html("Feil i db - prøv igjen senere");
-        }
     });
-
 };

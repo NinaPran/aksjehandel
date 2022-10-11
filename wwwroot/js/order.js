@@ -25,7 +25,7 @@ function formatCompanies(companies) {
                 .text(company.symbol + " - " + company.name));
     }
 
-  
+
     if (id != "") {
         companySelect.val(id);
 
@@ -53,12 +53,10 @@ function regOrder() {
     }
 
     const url = "stock/regOrder";
-    $.post(url, order, function (OK) {
-        if (OK) {
-            window.location.href = 'overview.html';
-        }
-        else {
+    $.post(url, order, function () {
+        window.location.href = 'overview.html';
+    })
+        .fail(function () {
             $("#error").html("Feil i db - prøv igjen senere");
-        }
-    });
-}
+        });
+};

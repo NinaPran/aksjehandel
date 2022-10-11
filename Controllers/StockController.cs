@@ -25,39 +25,66 @@ namespace aksjehandel.Controllers
             _db = db;
             _log = log;
         }
-       public async Task<bool> regOrder(Order newOrder)
+       public async Task<ActionResult> regOrder(Order newOrder)
         {
-            return await _db.RegOrder(newOrder);
+            bool returnOK = await _db.RegOrder(newOrder);
+            if (!returnOK)
+            {
+                _log.LogInformation("Ordren ble ikke lagret");
+                return BadRequest("Ordren ble ikke lagret");
+            }
+            return Ok("Ordre lagret");
         }
-        public async Task<bool> DeleteOrder(int id)
+        public async Task<ActionResult> DeleteOrder(int id)
         {
-            return await _db.DeleteOrder(id);
+            bool returnOK = await _db.DeleteOrder(id);
+            if (!returnOK)
+            {
+                _log.LogInformation("Ordren ble ikke slettet");
+                return NotFound("Ordren ble ikke slettet");
+            }
+            return Ok("Ordren slettet");
         }
-        public async Task<bool> ChangeOrder(Order changeOrder)
+        public async Task<ActionResult> ChangeOrder(Order changeOrder)
         {
-            return await _db.ChangeOrder(changeOrder);
+            bool returnOk = await _db.ChangeOrder(changeOrder);
+            if (!returnOk)
+            {
+                _log.LogInformation("Ordren ble ikke endret");
+                return NotFound("Ordren ble ikke endret");
+            }
+            return Ok("Ordren endret");
         }
-        public async Task<Order> GetOneOrder(int id)
+        public async Task<ActionResult> GetOneOrder(int id)
         {
-            return await _db.GetOneOrder(id);
+            Order oneOrder = await _db.GetOneOrder(id);
+            if(oneOrder == null)
+            {
+                _log.LogInformation("Fant ikke ordren");
+                return NotFound("Fant ikke ordren");
+            }
+            return Ok(oneOrder);
         }
-        public async Task<List<Order>> getAllOrders()
+        public async Task<ActionResult> getAllOrders()
         {
-            _log.LogInformation("Test Log");
-            return await _db.GetAllOrders();
+            List<Order> allOrders = await _db.GetAllOrders();
+            return Ok(allOrders);
 
         }
-        public async Task<List<Shareholding>> GetAllShareholdings()
+        public async Task<ActionResult> GetAllShareholdings()
         {
-            return await _db.GetAllShareholdings();
+            List<Shareholding> allShareholdings = await _db.GetAllShareholdings();
+            return Ok(allShareholdings);
         }
-        public async Task<List<Portfolio>> GetAllPortfolios()
+        public async Task<ActionResult> GetAllPortfolios()
         {
-            return await _db.GetAllPortfolios();
+            List<Portfolio> allPortfolios = await _db.GetAllPortfolios();
+            return Ok(allPortfolios);
         }
-        public async Task<List<Company>> GetAllCompanies()
+        public async Task<ActionResult> GetAllCompanies()
         {
-            return await _db.GetAllCompanies();
+            List<Company> allCompanies = await _db.GetAllCompanies();
+            return Ok(allCompanies);
             
         }
     }
