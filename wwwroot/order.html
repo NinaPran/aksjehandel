@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
     <script defer src="js/order.js"></script>
     <script defer src="js/portfolioSelect.js"></script>
+    <script src="js/validering.js"></script>
 </head>
 <body>
     <div class="container">
@@ -37,11 +38,13 @@
             </div>
             <div class="form-group">
                 <label>Pris</label>
-                <input type="text" id="price" />
+                <input type="text" id="price" onchange="validerPris(this.value)"/>
+                <span id="feilPris" style="color: red"></span>
             </div>
             <div class="form-group">
                 <label>Antall</label>
-                <input type="text" id="amount" />
+                <input type="text" id="amount" onchange="validerAntall(this.value)" />
+                <span id="feilAntall" style="color: red"></span>
             </div>
             <div class="form-group">
                 <input type="button" id="reg" value="Lagre" onclick="regOrder()" class="btn" />

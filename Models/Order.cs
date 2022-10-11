@@ -12,9 +12,9 @@ namespace aksjehandel.Models
         public string PortfolioDisplayName { get; set; }
         public double PortfolioCash { get; set; }
         public string Type { get; set; }
-        [RegularExpression(@"[0-9]{2,20}")]
+        [RegularExpression(@"[0-9]{2,8}")]
         public double Price { get; set; }
-        [RegularExpression(@"[0-9]{2,20}")]
+        [RegularExpression(@"[0-9]{1,8}")]
         public int Amount { get; set; }
     }
 }
