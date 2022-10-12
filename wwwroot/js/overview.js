@@ -35,8 +35,8 @@ function formatShareholdings(shareholdings) {
         out += "<tr>" +
             "<td>" + shareholding.company + "</td>" +
             "<td>" + shareholding.amount + "</td>" +
-            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.id + "'>Kjøp</a></td>" +
-            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.id + "'>Salg</a></td>" +
+            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.id + "&type=buy'>Kjøp</a></td>" +
+            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.id + "&type=sell'>Salg</a></td>" +
             "</tr>";
     }
 
