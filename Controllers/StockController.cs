@@ -75,15 +75,15 @@ namespace aksjehandel.Controllers
             }
             return Ok(oneOrder);
         }
-        public async Task<ActionResult> getAllOrders()
+        public async Task<ActionResult> getAllOrders(int portfolioId)
         {
-            List<Order> allOrders = await _db.GetAllOrders();
+            List<Order> allOrders = await _db.GetAllOrders(portfolioId);
             return Ok(allOrders);
 
         }
-        public async Task<ActionResult> GetAllShareholdings()
+        public async Task<ActionResult> GetAllShareholdings(int portfolioId)
         {
-            List<Shareholding> allShareholdings = await _db.GetAllShareholdings();
+            List<Shareholding> allShareholdings = await _db.GetAllShareholdings(portfolioId);
             return Ok(allShareholdings);
         }
         public async Task<ActionResult> GetAllPortfolios()

@@ -1,6 +1,4 @@
 ﻿$(function () {
-    getAllShareholdings();
-    getAllCompanies();
     onPortfolioChangeListener = onPortfolioChanged;
 });
 
@@ -8,17 +6,20 @@
 function onPortfolioChanged(portfolio) {
     $("#purchasingPower").html(portfolio.purchasingPower);
     // Legg inn getAll her for å filtrere på portfolio.id
+    getAllShareholdings(portfolio.id);
+    getAllCompanies(portfolio.id);
+    
 }
 
-function getAllShareholdings() {
-    $.get("stock/getAllShareholdings", function (shareholdings) {
+function getAllShareholdings(portfolioId) {
+    $.get("stock/getAllShareholdings?id="+portfolioId, function (shareholdings) {
         formatShareholdings(shareholdings);
         
     });
 }
 
-function getAllCompanies() {
-    $.get("stock/getAllOrders", function (orders) {
+function getAllCompanies(portfolioId) {
+    $.get("stock/getAllOrders?portfolioId="+portfolioId, function (orders) {
         formatCompanies(orders);
 
     });

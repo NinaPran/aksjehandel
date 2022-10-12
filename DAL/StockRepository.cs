@@ -293,7 +293,6 @@ namespace aksjehandel.DAL
 
         }
 
-
         public async Task<Order> GetOneOrder(int id)
         {
             try
@@ -323,11 +322,11 @@ namespace aksjehandel.DAL
 
         }
 
-        public async Task<List<Order>> GetAllOrders()
+        public async Task<List<Order>> GetAllOrders(int portofolioId)
         {
             try
             {
-                List<Order> allOrders = await _db.Orders.Select(o => new Order
+                List<Order> allOrders = await _db.Orders.Where(o =>  o.Portfolio.Id == portofolioId).Select(o => new Order
                 {
                     Id = o.Id,
                     CompanyId = o.Company.Id,
@@ -340,6 +339,7 @@ namespace aksjehandel.DAL
                     Price = o.Price,
                     Amount = o.Amount
                 }).ToListAsync();
+
                 return allOrders;
             }
             catch
@@ -349,7 +349,7 @@ namespace aksjehandel.DAL
 
         }
 
-        public async Task<List<Shareholding>> GetAllShareholdings()
+        public async Task<List<Shareholding>> GetAllShareholdings(int portofolioId)
         {
             try
             {
