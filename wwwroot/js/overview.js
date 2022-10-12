@@ -27,7 +27,7 @@ function getAllOrders(portfolioId) {
 
 
 function formatShareholdings(shareholdings) {
-    let out = "<table class'table table-striped'>" +
+    let out = "<table class='table table-striped'>" +
         "<tr>" +
         "<th>Selskap</th><th>Antall</th><th></th><th></th>" +
         "</tr>";
@@ -46,7 +46,7 @@ function formatShareholdings(shareholdings) {
 }
 
 function formatCompanies(orders) {
-    let out = "<table class'table table-striped'>" +
+    let out = "<table class='table table-striped'>" +
         "<tr>" +
         "<th>Symbol</th><th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +
         "</tr>";
