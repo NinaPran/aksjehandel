@@ -5,6 +5,17 @@ $(function () {
     getAllOrders();
 });
 
+/*
+// Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
+
+function onPortfolioChanged(portfolio) {
+    $("#purchasingPower").html(portfolio.purchasingPower);
+    // Legg inn getAll her for å filtrere på portfolio.id
+    getAllShareholdings(portfolio.id);
+    getAllOrders(portfolio.id);
+
+}
+*/
 
 function getAllOrders() {
     $.get("stock/getAllCompanies", function (companies) {
@@ -14,6 +25,7 @@ function getAllOrders() {
 
 function formatCompanies(companies) {
     const url = new URL(location.href); // lager url objekt
+
     const id = url.searchParams.get('id'); // leter etter id'en i url'en 
     const type = url.searchParams.get('type'); // leter etter type i url'en
 

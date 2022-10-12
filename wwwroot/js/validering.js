@@ -23,4 +23,23 @@ function validerAntall(antall) {
         $("#feilAntall").html("");
         return true;
     }
+
+ /*
+    function validerPortfolio(portfolio) {
+        var portfolio = regOrder.getElementById("portfolioSelect"),
+            validationButton = regOrder.getElementById('portfolioSelect');
+
+        validationButton.addEventListener('click', function (e) {
+            var selectedValue = portfolio.options[portfolio.selectedIndex] ? portfolio.options[portfolio.selectedIndex].value : null;
+
+            if (!selectedValue) {
+                $("#feilPortfolio").html("Du må velge en portefølje");
+            } else {
+                $("#feilPortfolio").html("");
+                return true;
+            }
+        });
+
+*/
+      
 }
