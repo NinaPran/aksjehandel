@@ -12,7 +12,7 @@ function onPortfolioChanged(portfolio) {
 }
 
 function getAllShareholdings(portfolioId) {
-    $.get("stock/getAllShareholdings?id="+portfolioId, function (shareholdings) {
+    $.get("stock/getAllShareholdings?portfolioId="+portfolioId, function (shareholdings) {
         formatShareholdings(shareholdings);
         
     });

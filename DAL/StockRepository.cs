@@ -353,7 +353,7 @@ namespace aksjehandel.DAL
         {
             try
             {
-                List<Shareholding> allShareholdings = await _db.Shareholdings.Select(s => new Shareholding
+                List<Shareholding> allShareholdings = await _db.Shareholdings.Where(s =>  s.Portfolio.Id == portofolioId).Select(s => new Shareholding
                 {
                     Id = s.Id,
                     Amount = s.Amount,
