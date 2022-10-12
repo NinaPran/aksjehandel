@@ -40,7 +40,7 @@ function formatShareholdings(shareholdings) {
             "</tr>";
     }
 
-    out += "<table>";
+    out += "</table>";
     $("#shareholdingContainer").html(out);
 
 }
@@ -48,10 +48,11 @@ function formatShareholdings(shareholdings) {
 function formatCompanies(orders) {
     let out = "<table class'table table-striped'>" +
         "<tr>" +
-        "<th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +
+        "<th>Symbol</th><th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +
         "</tr>";
     for (let order of orders) {
         out += "<tr>" +
+            "<td>" + order.companySymbol + "</td>" +
             "<td>" + order.companyName + "</td>" +
             "<td>" + order.type + "</td>" +
             "<td>" + order.price + "</td>" +
@@ -61,7 +62,7 @@ function formatCompanies(orders) {
             "</tr>";
     }
 
-    out += "<table>";
+    out += "</table>";
     $("#orderContainer").html(out);
 }
 
