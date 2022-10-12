@@ -4,6 +4,8 @@
     $.get(url, function (order) {
         $("#id").val(order.id);
         $("#company").val(order.companyName);
+        $("#company").prop("readonly", true); //Bruker kan ikke endre company navnet
+        $("#portfolio").prop("readonly", true); //Bruker kan ikke endre portfolioen
         if (order.type == "buy") {
             $("#type-buy").prop("checked", true);
         }
