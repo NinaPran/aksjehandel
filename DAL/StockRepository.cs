@@ -357,7 +357,7 @@ namespace aksjehandel.DAL
                 {
                     Id = s.Id,
                     Amount = s.Amount,
-                    Company = s.Company.Name,
+                    CompanyName = s.Company.Name,
                     Portfolio = s.Portfolio.DisplayName
                 }).ToListAsync();
                 return allShareholdings;
