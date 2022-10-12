@@ -2,11 +2,11 @@
 const companySelect = $("#companySelect");
 
 $(function () {
-    getAllCompanies();
+    getAllOrders();
 });
 
 
-function getAllCompanies() {
+function getAllOrders() {
     $.get("stock/getAllCompanies", function (companies) {
         formatCompanies(companies);
     });
