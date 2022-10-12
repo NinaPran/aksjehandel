@@ -56,6 +56,7 @@ function regOrder() {
     $.post(url, order, function () {
         window.location.href = 'overview.html';
     })
+
         .fail(function () {
             $("#error").html("Feil i db - prøv igjen senere");
         });

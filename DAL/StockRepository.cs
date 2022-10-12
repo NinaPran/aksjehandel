@@ -414,6 +414,8 @@ namespace aksjehandel.DAL
         {
             // returnerer cash minus summen av alle kjøpsordre tilhørende portfølgen sine aksjer * prisen
             return portfolio.Cash - db.Orders.Where(o=> o.Portfolio.Id == portfolio.Id && o.Type == "buy").Sum(o=> o.Amount*o.Price);
+
+            //Finne ut om disponibelt beløp er i orden etter alle ordrene er satt i bestilling
         }
     }
 }

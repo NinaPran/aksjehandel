@@ -1,6 +1,7 @@
 ﻿function validerPris(pris) {
     const regexp = /^[0-9]{2,8}$/
     const ok = regexp.test(pris);
+
     if (!ok) {
         $("#feilPris").html("Pris må være beløp mellom 10 og 99999999");
         return false;

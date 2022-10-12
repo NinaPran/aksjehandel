@@ -5,11 +5,14 @@
     <title></title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <script defer src="js/order.js"></script>
     <script defer src="js/portfolioSelect.js"></script>
     <script src="js/validering.js"></script>
 </head>
 <body>
+    <button class="btn" a href="index.html"><i class="fa fa-home"></i>Forside</button>
+
     <div class="container">
         <h1>Lag en ny ordre</h1>
         <form class="form">
@@ -38,7 +41,7 @@
             </div>
             <div class="form-group">
                 <label>Pris</label>
-                <input type="text" id="price" onchange="validerPris(this.value)"/>
+                <input type="text" id="price" onchange="validerPris(this.value)" />
                 <span id="feilPris" style="color: red"></span>
             </div>
             <div class="form-group">
@@ -47,7 +50,7 @@
                 <span id="feilAntall" style="color: red"></span>
             </div>
             <div class="form-group">
-                <input type="button" id="reg" value="Lagre" onclick="regOrder()" class="btn" />
+                <input type="button" id="reg" value="Lagre" onclick="regOrder()" class="btn btn-primary" />
             </div>
             <div id="error" style="color: red"></div>
         </form>
