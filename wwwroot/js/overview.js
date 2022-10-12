@@ -12,7 +12,7 @@ function onPortfolioChanged(portfolio) {
 }
 
 function getAllShareholdings(portfolioId) {
-    $.get("stock/getAllShareholdings?id="+portfolioId, function (shareholdings) {
+    $.get("stock/getAllShareholdings?portfolioId="+portfolioId, function (shareholdings) {
         formatShareholdings(shareholdings);
         
     });
@@ -27,31 +27,33 @@ function getAllOrders(portfolioId) {
 
 
 function formatShareholdings(shareholdings) {
-    let out = "<table class'table table-striped'>" +
+    let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Selskap</th><th>Antall</th><th></th><th></th>" +
+        "<th>Symbol</th><th>Selskap</th><th>Antall</th><th></th><th></th>" +
         "</tr>";
     for (let shareholding of shareholdings) {
         out += "<tr>" +
-            "<td>" + shareholding.company + "</td>" +
+            "<td>" + shareholding.companySymbol + "</td>" +
+            "<td>" + shareholding.companyName + "</td>" +
             "<td>" + shareholding.amount + "</td>" +
-            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.id + "'>Kjøp</a></td>" +
-            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.id + "'>Salg</a></td>" +
+            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.companyId + "&type=buy'>Kjøp</a></td>" +
+            "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.companyId + "&type=sell'>Salg</a></td>" +
             "</tr>";
     }
 
-    out += "<table>";
+    out += "</table>";
     $("#shareholdingContainer").html(out);
 
 }
 
 function formatCompanies(orders) {
-    let out = "<table class'table table-striped'>" +
+    let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +
+        "<th>Symbol</th><th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +
         "</tr>";
     for (let order of orders) {
         out += "<tr>" +
+            "<td>" + order.companySymbol + "</td>" +
             "<td>" + order.companyName + "</td>" +
             "<td>" + order.type + "</td>" +
             "<td>" + order.price + "</td>" +
@@ -61,7 +63,7 @@ function formatCompanies(orders) {
             "</tr>";
     }
 
-    out += "<table>";
+    out += "</table>";
     $("#orderContainer").html(out);
 }
 

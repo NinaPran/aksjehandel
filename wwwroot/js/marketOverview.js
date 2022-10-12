@@ -11,7 +11,7 @@ function getAllOrders() {
 }
 
 function formatCompanies(companies) {
-    let out = "<table class'table table-striped'>" +
+    let out = "<table class='table table-striped'>" +
         "<tr>" +
         "<th>Symbol</th><th>Navn</th><th></th><th></th>" +
         "</tr>";
@@ -23,6 +23,6 @@ function formatCompanies(companies) {
         "</tr>";
     }
 
-    out += "<table>";
+    out += "</table>";
     $("#companyContainer").html(out);
 }
