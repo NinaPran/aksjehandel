@@ -6,15 +6,7 @@ $(function () {
     getAllCompanies();
 });
 
-/*
-$(function () {
-    getAllCompanies();
-});
-*/
-
-
 // Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
-
 function onPortfolioChanged(portfolio) {
     $("#purchasingPower").html(portfolio.purchasingPower);
 }

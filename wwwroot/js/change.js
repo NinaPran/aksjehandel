@@ -1,4 +1,7 @@
-﻿$(function () {
+﻿
+
+$(function () {
+    onPortfolioChangeListener = onPortfolioChanged;
     const id = window.location.search.substring(1);
     const url = "stock/getOneOrder?" + id;
     $.get(url, function (order) {
@@ -16,6 +19,11 @@
         $("#amount").val(order.amount);
     });
 });
+
+// Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
+function onPortfolioChanged(portfolio) {
+    $("#purchasingPower").html(portfolio.purchasingPower);
+}
 
 function changeOrder() {
     const order = {
