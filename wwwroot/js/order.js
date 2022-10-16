@@ -9,6 +9,7 @@ $(function () {
 // Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
 function onPortfolioChanged(portfolio) {
     $("#purchasingPower").html(portfolio.purchasingPower);
+    getOwnedShareholdings(portfolio.id);
 }
 
 
@@ -45,26 +46,28 @@ function formatCompanies(companies) {
     }
 }
 function regOrder() {
-    const portfolio = getCurrentPortfolio();
-    const portfolioId = portfolio.id;
-    const type = $('input[name=type]:checked');
-    const price = $("#price");
-    const amount = $("#amount");
+    if (validateOrder()) {
+        const portfolio = getCurrentPortfolio();
+        const portfolioId = portfolio.id;
+        const type = $('input[name=type]:checked');
+        const price = $("#price");
+        const amount = $("#amount");
 
-    const order = {
-        portfolioId: portfolioId,
-        companyId: companySelect.val(),
-        type: type.val(),
-        price: price.val(),
-        amount: amount.val()
+        const order = {
+            portfolioId: portfolioId,
+            companyId: companySelect.val(),
+            type: type.val(),
+            price: price.val(),
+            amount: amount.val()
+        }
+
+        const url = "stock/regOrder";
+        $.post(url, order, function () {
+            window.location.href = 'overview.html';
+        })
+
+            .fail(function () {
+                $("#error").html("Feil i db - prøv igjen senere");
+            });
     }
-
-    const url = "stock/regOrder";
-    $.post(url, order, function () {
-        window.location.href = 'overview.html';
-    })
-
-        .fail(function () {
-            $("#error").html("Feil i db - prøv igjen senere");
-        });
 };
