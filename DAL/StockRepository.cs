@@ -183,6 +183,29 @@ namespace aksjehandel.DAL
 
         }
 
+        private async Task<bool> ValidateOrder(bool isBuyOrder, Portfolios portfolio, int companyId, int amount, double price)
+        {
+            if (isBuyOrder)
+            {
+                double purchasingPower = CalculatePurchasingPower(portfolio, _db);
+                double orderValue = price * amount;
+                if (purchasingPower < orderValue)
+                {
+                    _log.LogInformation("Ordreverdien er større enn kjøpekraft");
+                    throw new ArgumentException("Ordreverdien er større enn kjøpekraft");
+                }
+            }
+            else
+            {
+                Shareholdings shareholding = await GetShareholdingByCompany(portfolio.Id, companyId);
+                if (shareholding.Amount < amount)
+                {
+                    _log.LogInformation("Antallet aksjer i ordren overskrider antall eide");
+                    throw new ArgumentException("Antallet aksjer i ordren overskrider antall eide");
+                }
+            }
+            return true;
+        }
         private async Task<Orders> CreateOrdersFromOrder(Order newOrder)
         {
             Portfolios chosenPortfolio = _db.Portfolios.Find(newOrder.PortfolioId);
@@ -197,26 +220,8 @@ namespace aksjehandel.DAL
                 _log.LogInformation("Fant ikke company med id " + newOrder.CompanyId);
                 throw new ArgumentException("Fant ikke company med id " + newOrder.CompanyId);
             }
-            if (newOrder.Type == "buy")
-            {
-                double purchasingPower = CalculatePurchasingPower(chosenPortfolio, _db);
-                double orderValue = newOrder.Price * newOrder.Amount;
-                if (purchasingPower < orderValue)
-                {
-                    _log.LogInformation("Ordreverdien er større enn kjøpekraft");
-                    throw new ArgumentException("Ordreverdien er større enn kjøpekraft");
-                }
-            }
-            else
-            {
-                Shareholdings shareholding = await GetShareholdingByCompany(newOrder.PortfolioId, newOrder.CompanyId);
-                if(shareholding.Amount < newOrder.Amount)
-                {
-                    _log.LogInformation("Antallet aksjer i ordren overskrider antall eide");
-                    throw new ArgumentException("Antallet aksjer i ordren overskrider antall eide");
-                }
-            }
-
+            await ValidateOrder(newOrder.Type == "buy", chosenPortfolio, newOrder.CompanyId, newOrder.Amount, newOrder.Price);
+            
             var newOrderRow = new Orders();
             newOrderRow.Type = newOrder.Type;
             newOrderRow.Price = newOrder.Price;
@@ -280,6 +285,8 @@ namespace aksjehandel.DAL
             try
             {
                 Orders oneOrder = await _db.Orders.FindAsync(changeOrder.Id);
+
+                await ValidateOrder(oneOrder.Type == "buy", oneOrder.Portfolio, oneOrder.Company.Id, oneOrder.Amount, oneOrder.Price);
                 // Tar vare på den gamle prisen
                 double oldPrice = oneOrder.Price;
 
