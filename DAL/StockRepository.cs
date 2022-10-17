@@ -1,11 +1,14 @@
-﻿using aksjehandel.Models;
+﻿using aksjehandel.Controllers;
+using aksjehandel.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 namespace aksjehandel.DAL
@@ -14,17 +17,19 @@ namespace aksjehandel.DAL
     {
 
         private readonly StockContext _db;
+        private ILogger<StockRepository> _log;
 
-        public StockRepository(StockContext db)
+        public StockRepository(StockContext db, ILogger<StockRepository> log)
         {
             _db = db;
+            _log = log;
         }
 
         private async Task<bool> AdjustShareholding(Portfolios portfolio, Companies company, double price, int amount)
         {
             // Henter inn shareholding som skal justeres
             Shareholdings shareholding = await _db.Shareholdings.FirstOrDefaultAsync(s => s.Company.Id == company.Id && s.Portfolio.Id == portfolio.Id);
-            
+
             // Regner ut den totale verdien av aksjene
             double totalPrice = price * amount;
             if (shareholding == null)
@@ -33,7 +38,7 @@ namespace aksjehandel.DAL
                 shareholding = new Shareholdings() { Company = company, Portfolio = portfolio, Amount = 0 };
                 _db.Shareholdings.Add(shareholding);
             }
-            
+
             // Justerer antall aksjer på shareholding
             shareholding.Amount += amount;
 
@@ -149,7 +154,11 @@ namespace aksjehandel.DAL
             {
 
                 // Lager en Orders av innkommende newOrder
-                Orders newOrders = CreateOrdersFromOrder(newOrder);
+                Orders newOrders = await CreateOrdersFromOrder(newOrder);
+                if (newOrders == null)
+                {
+                    _log.LogInformation("newOrder var ugyldig");
+                }
 
                 // Kaller funksjonen som sjekker om det er mulig å utføre trade og utfører de om mulig
                 newOrders = await CheckForAndExecuteTrade(newOrders);
@@ -174,34 +183,47 @@ namespace aksjehandel.DAL
 
         }
 
-        private Orders CreateOrdersFromOrder(Order newOrder)
+        private async Task<Orders> CreateOrdersFromOrder(Order newOrder)
         {
-            try
+            Portfolios chosenPortfolio = _db.Portfolios.Find(newOrder.PortfolioId);
+            if (chosenPortfolio == null)
             {
-                Portfolios chosenPortfolio = _db.Portfolios.Find(newOrder.PortfolioId);
-                if (chosenPortfolio == null)
-                {
-                    Debug.WriteLine("Fant ikke portfolio med id " + newOrder.PortfolioId);
-                    throw new ArgumentException("Invalid portfolio ID");
-                }
-                Companies chosenCompany = _db.Companies.Find(newOrder.CompanyId);
-                if (chosenCompany == null)
-                {
-                    Debug.WriteLine("Fant ikke company med id " + newOrder.CompanyId);
-                    throw new ArgumentException("Invalid company ID");
-                }
-                var newOrderRow = new Orders();
-                newOrderRow.Type = newOrder.Type;
-                newOrderRow.Price = newOrder.Price;
-                newOrderRow.Amount = newOrder.Amount;
-                newOrderRow.Portfolio = chosenPortfolio;
-                newOrderRow.Company = chosenCompany;
-                return newOrderRow;
+                _log.LogInformation("Fant ikke portfolio med id " + newOrder.PortfolioId);
+                throw new ArgumentException("Fant ikke portfolio med id " + newOrder.PortfolioId);
             }
-            catch
+            Companies chosenCompany = _db.Companies.Find(newOrder.CompanyId);
+            if (chosenCompany == null)
             {
-                return null;
+                _log.LogInformation("Fant ikke company med id " + newOrder.CompanyId);
+                throw new ArgumentException("Fant ikke company med id " + newOrder.CompanyId);
             }
+            if (newOrder.Type == "buy")
+            {
+                double purchasingPower = CalculatePurchasingPower(chosenPortfolio, _db);
+                double orderValue = newOrder.Price * newOrder.Amount;
+                if (purchasingPower < orderValue)
+                {
+                    _log.LogInformation("Ordreverdien er større enn kjøpekraft");
+                    throw new ArgumentException("Ordreverdien er større enn kjøpekraft");
+                }
+            }
+            else
+            {
+                Shareholdings shareholding = await GetShareholdingByCompany(newOrder.PortfolioId, newOrder.CompanyId);
+                if(shareholding.Amount < newOrder.Amount)
+                {
+                    _log.LogInformation("Antallet aksjer i ordren overskrider antall eide");
+                    throw new ArgumentException("Antallet aksjer i ordren overskrider antall eide");
+                }
+            }
+
+            var newOrderRow = new Orders();
+            newOrderRow.Type = newOrder.Type;
+            newOrderRow.Price = newOrder.Price;
+            newOrderRow.Amount = newOrder.Amount;
+            newOrderRow.Portfolio = chosenPortfolio;
+            newOrderRow.Company = chosenCompany;
+            return newOrderRow;
         }
 
         private async Task<bool> NewShareholding(int amount, Portfolios portfolio, Companies company)
@@ -266,7 +288,7 @@ namespace aksjehandel.DAL
                 oneOrder.Amount = changeOrder.Amount;
 
                 // Kaller funksjon som sjekker om det er mulighet for å utføre trade og gjennomfører dette om mulige hvis man nå krever lavere pris på salgsordre
-                if(oneOrder.Price < oldPrice && oneOrder.Type == "sell")
+                if (oneOrder.Price < oldPrice && oneOrder.Type == "sell")
                 {
                     oneOrder = await CheckForAndExecuteTrade(oneOrder);
                 }
@@ -278,7 +300,7 @@ namespace aksjehandel.DAL
                 }
 
                 // Sletter ordren om den er tom
-                if(oneOrder.Amount == 0)
+                if (oneOrder.Amount == 0)
                 {
                     await DeleteOrder(oneOrder.Id);
                 }
@@ -322,11 +344,11 @@ namespace aksjehandel.DAL
 
         }
 
-        public async Task<List<Order>> GetAllOrders(int portofolioId)
+        public async Task<List<Order>> GetAllOrders(int portfolioId)
         {
             try
             {
-                List<Order> allOrders = await _db.Orders.Where(o =>  o.Portfolio.Id == portofolioId).Select(o => new Order
+                List<Order> allOrders = await _db.Orders.Where(o => o.Portfolio.Id == portfolioId).Select(o => new Order
                 {
                     Id = o.Id,
                     CompanyId = o.Company.Id,
@@ -349,17 +371,17 @@ namespace aksjehandel.DAL
 
         }
 
-        public async Task<List<Shareholding>> GetAllShareholdings(int portofolioId)
+        public async Task<List<Shareholding>> GetAllShareholdings(int portfolioId)
         {
             try
             {
-                List<Shareholding> allShareholdings = await _db.Shareholdings.Where(s =>  s.Portfolio.Id == portofolioId).Select(s => new Shareholding
+                List<Shareholding> allShareholdings = await _db.Shareholdings.Where(s => s.Portfolio.Id == portfolioId).Select(s => new Shareholding
                 {
                     Id = s.Id,
                     Amount = s.Amount,
                     CompanyName = s.Company.Name,
-                    CompanyId=s.Company.Id,
-                    CompanySymbol=s.Company.Symbol,
+                    CompanyId = s.Company.Id,
+                    CompanySymbol = s.Company.Symbol,
                     Portfolio = s.Portfolio.DisplayName
                 }).ToListAsync();
                 return allShareholdings;
@@ -367,6 +389,22 @@ namespace aksjehandel.DAL
             catch
             {
                 return null;
+            }
+
+        }
+
+        public async Task<Shareholdings> GetShareholdingByCompany(int portfolioId, int companyId)
+        {
+            try
+            {
+                return await _db.Shareholdings.FirstAsync(s => s.Company.Id == companyId && s.Portfolio.Id == portfolioId);
+  
+            }
+            catch
+            {
+                _log.LogInformation("Fant ingen shareholding for portfolioId: " + portfolioId + " og companyId: " + companyId);
+
+                throw new ArgumentException("Fant ingen shareholding for portfolioId: " + portfolioId + " og companyId: " + companyId);
             }
 
         }
@@ -415,9 +453,11 @@ namespace aksjehandel.DAL
         private static double CalculatePurchasingPower(Portfolios portfolio, StockContext db)
         {
             // returnerer cash minus summen av alle kjøpsordre tilhørende portfølgen sine aksjer * prisen
-            return portfolio.Cash - db.Orders.Where(o=> o.Portfolio.Id == portfolio.Id && o.Type == "buy").Sum(o=> o.Amount*o.Price);
+            return portfolio.Cash - db.Orders.Where(o => o.Portfolio.Id == portfolio.Id && o.Type == "buy").Sum(o => o.Amount * o.Price);
 
             //Finne ut om disponibelt beløp er i orden etter alle ordrene er satt i bestilling
         }
+
+
     }
 }

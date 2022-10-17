@@ -11,6 +11,7 @@ namespace aksjehandel.Models
         public int PortfolioId { get; set; }
         public string PortfolioDisplayName { get; set; }
         public double PortfolioCash { get; set; }
+        [RegularExpression(@"^(buy|sell)$")]
         public string Type { get; set; }
         [RegularExpression(@"[0-9]{2,8}")]
         public double Price { get; set; }
