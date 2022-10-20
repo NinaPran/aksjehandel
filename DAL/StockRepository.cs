@@ -198,7 +198,8 @@ namespace aksjehandel.DAL
             else
             {
                 Shareholdings shareholding = await GetShareholdingByCompany(portfolio.Id, companyId);
-                if (shareholding.Amount < amount)
+                int remainingAmount = CalculateRemainingAmount(portfolio, shareholding, _db);
+                if (remainingAmount < amount)
                 {
                     _log.LogInformation("Antallet aksjer i ordren overskrider antall eide");
                     throw new ArgumentException("Antallet aksjer i ordren overskrider antall eide");
@@ -389,7 +390,8 @@ namespace aksjehandel.DAL
                     CompanyName = s.Company.Name,
                     CompanyId = s.Company.Id,
                     CompanySymbol = s.Company.Symbol,
-                    Portfolio = s.Portfolio.DisplayName
+                    Portfolio = s.Portfolio.DisplayName,
+                    RemainingAmount = StockRepository.CalculateRemainingAmount(s.Portfolio, s, _db)
                 }).ToListAsync();
                 return allShareholdings;
             }
@@ -463,6 +465,12 @@ namespace aksjehandel.DAL
             return portfolio.Cash - db.Orders.Where(o => o.Portfolio.Id == portfolio.Id && o.Type == "buy").Sum(o => o.Amount * o.Price);
 
             //Finne ut om disponibelt beløp er i orden etter alle ordrene er satt i bestilling
+        }
+
+        private static int CalculateRemainingAmount(Portfolios portfolio, Shareholdings shareholding, StockContext db)
+        {
+          
+            return shareholding.Amount - db.Orders.Where(o => o.Portfolio.Id == portfolio.Id && o.Company.Id == shareholding.Company.Id && o.Type == "sell").Sum(o => o.Amount);
         }
 
 

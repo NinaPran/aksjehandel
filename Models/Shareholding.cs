@@ -12,5 +12,7 @@ namespace aksjehandel.Models
         public string Portfolio { get; set; }
         [RegularExpression(@"[0-9]{2,20}")]
         public int Amount { get; set; }
+
+        public int RemainingAmount { get; set; }
     }
 }
