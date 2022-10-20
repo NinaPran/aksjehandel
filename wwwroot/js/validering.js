@@ -5,7 +5,6 @@ var priceError;
 var amountError;
 var error;
 var ownedShareholdings
-var test;
 
 
 $(function () {
@@ -16,7 +15,6 @@ $(function () {
     amountError = $("#feilAntall");
     purchasingPower = $("#purchasingPower");
     error = $("#error");
-    test = $("#test");
 });
 
 function isBuyOrder() {
@@ -97,9 +95,7 @@ function validateEnoughStocks() {
 
     for (var i = 0; i < ownedShareholdings.length; i++) {
         const shareholding = ownedShareholdings[i];
-        if (shareholding.companyId === companyId) {
-            // burde hatt en "availableAmount" på shareholding for å forhindre å kunne legge opp salg av samme aksje flere ganger
-            test.text(" " + shareholding.remainingAmount)
+        if (shareholding.companyId === companyId) {            
             return amountSell <= shareholding.remainingAmount;
         }
     }
