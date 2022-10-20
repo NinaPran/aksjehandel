@@ -57,7 +57,7 @@ function validateOrder() {
         }
     } else {
         if (!validateEnoughStocks()) {
-            error.text("Antallet aksjer forsøkt solgt overskrider antall eide aksjer");
+            error.text("Antall aksjer til dispoisjon for salg dekker ikke antall forsøkt solgt, vennligst endre antall");
             return false;
         }
     }    
