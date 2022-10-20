@@ -43,7 +43,7 @@ function validateOrder() {
         return false;
     }
     if (companySelectInput.val() === null) {
-        error.text("Company er ikke satt");
+        error.text("Selskap er ikke satt");
         return false;
     }
     if (!validerAntall() || !validerPris()) {
