@@ -43,6 +43,8 @@ namespace aksjehandel.DAL
                 context.Orders.Add(order1);
                 context.Orders.Add(order2);
                 context.Orders.Add(order3);
+                context.Trades.Add(trade1);
+                context.Trades.Add(trade2);
 
                 context.SaveChanges();
 
