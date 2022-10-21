@@ -451,8 +451,8 @@ namespace aksjehandel.DAL
                     Price = t.Price,
                     CompanyId = t.Company.Id,
                     CompanyName = t.Company.Name,
-                    BuyerPortfolioId = t.Portfolio.Id,
-                    SellerPortfolioId = t.Portfolio.Id
+                    BuyerPortfolioId = t.BuyPortfolio.Id,
+                    SellerPortfolioId = t.SellPortfolio.Id
                 }).ToListAsync();
                 return allTrades;
             }
