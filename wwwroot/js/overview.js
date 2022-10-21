@@ -4,6 +4,7 @@
 
 // Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
 function onPortfolioChanged(portfolio) {
+    $("#cash").html(portfolio.cash);
     $("#purchasingPower").html(portfolio.purchasingPower);
     // Legg inn getAll her for å filtrere på portfolio.id
     getAllShareholdings(portfolio.id);
