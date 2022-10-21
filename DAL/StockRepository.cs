@@ -42,8 +42,8 @@ namespace aksjehandel.DAL
             // Justerer antall aksjer på shareholding
             shareholding.Amount += amount;
 
-            // Justerer purchasing power
-            portfolio.Cash += totalPrice;
+            // Justerer cash
+            portfolio.Cash -= totalPrice;
 
             if (shareholding.Amount == 0)
             {
