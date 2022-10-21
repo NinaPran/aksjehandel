@@ -9,6 +9,6 @@
         public int CompanyId { get; set; }
         public string CompanyName { get; set; }
         public int BuyerPortfolioId { get; set; }
-        public int SellerPortffolioId { get; set; }
+        public int SellerPortfolioId { get; set; }
     }
 }

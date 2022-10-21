@@ -14,5 +14,6 @@ namespace aksjehandel.DAL
         Task<List<Shareholding>> GetAllShareholdings(int portfolioId);
         Task<List<Portfolio>> GetAllPortfolios();
         Task<List<Company>> GetAllCompanies();
+        Task<List<Trade>> GetAllTrades();
     }
 }

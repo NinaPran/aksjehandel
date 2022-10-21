@@ -439,6 +439,29 @@ namespace aksjehandel.DAL
 
         }
 
+        public async Task<List<Trade>> GetAllTrades()
+        {
+            try
+            {
+                List<Trade> allTrades = await _db.Trades.Select(t => new Trade
+                {
+                    Id = t.Id,
+                    Date = t.Date,
+                    Amount = t.Amount,
+                    Price = t.Price,
+                    CompanyId = t.Company.Id,
+                    CompanyName = t.Company.Name,
+                    BuyerPortfolioId = t.Portfolio.Id,
+                    SellerPortfolioId = t.Portfolio.Id
+                }).ToListAsync();
+                return allTrades;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return null;
+            }
+        }
 
         public async Task<List<Company>> GetAllCompanies()
         {
