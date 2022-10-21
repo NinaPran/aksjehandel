@@ -14,10 +14,21 @@
     margin: 5px;
 }
 
+.btn-danger {
+    padding: 5px 5px;
+    margin: 5px;
+    background-color: #ff0000;
+}
+
+.btn-danger:hover {
+    background-color: #9e0a0a;
+}
+
 /* Mørkere bakgrunn når musen hover over */
-.btn:hover {
+.btn-primary:hover {
     background-color: #41545A;
     }
+
 
 h1 {
     color: #ffffff;
