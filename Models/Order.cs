@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace aksjehandel.Models
 {
@@ -13,9 +14,11 @@ namespace aksjehandel.Models
         public double PortfolioCash { get; set; }
         [RegularExpression(@"^(buy|sell)$")]
         public string Type { get; set; }
-        [RegularExpression(@"[0-9]{2,8}")]
+        //[RegularExpression(@"[0-9]{2,8}")]
+        [Range(0, Double.MaxValue)]
         public double Price { get; set; }
-        [RegularExpression(@"[0-9]{1,8}")]
+        //[RegularExpression(@"[0-9]{1,8}")]
+        [Range(0, Int32.MaxValue)]
         public int Amount { get; set; }
     }
 }

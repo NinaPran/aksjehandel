@@ -24,11 +24,11 @@ function isBuyOrder() {
 }
 
 function validerPris() {
-    const regexp = /^[0-9]{2,8}$/
+    const regexp = /^[0-9]{1,8}$/
     const ok = regexp.test(priceInput.val());
 
     if (!ok) {
-        priceError.text("Pris må være beløp mellom 10 og 99999999");
+        priceError.text("Pris må være et positivt tall");
         return false;
     }
     else {
@@ -105,6 +105,7 @@ function validateEnoughStocks() {
 }
 
 function validerAntall() {
+    return true;
     const regexp = /^[0-9]{1,8}$/
     const ok = regexp.test(amountInput.val());
     if (!ok) {
