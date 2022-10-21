@@ -43,8 +43,8 @@ function formatTrades(trades) {
     for (let trade of trades) {
         out += "<tr>" +
             "<td>" + trade.date + "</td>" +
-            "<td>" + trade.companyname + "</td>" +
-            "<td>" + trade.buyerportfolioid + "</td>" +
+            "<td>" + trade.companyName + "</td>" +
+            "<td>" + trade.buyerPortfolioId + "</td>" +
             "<td>" + trade.amount + "</td>" +
             "<td>" + trade.price + "</td>" +
             "</tr>";
