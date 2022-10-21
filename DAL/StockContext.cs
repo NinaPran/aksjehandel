@@ -1,5 +1,6 @@
 ﻿  using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace aksjehandel.DAL
@@ -25,7 +26,6 @@ namespace aksjehandel.DAL
         public int Id { get; set; }
         public string DisplayName { get; set; }
         public double Cash { get; set; }
-
     }
     public class Shareholdings
     {
@@ -34,6 +34,18 @@ namespace aksjehandel.DAL
         virtual public Companies Company { get; set; }
         virtual public Portfolios Portfolio { get; set; }
     }
+
+    public class Trades
+    {
+        public int Id { get; set; }
+        public string Date { get; set;}
+        public int Amount { get; set; }
+        public double Price { get; set; }
+        virtual public Companies CompanyId { get; set; }
+        virtual public Portfolios BuyerPortfolioId { get; set; }
+        virtual public Portfolios SellerPortfolioId { get; set; }
+    }
+
     public class StockContext : DbContext
     {
         public StockContext(DbContextOptions<StockContext> options) : base(options)
@@ -45,6 +57,7 @@ namespace aksjehandel.DAL
         public DbSet<Shareholdings> Shareholdings { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<Companies> Companies { get; set; }
+        public DbSet<Trades> Trades { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

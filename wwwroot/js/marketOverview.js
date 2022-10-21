@@ -13,7 +13,7 @@ function getAllOrders() {
 function formatCompanies(companies) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Symbol</th><th>Navn</th><th></th><th></th>" +
+        "<th>Symbol</th><th>Navn</th><th></th>" +
         "</tr>";
     for (let company of companies) {
         out += "<tr>" +

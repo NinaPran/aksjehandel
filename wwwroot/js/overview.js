@@ -29,7 +29,7 @@ function getAllOrders(portfolioId) {
 function formatShareholdings(shareholdings) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Symbol</th><th>Selskap</th><th>Antall</th><th>Resterende Antall</th><th></th><th></th>" +
+        "<th>Symbol</th><th>Selskap</th><th>Antall</th><th>Resterende Antall</th><th></th><th></th><th></th>" +
         "</tr>";
     for (let shareholding of shareholdings) {
         out += "<tr>" +
@@ -39,6 +39,7 @@ function formatShareholdings(shareholdings) {
             "<td>" + shareholding.remainingAmount + "</td>" +
             "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.companyId + "&type=buy'>Kjøp</a></td>" +
             "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.companyId + "&type=sell'>Salg</a></td>" +
+            "<td></td>" +
             "</tr>";
     }
 
