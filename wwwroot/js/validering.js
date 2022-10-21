@@ -4,7 +4,8 @@ var companySelectInput;
 var priceError;
 var amountError;
 var error;
-var ownedShareholdings
+var ownedShareholdings;
+var availableAmountOutput;
 
 
 $(function () {
@@ -15,6 +16,7 @@ $(function () {
     amountError = $("#feilAntall");
     purchasingPower = $("#purchasingPower");
     error = $("#error");
+    availableAmountOutput = $("#availableAmount");
 });
 
 function isBuyOrder() {
@@ -80,7 +82,7 @@ function getOwnedShareholdings(portfolioId) {
     ownedShareholdings = null;
     $.get("stock/getAllShareholdings?portfolioId=" + portfolioId, function (shareholdings) {
         ownedShareholdings = shareholdings;
-
+        setAvailableAmount();
     });
     
 
@@ -117,22 +119,32 @@ function validerAntall() {
 
     }
 
-    /*
-       function validerPortfolio(portfolio) {
-           var portfolio = regOrder.getElementById("portfolioSelect"),
-               validationButton = regOrder.getElementById('portfolioSelect');
-   
-           validationButton.addEventListener('click', function (e) {
-               var selectedValue = portfolio.options[portfolio.selectedIndex] ? portfolio.options[portfolio.selectedIndex].value : null;
-   
-               if (!selectedValue) {
-                   $("#feilPortfolio").val("Du må velge en portefølje");
-               } else {
-                   $("#feilPortfolio").val("");
-                   return true;
-               }
-           });
-   
-   */
+}
 
+function setAvailableAmount() {
+    const isSell = !isBuyOrder();
+    const availableAmount = getAvailableAmount();
+    console.log(isSell, availableAmount);
+
+    if (availableAmount > 0 && isSell) {
+        availableAmountOutput.text("Tilgjengelig antall: " + availableAmount);
+    } else {
+        availableAmountOutput.text("");
+    }
+
+}
+
+function getAvailableAmount() {
+    const companyId = Number(companySelectInput.val());
+    if (!ownedShareholdings) {
+        return 0;
+    }
+
+    for (var i = 0; i < ownedShareholdings.length; i++) {
+        const shareholding = ownedShareholdings[i];
+        if (shareholding.companyId === companyId) {
+            return shareholding.remainingAmount;
+        }
+    }
+    return 0;
 }
