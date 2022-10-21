@@ -1,6 +1,7 @@
 ﻿  using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace aksjehandel.DAL
@@ -38,7 +39,7 @@ namespace aksjehandel.DAL
     public class Trades
     {
         public int Id { get; set; }
-        public string Date { get; set;}
+        public DateTime Date { get; set;}
         public int Amount { get; set; }
         public double Price { get; set; }
         virtual public Companies Company { get; set; }

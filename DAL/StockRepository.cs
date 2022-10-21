@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -84,6 +85,9 @@ namespace aksjehandel.DAL
             buyOrder.Amount -= matchingAmount;
             sellOrder.Amount -= matchingAmount;
 
+            // Kaller funksjon som registrerer den nye handlen i Trade
+            await RegTrade(matchingAmount, matchingOrder.Price, company, buyerPortfolio, sellerPortfolio);
+
             if (matchingOrder.Amount == 0)
             {
                 // Fjerner matching-order fra DB om den er tom
@@ -91,6 +95,28 @@ namespace aksjehandel.DAL
             }
 
             return true;
+        }
+
+        private async Task<bool> RegTrade(int amount, double price, Companies company, Portfolios buyPortfolio, Portfolios sellPortfolio)
+        {
+            try
+            { 
+                var newTradeRow = new Trades();
+                newTradeRow.Date = DateTime.Now;
+                newTradeRow.Amount = amount;
+                newTradeRow.Price = price;
+                newTradeRow.Company = company;
+                newTradeRow.BuyPortfolio = buyPortfolio;
+                newTradeRow.SellPortfolio = sellPortfolio;
+              
+                _db.Trades.Add(newTradeRow);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private async Task<Orders> CheckForAndExecuteTrade(Orders newOrders)
@@ -446,7 +472,7 @@ namespace aksjehandel.DAL
                 List<Trade> allTrades = await _db.Trades.Select(t => new Trade
                 {
                     Id = t.Id,
-                    Date = t.Date,
+                    Date = t.Date.ToShortDateString(),
                     Amount = t.Amount,
                     Price = t.Price,
                     CompanyId = t.Company.Id,
