@@ -97,5 +97,10 @@ namespace aksjehandel.Controllers
             return Ok(allCompanies);
             
         }
+        public async Task<ActionResult> GetAllTrades()
+        {
+            List<Trade> allTrades = await _db.GetAllTrades();
+            return Ok(allTrades);
+        }
     }
 }

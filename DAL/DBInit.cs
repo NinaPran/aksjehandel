@@ -30,7 +30,8 @@ namespace aksjehandel.DAL
                 var order2 = new Orders { Company = company2, Amount = 10, Type = "sell", Portfolio = portfolio1, Price = 10 };
                 var order3 = new Orders { Company = company2, Amount = 10, Type = "sell", Portfolio = portfolio2, Price = 9 };
 
-
+                var trade1 = new Trades { Company = company1, Amount = 5, Price = 10, Date = "21.10.2022", Portfolio = portfolio1 };
+                var trade2 = new Trades { Company = company2, Amount = 10, Price = 30, Date = "21.10.2022", Portfolio = portfolio2 }; 
 
                 context.Portfolios.Add(portfolio1);
                 context.Portfolios.Add(portfolio2);
