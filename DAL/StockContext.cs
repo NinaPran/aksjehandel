@@ -41,9 +41,8 @@ namespace aksjehandel.DAL
         public string Date { get; set;}
         public int Amount { get; set; }
         public double Price { get; set; }
-        virtual public Companies CompanyId { get; set; }
-        virtual public Portfolios BuyerPortfolioId { get; set; }
-        virtual public Portfolios SellerPortfolioId { get; set; }
+        virtual public Companies Company { get; set; }
+        virtual public Portfolios Portfolio { get; set; }
     }
 
     public class StockContext : DbContext
