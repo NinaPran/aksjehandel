@@ -7,7 +7,7 @@ function onPortfolioChanged(portfolio) {
     $("#purchasingPower").html(portfolio.purchasingPower);
     // Legg inn getAll her for å filtrere på portfolio.id
     getAllShareholdings(portfolio.id);
-    getAllOrders(portfolio.id);
+    getAllCompanies(portfolio.id);
     
 }
 
@@ -18,7 +18,7 @@ function getAllShareholdings(portfolioId) {
     });
 }
 
-function getAllOrders(portfolioId) {
+function getAllCompanies(portfolioId) {
     $.get("stock/getAllOrders?portfolioId="+portfolioId, function (orders) {
         formatCompanies(orders);
 
