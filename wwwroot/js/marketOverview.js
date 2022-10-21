@@ -20,14 +20,15 @@ function getAllTrades() {
 function formatCompanies(companies) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Symbol</th><th>Navn</th><th></th><th></th><th></th>" +
+        "<th>Symbol</th><th>Navn</th><th>Max Pris</th><th>Minimum Pris</th><th></th>" +
         "</tr>";
     for (let company of companies) {
         out += "<tr>" +
             "<td>" + company.symbol + "</td>" +
             "<td>" + company.name + "</td>" +
+            "<td>" + company.maxPrice + "</td>" +
+            "<td> " + company.minPrice + "</td> " +
             "<td> <a class='btn btn-primary' href='order.html?id=" + company.id + "'>Kjøp</a></td>" +
-            "<th></th><th></th>" +
             "</tr>";
     }
 

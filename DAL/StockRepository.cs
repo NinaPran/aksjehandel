@@ -471,7 +471,9 @@ namespace aksjehandel.DAL
                 {
                     Id = c.Id,
                     Symbol = c.Symbol,
-                    Name = c.Name
+                    Name = c.Name,
+                    MaxPrice = StockRepository.getMaxTradePrice(c, _db),
+                    MinPrice = StockRepository.getMinTradePrice(c, _db),
                 }).ToListAsync();
                 return allCompanies;
             }
@@ -496,6 +498,16 @@ namespace aksjehandel.DAL
             return shareholding.Amount - db.Orders.Where(o => o.Portfolio.Id == portfolio.Id && o.Company.Id == shareholding.Company.Id && o.Type == "sell").Sum(o => o.Amount);
         }
 
+        private static double getMaxTradePrice(Companies company, StockContext db) 
+        {
+            return db.Trades.Max(t => t.Price);
+            //int maxAge = context.Persons.Max(p => p.Age);
+        }
+
+        private static double getMinTradePrice(Companies company, StockContext db) 
+        {
+            return db.Trades.Min(t => t.Price);
+        }
 
     }
 }

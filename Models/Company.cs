@@ -9,5 +9,7 @@ namespace aksjehandel.Models
         public string Symbol { get; set; }
         [RegularExpression(@"[A-ZÆØÅ]{2,20}")]
         public string Name { get; set; }
+        public double MaxPrice { get; set; }
+        public double MinPrice { get; set; }
     }
 }
