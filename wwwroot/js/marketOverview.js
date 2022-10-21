@@ -39,7 +39,7 @@ function formatCompanies(companies) {
 function formatTrades(trades) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
-        "<th>Date</th><th>Company</th><th>Kjøper Portfolio</th><th>Selger Portfolio</th><th>Amount</th><th>Price</th>" +
+        "<th>Dato</th><th>Selskap</th><th>Kjøper Portfolio</th><th>Selger Portfolio</th><th>Antall</th><th>Pris</th>" +
         "</tr>";
     for (let trade of trades) {
         out += "<tr>" +
