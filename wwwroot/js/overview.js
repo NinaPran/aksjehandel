@@ -37,7 +37,6 @@ function formatShareholdings(shareholdings) {
             "<td>" + shareholding.companySymbol + "</td>" +
             "<td>" + shareholding.companyName + "</td>" +
             "<td>" + shareholding.amount + " (" + reservedAmount + ")</td>" +
-            "<td>" + shareholding.remainingAmount + "</td>" +
             "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.companyId + "&type=buy'>Kjøp</a></td>" +
             "<td> <a class='btn btn-primary' href='order.html?id=" + shareholding.companyId + "&type=sell'>Salg</a></td>" +
             "<td></td>" +
