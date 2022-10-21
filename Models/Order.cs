@@ -14,11 +14,9 @@ namespace aksjehandel.Models
         public double PortfolioCash { get; set; }
         [RegularExpression(@"^(buy|sell)$")]
         public string Type { get; set; }
-        //[RegularExpression(@"[0-9]{2,8}")]
-        [Range(0, Double.MaxValue)]
+        [RegularExpression(@"[0-9]{1,10}")]
         public double Price { get; set; }
-        //[RegularExpression(@"[0-9]{1,8}")]
-        [Range(0, Int32.MaxValue)]
+        [RegularExpression(@"[0-9]{1,9}")]
         public int Amount { get; set; }
     }
 }

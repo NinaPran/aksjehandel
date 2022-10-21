@@ -5,9 +5,9 @@ namespace aksjehandel.Models
     public class Company
     {
         public int Id { get; set; }
-        [RegularExpression(@"[a-zæøåA-ZÆØÅ]{2,4}")]
+        [RegularExpression(@"[A-ZÆØÅ]{3,5}")]
         public string Symbol { get; set; }
-        [RegularExpression(@"[A-ZÆØÅ]{2,20}")]
+        [RegularExpression(@"[0-9a-zæøåA-ZÆØÅ. \-]{2,30}")]
         public string Name { get; set; }
         public double MaxPrice { get; set; }
         public double MinPrice { get; set; }
