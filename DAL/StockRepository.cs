@@ -261,7 +261,7 @@ namespace aksjehandel.DAL
             return newOrderRow;
         }
 
-        private async Task<bool> NewShareholding(int amount, Portfolios portfolio, Companies company)
+        private bool NewShareholding(int amount, Portfolios portfolio, Companies company)
         {
             try
             {
