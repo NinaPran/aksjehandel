@@ -4,6 +4,7 @@ let allPortfolios;
 let currentPortfolioId = -1;
 let currentPortfolio;
 let onPortfolioChangeListener;
+let onPortfolioReadyListener;
 
 $(function () {
     getAllPortfolios();
@@ -16,6 +17,7 @@ function getAllPortfolios() {
         formatPortfolios(portfolios);
         loadSelectePortfolio();
         portfolioSelect.change(setSelectedPortfolio);
+        notifyPortfolioReady();
     });
 }
 
@@ -39,7 +41,7 @@ function setSelectedPortfolio() {
 
 function loadSelectePortfolio() {
     const portfolioId = window.localStorage.getItem(SELECTEDPORTFOLIOKEY);
-    if (portfolioId >= 0) {
+    if (portfolioId !== null && portfolioId >= 0) {
         currentPortfolioId = portfolioId;
         currentPortfolio = getPortfolioFromId(currentPortfolioId);
         portfolioSelect.val(currentPortfolioId);
@@ -65,5 +67,12 @@ function getCurrentPortfolio() {
 function notifyPortfolioListeners() {
     if (onPortfolioChangeListener) {
         onPortfolioChangeListener(currentPortfolio);
+    }
+}
+
+// Kjøres når alle portefølgene er klare første gang. Trigges etter en evt onPortfolioChangeListener
+function notifyPortfolioReady() {
+    if (onPortfolioReadyListener) {
+        onPortfolioReadyListener();
     }
 }
