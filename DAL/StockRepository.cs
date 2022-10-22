@@ -205,7 +205,7 @@ namespace aksjehandel.DAL
             }
             catch (Exception e)
             {
-                _log.LogInformation("Feil i RegOrder", e.Message);
+                _log.LogInformation("Feil i RegOrder: " + e.Message);
                 return false;
             }
 
@@ -260,39 +260,6 @@ namespace aksjehandel.DAL
             return newOrderRow;
         }
 
-        private bool NewShareholding(int amount, Portfolios portfolio, Companies company)
-        {
-            try
-            {
-                var newSharholdingRow = new Shareholdings();
-                newSharholdingRow.Amount = amount;
-                newSharholdingRow.Portfolio = portfolio;
-                newSharholdingRow.Company = company;
-                _db.Shareholdings.Add(newSharholdingRow);
-                return true;
-
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private async Task<bool> DeleteShareholding(int id)
-        {
-            try
-            {
-                Shareholdings oneShareholding = await _db.Shareholdings.FindAsync(id);
-                _db.Shareholdings.Remove(oneShareholding);
-                await _db.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public async Task<bool> DeleteOrder(int id)
         {
             try
@@ -302,8 +269,9 @@ namespace aksjehandel.DAL
                 await _db.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                _log.LogInformation("Feil i DeleteOrder: " + e.Message);
                 return false;
             }
         }
@@ -343,9 +311,9 @@ namespace aksjehandel.DAL
                 await _db.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch (Exception e)
             {
-                _log.LogInformation("Feil i change Order");
+                _log.LogInformation("Feil i change Order: ", e.Message);
                 return false;
             }
 
@@ -373,8 +341,9 @@ namespace aksjehandel.DAL
                 };
                 return collectedOrder;
             }
-            catch
+            catch (Exception e)
             {
+                _log.LogInformation("Feil i GetOneOrder: " + e.Message);
                 return null;
             }
 
@@ -400,8 +369,9 @@ namespace aksjehandel.DAL
 
                 return allOrders;
             }
-            catch
+            catch (Exception e)
             {
+                _log.LogInformation("Feil i GetAllOrders: " + e.Message);
                 return null;
             }
 
@@ -423,8 +393,9 @@ namespace aksjehandel.DAL
                 }).ToListAsync();
                 return allShareholdings;
             }
-            catch
+            catch (Exception e)
             {
+                _log.LogInformation("Feil i GetAllShareholdings: " + e.Message);
                 return null;
             }
 
@@ -459,9 +430,9 @@ namespace aksjehandel.DAL
                 }).ToListAsync();
                 return allPortfolios;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine(ex);
+                _log.LogInformation("Feil i GetAllPortfolios: " + e.Message);
                 return null;
             }
 
@@ -484,9 +455,9 @@ namespace aksjehandel.DAL
                 }).ToListAsync();
                 return allTrades;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine(ex);
+                _log.LogInformation("Feil i GetAllTrades: " + e.Message);
                 return null;
             }
         }
@@ -505,8 +476,9 @@ namespace aksjehandel.DAL
                 }).ToListAsync();
                 return allCompanies;
             }
-            catch
+            catch (Exception e)
             {
+                _log.LogInformation("Feil i GetAllCompanies: " + e.Message);
                 return null;
             }
 
