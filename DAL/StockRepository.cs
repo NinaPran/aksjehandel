@@ -86,18 +86,19 @@ namespace aksjehandel.DAL
             sellOrder.Amount -= matchingAmount;
 
             // Kaller funksjon som registrerer den nye handlen i Trade
-            await RegTrade(matchingAmount, matchingOrder.Price, company, buyerPortfolio, sellerPortfolio);
+            bool saveTradeOk = SaveTrade(matchingAmount, matchingOrder.Price, company, buyerPortfolio, sellerPortfolio);
 
             if (matchingOrder.Amount == 0)
             {
                 // Fjerner matching-order fra DB om den er tom
                 _db.Orders.Remove(matchingOrder);
             }
+            
 
-            return true;
+            return saveTradeOk;
         }
 
-        private async Task<bool> RegTrade(int amount, double price, Companies company, Portfolios buyPortfolio, Portfolios sellPortfolio)
+        private bool SaveTrade(int amount, double price, Companies company, Portfolios buyPortfolio, Portfolios sellPortfolio)
         {
             try
             { 
@@ -110,7 +111,6 @@ namespace aksjehandel.DAL
                 newTradeRow.SellPortfolio = sellPortfolio;
               
                 _db.Trades.Add(newTradeRow);
-                await _db.SaveChangesAsync();
                 return true;
             }
             catch
@@ -184,6 +184,7 @@ namespace aksjehandel.DAL
                 if (newOrders == null)
                 {
                     _log.LogInformation("newOrder var ugyldig");
+                    return false;
                 }
 
                 // Kaller funksjonen som sjekker om det er mulig å utføre trade og utfører de om mulig
@@ -195,6 +196,7 @@ namespace aksjehandel.DAL
                     _db.Orders.Add(newOrders);
 
                 }
+                throw new InvalidOperationException("TEST!");
 
                 // Lagre alle endringer vi har gjort på databasen
                 await _db.SaveChangesAsync();
@@ -202,8 +204,9 @@ namespace aksjehandel.DAL
                 return true;
 
             }
-            catch
+            catch (Exception e)
             {
+                _log.LogInformation("Feil i RegOrder", e);
                 return false;
             }
 
@@ -267,7 +270,6 @@ namespace aksjehandel.DAL
                 newSharholdingRow.Portfolio = portfolio;
                 newSharholdingRow.Company = company;
                 _db.Shareholdings.Add(newSharholdingRow);
-                await _db.SaveChangesAsync();
                 return true;
 
             }
@@ -344,6 +346,7 @@ namespace aksjehandel.DAL
             }
             catch
             {
+                _log.LogInformation("Feil i change Order");
                 return false;
             }
 
