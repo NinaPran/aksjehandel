@@ -196,7 +196,6 @@ namespace aksjehandel.DAL
                     _db.Orders.Add(newOrders);
 
                 }
-                throw new InvalidOperationException("TEST!");
 
                 // Lagre alle endringer vi har gjort på databasen
                 await _db.SaveChangesAsync();
@@ -206,7 +205,7 @@ namespace aksjehandel.DAL
             }
             catch (Exception e)
             {
-                _log.LogInformation("Feil i RegOrder", e);
+                _log.LogInformation("Feil i RegOrder", e.Message);
                 return false;
             }
 
