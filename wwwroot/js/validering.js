@@ -107,7 +107,6 @@ function validateEnoughStocks() {
 }
 
 function validerAntall() {
-    return true;
     const regexp = /^[0-9]{1,9}$/
     const ok = regexp.test(amountInput.val());
     if (!ok) {
