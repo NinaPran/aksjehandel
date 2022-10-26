@@ -53,7 +53,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> DeleteOrder(int id)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
@@ -67,7 +67,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> ChangeOrder(Order changeOrder)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
@@ -86,7 +86,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetOneOrder(int id)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
@@ -100,7 +100,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> getAllOrders(int portfolioId)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
@@ -110,7 +110,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetAllShareholdings(int portfolioId)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
@@ -119,7 +119,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetAllPortfolios()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
@@ -128,7 +128,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetAllCompanies()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
@@ -138,7 +138,7 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetAllTrades()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
