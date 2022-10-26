@@ -25,7 +25,7 @@ namespace aksjehandel.Controllers
             _db = db;
             _log = log;
         }
-       public async Task<ActionResult> regOrder(Order newOrder)
+        public async Task<ActionResult> regOrder(Order newOrder)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +68,7 @@ namespace aksjehandel.Controllers
         public async Task<ActionResult> GetOneOrder(int id)
         {
             Order oneOrder = await _db.GetOneOrder(id);
-            if(oneOrder == null)
+            if (oneOrder == null)
             {
                 _log.LogInformation("Fant ikke ordren");
                 return NotFound("Fant ikke ordren");
@@ -95,12 +95,28 @@ namespace aksjehandel.Controllers
         {
             List<Company> allCompanies = await _db.GetAllCompanies();
             return Ok(allCompanies);
-            
+
         }
         public async Task<ActionResult> GetAllTrades()
         {
             List<Trade> allTrades = await _db.GetAllTrades();
             return Ok(allTrades);
+        }
+
+        public async Task<ActionResult> SignIn(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                bool returnOk = await _db.SignIn(user);
+                if (!returnOk)
+                {
+                    _log.LogInformation("Innloggingen feilet for bruker. Brukernavn: " + user.Username);
+                    return Ok(false);
+                }
+                return Ok(true);
+            }
+            _log.LogInformation("Feil i inputvalidering");
+            return BadRequest("Feil i inputvalidering på server");
         }
     }
 }

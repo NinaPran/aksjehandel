@@ -1,8 +1,13 @@
 ﻿var priceInput;
 var amountInput;
 var companySelectInput;
+var usernameInput;
+var passwordInput;
 var priceError;
 var amountError;
+var usernameError;
+var passwordError;
+var signInError;
 var error;
 var ownedShareholdings;
 var availableAmountOutput;
@@ -12,8 +17,13 @@ $(function () {
     priceInput = $("#price");
     amountInput = $("#amount");
     companySelectInput = $("#companySelect");
+    usernameInput = $("#username");
+    passwordInput = $("#password");
     priceError = $("#feilPris");
     amountError = $("#feilAntall");
+    usernameError = $("#usernameError");
+    passwordError = $("#passwordError");
+    signInError = $("#signInError");
     purchasingPower = $("#purchasingPower");
     error = $("#error");
     availableAmountOutput = $("#availableAmount");
@@ -147,4 +157,32 @@ function getAvailableAmount() {
         }
     }
     return 0;
+}
+
+function validateUser() {
+    const regexp = /^[a-zA-ZæøåÆØÅ\.\-]{2,20}$/;
+    const ok = regexp.test(usernameInput.val());
+    if (!ok) {
+        usernameError.text("Brukernavnet må bestå av 2 til 20 bokstaver");
+        return false;
+    }
+    else {
+        usernameError.text("");
+        return true;
+    }
+
+}
+
+function validatePassword() {
+    const regexp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    const ok = regexp.test(passwordInput.val());
+    if (!ok) {
+        passwordError.text("Passordet må bestå av minimum 6 tegn, minst en bokstav og et talll");
+        return false;
+    }
+    else {
+        passwordError.text("");
+        return true;
+    }
+
 }

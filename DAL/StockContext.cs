@@ -47,6 +47,14 @@ namespace aksjehandel.DAL
         virtual public Portfolios SellPortfolio { get; set; }
     }
 
+    public class Users
+    {
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public byte[] Password { get; set; }
+        public byte[] Salt { get; set; }
+    }
+
     public class StockContext : DbContext
     {
         public StockContext(DbContextOptions<StockContext> options) : base(options)
@@ -59,6 +67,7 @@ namespace aksjehandel.DAL
         public DbSet<Orders> Orders { get; set; }
         public DbSet<Companies> Companies { get; set; }
         public DbSet<Trades> Trades { get; set; }
+        public DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

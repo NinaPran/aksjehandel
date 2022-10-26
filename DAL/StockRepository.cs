@@ -1,5 +1,6 @@
 ﻿using aksjehandel.Controllers;
 using aksjehandel.Models;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -93,7 +95,7 @@ namespace aksjehandel.DAL
                 // Fjerner matching-order fra DB om den er tom
                 _db.Orders.Remove(matchingOrder);
             }
-            
+
 
             return saveTradeOk;
         }
@@ -101,7 +103,7 @@ namespace aksjehandel.DAL
         private bool SaveTrade(int amount, double price, Companies company, Portfolios buyPortfolio, Portfolios sellPortfolio)
         {
             try
-            { 
+            {
                 var newTradeRow = new Trades();
                 newTradeRow.Date = DateTime.Now;
                 newTradeRow.Amount = amount;
@@ -109,7 +111,7 @@ namespace aksjehandel.DAL
                 newTradeRow.Company = company;
                 newTradeRow.BuyPortfolio = buyPortfolio;
                 newTradeRow.SellPortfolio = sellPortfolio;
-              
+
                 _db.Trades.Add(newTradeRow);
                 return true;
             }
@@ -250,7 +252,7 @@ namespace aksjehandel.DAL
                 throw new ArgumentException("Fant ikke company med id " + newOrder.CompanyId);
             }
             await ValidateOrder(newOrder.Type == "buy", chosenPortfolio, newOrder.CompanyId, newOrder.Amount, newOrder.Price);
-            
+
             var newOrderRow = new Orders();
             newOrderRow.Type = newOrder.Type;
             newOrderRow.Price = newOrder.Price;
@@ -406,7 +408,7 @@ namespace aksjehandel.DAL
             try
             {
                 return await _db.Shareholdings.FirstAsync(s => s.Company.Id == companyId && s.Portfolio.Id == portfolioId);
-  
+
             }
             catch
             {
@@ -494,19 +496,58 @@ namespace aksjehandel.DAL
 
         private static int CalculateRemainingAmount(Portfolios portfolio, Shareholdings shareholding, StockContext db)
         {
-          
+
             return shareholding.Amount - db.Orders.Where(o => o.Portfolio.Id == portfolio.Id && o.Company.Id == shareholding.Company.Id && o.Type == "sell").Sum(o => o.Amount);
         }
 
-        private static double getMaxTradePrice(Companies company, StockContext db) 
+        private static double getMaxTradePrice(Companies company, StockContext db)
         {
             return db.Trades.Max(t => t.Price);
             //int maxAge = context.Persons.Max(p => p.Age);
         }
 
-        private static double getMinTradePrice(Companies company, StockContext db) 
+        private static double getMinTradePrice(Companies company, StockContext db)
         {
             return db.Trades.Min(t => t.Price);
+        }
+
+        public static byte[] CreateHash(string password, byte[] salt)
+        {
+            return KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA512,
+                iterationCount: 1000,
+                numBytesRequested: 32);
+        }
+
+        public static byte[] CreateSalt()
+        {
+            var csp = new RNGCryptoServiceProvider();
+            var salt = new byte[24];
+            csp.GetBytes(salt);
+            return salt;
+        }
+
+        public async Task<bool> SignIn(User user)
+        {
+            try
+            {
+                Users foundUser = await _db.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
+                // Check password
+                byte[] hash = CreateHash(user.Password, foundUser.Salt);
+                bool ok = hash.SequenceEqual(foundUser.Password);
+                if (ok)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                _log.LogInformation(e.Message);
+                return false;
+            }
         }
 
     }
