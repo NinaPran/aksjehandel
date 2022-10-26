@@ -27,9 +27,14 @@ namespace aksjehandel.Controllers
             _db = db;
             _log = log;
         }
+        // Virtuell funksjon så vi kan mocke den for unit-testene
+        public virtual bool IsLoggedIn()
+        {
+            return string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn));
+        }
         public async Task<ActionResult> regOrder(Order newOrder)
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (!IsLoggedIn())
             {
                 return Unauthorized();
             }
