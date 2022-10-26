@@ -7,22 +7,35 @@ function onPortfolioChanged(portfolio) {
     $("#purchasingPower").html(portfolio.purchasingPower);
     // Legg inn getAll her for å filtrere på portfolio.id
     getAllShareholdings(portfolio.id);
-    getAllCompanies(portfolio.id);
+    getAllOrders(portfolio.id);
     
 }
 
 function getAllShareholdings(portfolioId) {
     $.get("stock/getAllShareholdings?portfolioId="+portfolioId, function (shareholdings) {
-        formatShareholdings(shareholdings);
-        
-    });
+        formatShareholdings(shareholdings);        
+    })
+        .fail(function (returnError) {
+            if (returnError.status == 401) {
+                window.location.href = 'signIn.html'
+            } else {
+                $("#errorShareholdings").html("Feil i db - prøv igjen senere");
+            }
+        });
 }
 
-function getAllCompanies(portfolioId) {
+function getAllOrders(portfolioId) {
     $.get("stock/getAllOrders?portfolioId="+portfolioId, function (orders) {
-        formatCompanies(orders);
+        formatOrders(orders);
 
-    });
+    })
+        .fail(function (returnError) {
+            if (returnError.status == 401) {
+                window.location.href = 'signIn.html'
+            } else {
+                $("#errorOrders").html("Feil i db - prøv igjen senere");
+            }
+        });
 }
 
 
@@ -48,7 +61,7 @@ function formatShareholdings(shareholdings) {
 
 }
 
-function formatCompanies(orders) {
+function formatOrders(orders) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
         "<th>Symbol</th><th>Selskap</th><th>Type</th><th>Pris</th><th>Antall</th><th></th><th></th>" +

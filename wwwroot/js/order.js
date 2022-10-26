@@ -3,7 +3,7 @@ const companySelect = $("#companySelect");
 
 $(function () {
     onPortfolioChangeListener = onPortfolioChanged;
-    getAllCompanies();
+    getAllOrders();
 });
 
 // Denne kalles når portefølgen er satt eller endret (f.eks fra dropdown menyen)
@@ -13,13 +13,13 @@ function onPortfolioChanged(portfolio) {
 }
 
 
-function getAllCompanies() {
+function getAllOrders() {
     $.get("stock/getAllCompanies", function (companies) {
-        formatCompanies(companies);
+        formatOrders(companies);
     });
 }
 
-function formatCompanies(companies) {
+function formatOrders(companies) {
     const url = new URL(location.href); // lager url objekt
 
     const id = url.searchParams.get('id'); // leter etter id'en i url'en 
@@ -66,8 +66,11 @@ function regOrder() {
             window.location.href = 'overview.html';
         })
 
-            .fail(function () {
-                $("#error").html("Feil i db - prøv igjen senere");
+            .fail(function (returnError) {
+                if (returnError.status == 401) {
+                    window.location.href = 'signIn.html'
+                } else {
+                    $("#error").html("Feil i db - prøv igjen senere");
+                }
             });
-    }
 };

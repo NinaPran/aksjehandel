@@ -1,23 +1,37 @@
 ﻿$(function () {
 
-    getAllCompanies();
+    getAllOrders();
     getAllTrades();
 });
 
-function getAllCompanies() {
+function getAllOrders() {
     $.get("stock/getAllCompanies", function (companies) {
-        formatCompanies(companies);
+        formatOrders(companies);
 
-    });
+    })
+        .fail(function (returnError) {
+            if (returnError.status == 401) {
+                window.location.href = 'signIn.html'
+            } else {
+                $("#errorCompanies").html("Feil i db - prøv igjen senere");
+            }
+        });
 }
 
 function getAllTrades() {
     $.get("stock/getAllTrades", function (trades) {
         formatTrades(trades);
-    });
+    })
+        .fail(function (returnError) {
+            if (returnError.status == 401) {
+                window.location.href = 'signIn.html'
+            } else {
+                $("#errorTrades").html("Feil i db - prøv igjen senere");
+            }
+        });
 }
 
-function formatCompanies(companies) {
+function formatOrders(companies) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
         "<th>Symbol</th><th>Navn</th><th>Max Pris</th><th>Minimum Pris</th><th></th>" +

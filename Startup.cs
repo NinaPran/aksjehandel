@@ -25,10 +25,18 @@ namespace aksjehandel
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {           
+            services.AddDistributedMemoryCache();
             services.AddControllers();
             services.AddDbContext<StockContext>(options => options.UseSqlite("Data source=Stock.db"));
             services.AddScoped<IStockRepository, StockRepository>();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".AdventureWorks.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(1800); // 30 minutter
+                options.Cookie.IsEssential = true;
+            });
+            services.AddDistributedMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +48,7 @@ namespace aksjehandel
                 loggerFactory.AddFile("Logs/StockLog.txt");
                 DBInit.Initializer(app);
             }
+            app.UseSession();
 
             app.UseRouting();
 
