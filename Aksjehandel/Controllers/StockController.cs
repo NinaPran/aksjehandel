@@ -22,21 +22,17 @@ namespace aksjehandel.Controllers
 
         private ILogger<StockController> _log;
         private const string _signedIn = "signedIn";
+        private const string _notSignedIn = "";
         public StockController(IStockRepository db, ILogger<StockController> log)
         {
             _db = db;
             _log = log;
         }
-        // Virtuell funksjon så vi kan mocke den for unit-testene
-        public virtual bool IsLoggedIn()
-        {
-            return string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn));
-        }
         public async Task<ActionResult> regOrder(Order newOrder)
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             if (ModelState.IsValid)
             {
@@ -53,9 +49,9 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> DeleteOrder(int id)
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             bool returnOK = await _db.DeleteOrder(id);
             if (!returnOK)
@@ -67,9 +63,9 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> ChangeOrder(Order changeOrder)
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             if (ModelState.IsValid)
             {
@@ -86,9 +82,9 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetOneOrder(int id)
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             Order oneOrder = await _db.GetOneOrder(id);
             if (oneOrder == null)
@@ -100,9 +96,9 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> getAllOrders(int portfolioId)
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             List<Order> allOrders = await _db.GetAllOrders(portfolioId);
             return Ok(allOrders);
@@ -110,27 +106,27 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetAllShareholdings(int portfolioId)
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             List<Shareholding> allShareholdings = await _db.GetAllShareholdings(portfolioId);
             return Ok(allShareholdings);
         }
         public async Task<ActionResult> GetAllPortfolios()
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             List<Portfolio> allPortfolios = await _db.GetAllPortfolios();
             return Ok(allPortfolios);
         }
         public async Task<ActionResult> GetAllCompanies()
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             List<Company> allCompanies = await _db.GetAllCompanies();
             return Ok(allCompanies);
@@ -138,9 +134,9 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetAllTrades()
         {
-            if (!IsLoggedIn())
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
-                return Unauthorized();
+                return Unauthorized("Ikke logget inn");
             }
             List<Trade> allTrades = await _db.GetAllTrades();
             return Ok(allTrades);
@@ -154,10 +150,10 @@ namespace aksjehandel.Controllers
                 if (!returnOk)
                 {
                     _log.LogInformation("Innloggingen feilet for bruker. Brukernavn: " + user.Username);
-                    HttpContext.Session.SetString(_signedIn, "");
+                    HttpContext.Session.SetString(_signedIn, _notSignedIn);
                     return Ok(false);
                 }
-                HttpContext.Session.SetString(_signedIn, "signedIn");
+                HttpContext.Session.SetString(_signedIn, _signedIn);
                 return Ok(true);
             }
             _log.LogInformation("Feil i inputvalidering");
@@ -166,7 +162,7 @@ namespace aksjehandel.Controllers
 
         public void SignOut()
         {
-            HttpContext.Session.SetString(_signedIn, "");
+            HttpContext.Session.SetString(_signedIn, _notSignedIn);
         }
 
     }
