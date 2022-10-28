@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+// Oppsett av denne klassen og metoder er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 namespace aksjehandel.Controllers
 {
     [Route("[controller]/[action]")]

@@ -14,6 +14,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace aksjehandel.DAL
 {
+    // Oppsett av denne klassen og dens metoder er basert på KundeApp fra ITPE3200-1 22H, OsloMet
     public class StockRepository : IStockRepository
     {
 
