@@ -8,13 +8,14 @@ using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 namespace aksjehandel.DAL
 {
-    // Oppsett av denne klassen og dens metoder er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+    // Oppsett av denne klassen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
     public class StockRepository : IStockRepository
     {
 
@@ -261,6 +262,7 @@ namespace aksjehandel.DAL
             return newOrderRow;
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<bool> DeleteOrder(int id)
         {
             try
@@ -277,6 +279,7 @@ namespace aksjehandel.DAL
             }
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<bool> ChangeOrder(Order changeOrder)
         {
             try
@@ -320,6 +323,7 @@ namespace aksjehandel.DAL
 
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<Order> GetOneOrder(int id)
         {
             try
@@ -350,6 +354,7 @@ namespace aksjehandel.DAL
 
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<List<Order>> GetAllOrders(int portfolioId)
         {
             try
@@ -378,6 +383,7 @@ namespace aksjehandel.DAL
 
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<List<Shareholding>> GetAllShareholdings(int portfolioId)
         {
             try
@@ -402,6 +408,7 @@ namespace aksjehandel.DAL
 
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<Shareholdings> GetShareholdingByCompany(int portfolioId, int companyId)
         {
             try
@@ -418,6 +425,7 @@ namespace aksjehandel.DAL
 
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<List<Portfolio>> GetAllPortfolios()
         {
             try
@@ -439,6 +447,7 @@ namespace aksjehandel.DAL
 
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<List<Trade>> GetAllTrades()
         {
             try
@@ -463,6 +472,7 @@ namespace aksjehandel.DAL
             }
         }
 
+        // Denne metoden er basert på KundeApp fra ITPE3200-1 22H, OsloMet
         public async Task<List<Company>> GetAllCompanies()
         {
             try
@@ -485,6 +495,7 @@ namespace aksjehandel.DAL
 
         }
 
+        // De 4 metodene under måtte være static for ikke å ha fare for memory leaks, og de kunne ikke være async
         private static double CalculatePurchasingPower(Portfolios portfolio, StockContext db)
         {
             // returnerer cash minus summen av alle kjøpsordre tilhørende portfølgen sine aksjer * prisen
@@ -502,7 +513,6 @@ namespace aksjehandel.DAL
         private static double getMaxTradePrice(Companies company, StockContext db) 
         {
             return db.Trades.Max(t => t.Price);
-            //int maxAge = context.Persons.Max(p => p.Age);
         }
 
         private static double getMinTradePrice(Companies company, StockContext db) 

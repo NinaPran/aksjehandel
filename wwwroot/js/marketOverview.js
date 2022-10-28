@@ -1,4 +1,4 @@
-﻿// Denne filen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+﻿// Innholdet i denne filen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 $(function () {
 
     getAllCompanies();

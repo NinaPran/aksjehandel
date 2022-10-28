@@ -1,6 +1,4 @@
-﻿// Denne filen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
-
-$(function () {
+﻿$(function () {
     onPortfolioChangeListener = onPortfolioChanged;
 });
 
@@ -13,6 +11,7 @@ function onPortfolioChanged(portfolio) {
     
 }
 
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function getAllShareholdings(portfolioId) {
     $.get("stock/getAllShareholdings?portfolioId="+portfolioId, function (shareholdings) {
         formatShareholdings(shareholdings);
@@ -20,6 +19,7 @@ function getAllShareholdings(portfolioId) {
     });
 }
 
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function getAllOrders(portfolioId) {
     $.get("stock/getAllOrders?portfolioId="+portfolioId, function (orders) {
         formatOrders(orders);
@@ -27,7 +27,7 @@ function getAllOrders(portfolioId) {
     });
 }
 
-
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function formatShareholdings(shareholdings) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
@@ -50,6 +50,7 @@ function formatShareholdings(shareholdings) {
 
 }
 
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function formatOrders(orders) {
     let out = "<table class='table table-striped'>" +
         "<tr>" +
@@ -71,6 +72,7 @@ function formatOrders(orders) {
     $("#orderContainer").html(out);
 }
 
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function deleteOrder(id) {
     const url = "stock/deleteOrder?id=" + id;
     $.get(url, function (OK) {
