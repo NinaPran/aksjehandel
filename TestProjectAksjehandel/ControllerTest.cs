@@ -508,7 +508,7 @@ namespace TestProjectAksjehandel
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.getAllOrders(It.IsAny<int>()) as OkObjectResult;
+            var result = await stockController.getAllOrders(It.IsAny<int>()) as NotFoundObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result); // SKAL DEN RETURNERE DETTE?
@@ -690,7 +690,7 @@ namespace TestProjectAksjehandel
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.GetAllShareholdings(It.IsAny<int>()) as OkObjectResult;
+            var result = await stockController.GetAllShareholdings(It.IsAny<int>()) as NotFoundObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -764,7 +764,7 @@ namespace TestProjectAksjehandel
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.GetAllPortfolios() as OkObjectResult;
+            var result = await stockController.GetAllPortfolios() as NotFoundObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -891,7 +891,7 @@ namespace TestProjectAksjehandel
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
             // Act
-            var result = await stockController.GetAllCompanies() as OkObjectResult;
+            var result = await stockController.GetAllCompanies() as NotFoundObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
@@ -1030,12 +1030,11 @@ namespace TestProjectAksjehandel
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.GetAllTrades() as OkObjectResult;
+            var result = await stockController.GetAllTrades() as NotFoundObjectResult;
 
             // Assert
-            Assert.IsType<OkObjectResult>(result);
-            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal<List<Trade>>((List<Trade>)result.Value, tradeList);// SKAL DENNE ASSERTES SLIK?
+            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode); // SKAL DENNE ASSERTES SLIK?
 
         }
 
