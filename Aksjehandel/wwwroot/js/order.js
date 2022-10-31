@@ -75,4 +75,5 @@ function regOrder() {
                     $("#error").html("Feil i db - prøv igjen senere");
                 }
             });
+    };
 };
