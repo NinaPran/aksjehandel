@@ -29,6 +29,7 @@ function onPortfolioChanged(portfolio) {
     getOwnedShareholdings(portfolio.id);
 }
 
+// Basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function changeOrder() {
     if (validateOrder()) {
         const order = {

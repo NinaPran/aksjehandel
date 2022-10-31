@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace aksjehandel.DAL
 {
+    // Oppsett av disse klassene er basert på KundeApp fra ITPE3200-1 22H, OsloMet
     public class Companies
     {
         public int Id { get; set; }

@@ -1,5 +1,4 @@
-﻿
-const companySelect = $("#companySelect");
+﻿const companySelect = $("#companySelect");
 
 $(function () {
     onPortfolioChangeListener = onPortfolioChanged;
@@ -12,14 +11,15 @@ function onPortfolioChanged(portfolio) {
     getOwnedShareholdings(portfolio.id);
 }
 
-
-function getAllOrders() {
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+function getAllCompanies() {
     $.get("stock/getAllCompanies", function (companies) {
         formatOrders(companies);
     });
 }
 
-function formatOrders(companies) {
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+function formatCompanies(companies) {
     const url = new URL(location.href); // lager url objekt
 
     const id = url.searchParams.get('id'); // leter etter id'en i url'en 
@@ -45,6 +45,8 @@ function formatOrders(companies) {
         $("#type-buy").prop("checked", true);
     }
 }
+
+// Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function regOrder() {
     if (validateOrder()) {
         const portfolio = getCurrentPortfolio();

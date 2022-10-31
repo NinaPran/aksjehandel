@@ -35,6 +35,7 @@ function isBuyOrder() {
 
 }
 
+// Basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function validerPris() {
     const regexp = /^[0-9]{1,10}$/
     const ok = regexp.test(priceInput.val());
@@ -116,6 +117,7 @@ function validateEnoughStocks() {
     
 }
 
+// Basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function validerAntall() {
     const regexp = /^[0-9]{1,9}$/
     const ok = regexp.test(amountInput.val());

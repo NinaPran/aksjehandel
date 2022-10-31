@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿// Innholdet i denne filen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+$(function () {
 
     getAllOrders();
     getAllTrades();
