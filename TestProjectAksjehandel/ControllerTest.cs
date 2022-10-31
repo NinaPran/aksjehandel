@@ -52,6 +52,7 @@ namespace TestProjectAksjehandel
 
             // Assert
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("Ordre lagret", result.Value);
             Assert.IsType<OkObjectResult>(result);
         }
 
