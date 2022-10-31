@@ -18,7 +18,14 @@ function getAllPortfolios() {
         loadSelectePortfolio();
         portfolioSelect.change(setSelectedPortfolio);
         notifyPortfolioReady();
-    });
+    })
+        .fail(function (returnError) {
+            if (returnError.status == 401) {
+                window.location.href = 'signIn.html'
+            } else {
+                $("#error").html("Feil i db - prøv igjen senere");
+            }
+        });
 }
 
 function formatPortfolios(portfolios) {

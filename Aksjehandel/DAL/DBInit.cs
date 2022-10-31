@@ -32,7 +32,15 @@ namespace aksjehandel.DAL
                 var order3 = new Orders { Company = company2, Amount = 10, Type = "sell", Portfolio = portfolio2, Price = 9 };
 
                 var trade1 = new Trades { Company = company1, Amount = 5, Price = 10, Date = new System.DateTime(2022, 10, 21), BuyPortfolio = portfolio1, SellPortfolio = portfolio2 };
-                var trade2 = new Trades { Company = company2, Amount = 10, Price = 30, Date = new System.DateTime(2022, 10, 21), BuyPortfolio = portfolio2, SellPortfolio = portfolio1 }; 
+                var trade2 = new Trades { Company = company2, Amount = 10, Price = 30, Date = new System.DateTime(2022, 10, 21), BuyPortfolio = portfolio2, SellPortfolio = portfolio1 };
+
+                var user1 = new Users();
+                user1.Username = "Admin";
+                string password = "Test11";
+                byte[] salt = StockRepository.CreateSalt();
+                byte[] hash = StockRepository.CreateHash(password, salt);
+                user1.Password = hash;
+                user1.Salt = salt;
 
                 context.Portfolios.Add(portfolio1);
                 context.Portfolios.Add(portfolio2);
@@ -46,6 +54,7 @@ namespace aksjehandel.DAL
                 context.Orders.Add(order3);
                 context.Trades.Add(trade1);
                 context.Trades.Add(trade2);
+                context.Users.Add(user1);
 
                 context.SaveChanges();
 

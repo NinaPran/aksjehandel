@@ -11,4 +11,5 @@ function onPortfolioReady() {
     $("#mainContent").show();
 }
 
+
 onPortfolioReadyListener = onPortfolioReady;

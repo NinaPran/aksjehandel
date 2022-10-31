@@ -14,9 +14,15 @@ function onPortfolioChanged(portfolio) {
 // Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
 function getAllShareholdings(portfolioId) {
     $.get("stock/getAllShareholdings?portfolioId="+portfolioId, function (shareholdings) {
-        formatShareholdings(shareholdings);
-        
-    });
+        formatShareholdings(shareholdings);        
+    })
+        .fail(function (returnError) {
+            if (returnError.status == 401) {
+                window.location.href = 'signIn.html'
+            } else {
+                $("#errorShareholdings").html("Feil i db - prøv igjen senere");
+            }
+        });
 }
 
 // Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
@@ -24,7 +30,14 @@ function getAllOrders(portfolioId) {
     $.get("stock/getAllOrders?portfolioId="+portfolioId, function (orders) {
         formatOrders(orders);
 
-    });
+    })
+        .fail(function (returnError) {
+            if (returnError.status == 401) {
+                window.location.href = 'signIn.html'
+            } else {
+                $("#errorOrders").html("Feil i db - prøv igjen senere");
+            }
+        });
 }
 
 // Denne funksjonen er basert på KundeApp fra ITPE3200-1 22H, OsloMet

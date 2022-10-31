@@ -40,8 +40,12 @@ function changeOrder() {
         $.post("stock/changeOrder", order, function () {
             window.location.href = 'overview.html';
         })
-            .fail(function () {
-                $("#error").html("Feil i db - prøv igjen senere");
+            .fail(function (returnError) {
+                if (returnError.status == 401) {
+                    window.location.href = 'signIn.html'
+                } else {
+                    $("#error").html("Feil i db - prøv igjen senere");
+                }
             });
     }
 };
