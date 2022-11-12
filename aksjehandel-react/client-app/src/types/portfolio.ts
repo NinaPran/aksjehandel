@@ -1,4 +1,7 @@
 ﻿
 export interface Portfolio {
-    Id: number;
+    id: number;
+    displayName: string;
+    cash: number;
+    purchasingPower: number;
 }

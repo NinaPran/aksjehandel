@@ -116,10 +116,10 @@ namespace aksjehandel.Controllers
         }
         public async Task<ActionResult> GetAllPortfolios()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            /* if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
                 return Unauthorized("Ikke logget inn");
-            }
+            }*/
             List<Portfolio> allPortfolios = await _db.GetAllPortfolios();
             return Ok(allPortfolios);
         }
