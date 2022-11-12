@@ -4,8 +4,12 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './pages/home';
 import { Layout } from './Layout';
-import { Home2 } from './pages/home2';
 import { Portfolio } from './types/portfolio';
+import { Overview } from './pages/overview';
+import { MarketOverview } from './pages/marketOverview';
+import { Order } from './pages/order';
+import { AppLoggedIn } from './app-logged-in';
+import { SignIn } from './components/sign-in';
 
 interface AppProps {
 }
@@ -13,36 +17,28 @@ interface AppProps {
 interface AppState {
     error: boolean;
     errorMessage?: string;
-    loading: boolean;
-    selectedPortfolio?: Portfolio;
-    portfolios?: Portfolio[];
+    signedIn: boolean;
 }
 
 export class App extends Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            loading: true,
             error: false,
+            signedIn: false,
         }
     }
+
     render() {
-        const { loading } = this.state;
+        const { signedIn } = this.state;
         return (
             <>
-                {loading && <div id="loading">
-                    <p>Henter porteføljer, venligst vent...</p>
-                </div>}
+                {!signedIn &&
+                    <SignIn onSignedIn={() => this.setState({ signedIn: true })}></SignIn>
+                }
 
-                {!loading &&
-                    <BrowserRouter>
-                        <Layout>
-                            <Routes>
-                                <Route path="/" element={<Home />}></Route>
-                                <Route path="/home2" element={<Home2 />}></Route>
-                            </Routes>
-                        </Layout>
-                    </BrowserRouter>
+                {signedIn &&
+                    <AppLoggedIn/>
                 }
             </>
         );

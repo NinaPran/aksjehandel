@@ -544,6 +544,10 @@ namespace aksjehandel.DAL
             try
             {
                 Users foundUser = await _db.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
+                if (foundUser == null)
+                {
+                    return false;
+                }
                 // Check password
                 byte[] hash = CreateHash(user.Password, foundUser.Salt);
                 bool ok = hash.SequenceEqual(foundUser.Password);

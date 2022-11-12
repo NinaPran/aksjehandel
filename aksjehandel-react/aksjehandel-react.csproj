@@ -26,10 +26,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="client-app\src\components\shareholding-table.tsx" />
+    <None Remove="client-app\src\context\portfolio-context.tsx" />
+    <None Remove="client-app\src\types\order.ts" />
     <None Remove="client-app\src\types\portfolio.ts" />
+    <None Remove="client-app\src\types\shareholding.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="client-app\src\components\shareholding-table.tsx" />
+    <TypeScriptCompile Include="client-app\src\context\portfolio-context.tsx" />
+    <TypeScriptCompile Include="client-app\src\types\order.ts" />
+    <TypeScriptCompile Include="client-app\src\types\shareholding.ts" />
     <TypeScriptCompile Include="client-app\src\types\portfolio.ts" />
   </ItemGroup>
 
