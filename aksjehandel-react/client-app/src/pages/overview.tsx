@@ -1,6 +1,7 @@
 ﻿import { FC, PropsWithChildren } from "react";
 import { PortfolioSelect } from "../components/portfolioSelect";
 import { ShareholdingTable } from "../components/shareholding-table";
+import { OrderTable } from "../components/order-table";
 import { PortfolioContext } from "../context/portfolio-context";
 import { Portfolio } from "../types/portfolio";
 
@@ -20,8 +21,8 @@ export const Overview: FC<PropsWithChildren> = (props) => {
                     {selectedPortfolio?.displayName}
 
                     <PortfolioSelect />
-                    {!selectedPortfolio &&  
-                        <h2>Venligst velg portfølje</h2>                    
+                    {!selectedPortfolio &&
+                        <h2>Venligst velg portfølje</h2>
                     }
                     {selectedPortfolio &&
                         <>
@@ -32,9 +33,9 @@ export const Overview: FC<PropsWithChildren> = (props) => {
                             <ShareholdingTable selectedPortfolio={selectedPortfolio} />
 
                             <h2>Dine ordrer</h2>
+                            <OrderTable selectedPortfolio={selectedPortfolio}></OrderTable>
                             <a href="order.html" className="btn btn-primary">Ny ordre</a>
-                            <div id="orderContainer"></div>
-                            <div id="errorOrder"></div>
+
                         </>
 
                     }
