@@ -62,8 +62,9 @@ namespace aksjehandel.Controllers
             }
             return Ok("Ordren slettet");
         }
-        public async Task<ActionResult> ChangeOrder(Order changeOrder)
+        public async Task<ActionResult> ChangeOrder([FromBody] Order changeOrder)
         {
+
             if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
                 return Unauthorized("Ikke logget inn");

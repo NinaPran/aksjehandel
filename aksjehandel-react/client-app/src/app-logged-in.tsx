@@ -9,6 +9,7 @@ import { NewOrderPage } from './pages/new-order';
 import { PortfolioContext } from './context/portfolio-context';
 import { Company } from './types/company';
 import { CompanyContext } from './context/company-context';
+import { EditOrderPage } from './pages/edit-order';
 
 interface AppProps {
 }
@@ -80,6 +81,7 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
                                         <Route path="/overview" element={<Overview />}></Route>
                                         <Route path="/marketOverview" element={<MarketOverview />}></Route>
                                         <Route path="/new-order" element={<NewOrderPage />}></Route>
+                                        <Route path="/edit-order" element={<EditOrderPage />}></Route>
                                     </Routes>
                                 </Layout>
                             </CompanyContext.Provider>

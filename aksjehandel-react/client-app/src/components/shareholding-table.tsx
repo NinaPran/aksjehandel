@@ -38,7 +38,6 @@ export class ShareholdingTable extends Component<ShareholdingTableProps, Shareho
         fetch("stock/getAllShareholdings?portfolioId=" + this.props.selectedPortfolio.id)
             .then(response => response.json())
             .then(response => {
-                console.log(response);
                 this.setState({
                     shareholdings: response,
                     loading: false

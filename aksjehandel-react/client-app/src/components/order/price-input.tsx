@@ -3,7 +3,7 @@ import { Container } from 'reactstrap';
 
 interface PriceInputProps {
     onPriceSet: (price: number, valid: boolean) => void;
-    price?: number;
+    price: number;
 }
 
 interface PriceInputState {
@@ -36,13 +36,13 @@ export class PriceInput extends Component<PriceInputProps, PriceInputState> {
     }
 
     render() {
-        const { } = this.props;
+        const { price } = this.props;
         const { priceError } = this.state;
 
         return (
             <div className="form-group">
                 <label>Pris</label>
-                <input type="text" ref={this.priceInput} onChange={this.validatePrice} />
+                <input type="text" ref={this.priceInput} onChange={this.validatePrice} defaultValue={price} />
                 <span style={{ color: "red" }}>{priceError}</span>
             </div>
         );

@@ -3,7 +3,7 @@ import { Container } from 'reactstrap';
 
 interface AmountInputProps {
     onAmountSet: (amount: number, valid: boolean) => void;
-    amount?: number;
+    amount: number;
 }
 
 interface AmountInputState {
@@ -38,13 +38,13 @@ export class AmountInput extends Component<AmountInputProps, AmountInputState> {
     }
 
     render() {
-        const { } = this.props;
+        const { amount } = this.props;
         const { amountError } = this.state;
 
         return (
             <div className="form-group">
                 <label>Antall</label>
-                <input type="text" ref={this.amountInput} onChange={this.validateAmount} />
+                <input type="text" ref={this.amountInput} onChange={this.validateAmount} defaultValue={ amount } />
                 <span style={{ color: "red" }}>{amountError}</span>
             </div>
         );

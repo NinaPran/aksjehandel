@@ -8,7 +8,7 @@ import { NewOrder } from "../types/order";
 
 export const NewOrderPage = () => {
     const location = useLocation();
-    const orderType: NewOrder["type"] = location.state.type || "buy";
+    const orderType: NewOrder["type"] = location.state?.type || "buy";
     return (
         <div className="container">
             <h1>Lag en ny ordre</h1>

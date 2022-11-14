@@ -7,38 +7,40 @@ import { PriceInput } from "../components/order/price-input";
 import { PortfolioSelect } from "../components/portfolio-select";
 import { PortfolioContext } from "../context/portfolio-context";
 import { Company } from "../types/company";
-import { NewOrder, ServerOrder } from "../types/order";
+import { EditOrder, NewOrder, ServerOrder } from "../types/order";
 import { Shareholding } from "../types/shareholding";
 
 
 interface OrderFormProps {
-    orderType?: NewOrder["type"],
+    orderType?: NewOrder["type"];
     company?: Company;
+    editOrder?: ServerOrder;
 } {/* https://stackoverflow.com/a/70342010 for å hente ut attributter fra knappeklikk  */ }
 
 //export class OrderForm extends Component<OrderProps, OrderState> {
 export const OrderForm = (props: OrderFormProps) => {
+    const editOrder = props.editOrder;
+    const isEditOrder = props.editOrder !== undefined;
+
     const navigate = useNavigate();
     const portfolioContext = useContext(PortfolioContext);
 
-    const [price, setPrice] = useState(0);
-    const [priceValid, setPriceValid] = useState(false);
+    const [price, setPrice] = useState(editOrder ? editOrder.price : 0);
+
+    const [priceValid, setPriceValid] = useState(isEditOrder); // Antar at edit-order er gyldig 
 
     const [selectedPortfolioId, setSelectedPortfolioId] = useState(-1);
 
-    const [amount, setAmount] = useState(0);
-    const [amountValid, setAmountValid] = useState(false);
-
-    //TODO konverter til useState
-    let isFetchingShareholdings: boolean = false;
+    const [amount, setAmount] = useState(editOrder ? editOrder.amount : 0);
+    const [amountValid, setAmountValid] = useState(isEditOrder); // Antar at edit-order er gyldig 
 
     const [error, setError] = useState(false);
 
     const [errorText, setErrorText] = useState("");
 
-    const [selectedCompany, setSelectedCompany] = useState<Company | undefined>(undefined);
+    const [selectedCompany, setSelectedCompany] = useState<Company | undefined>(props.company);
 
-    const [orderType, setOrderType] = useState<NewOrder["type"]>(props.orderType || "buy");
+    const [orderType, setOrderType] = useState<NewOrder["type"]>(editOrder ? editOrder.type : props.orderType || "buy");
     const [shareholdings, setShareholdings] = useState<Shareholding[]>([]);
 
 
@@ -91,27 +93,25 @@ export const OrderForm = (props: OrderFormProps) => {
 
     useEffect(() => {
         const currentSelectedPortfolioId = portfolioContext.selectedPortfolio?.id ?? -1;
-        if (selectedPortfolioId !== currentSelectedPortfolioId) {
+        console.log("AAA", currentSelectedPortfolioId, selectedPortfolioId, selectedPortfolioId !== currentSelectedPortfolioId);
+        if (currentSelectedPortfolioId >=0 && selectedPortfolioId !== currentSelectedPortfolioId) {
+            console.log("Fetching");
             setSelectedPortfolioId(currentSelectedPortfolioId);
-            getOwnedShareholdings(selectedPortfolioId);
+            getOwnedShareholdings(currentSelectedPortfolioId);
 
         }
-    })
+    }, [portfolioContext])
 
     const getOwnedShareholdings = (portfolioId: number) => {
 
-        isFetchingShareholdings = true;
         fetch("stock/getAllShareholdings?portfolioId=" + portfolioId)
             .then(response => response.json())
             .then(response => {
                 setShareholdings(response);
-                isFetchingShareholdings = false;
             })
             .catch(error => {
                 setShareholdings([]);
                 setError(true);
-
-                isFetchingShareholdings = false;
             });
     }
 
@@ -127,11 +127,47 @@ export const OrderForm = (props: OrderFormProps) => {
 
         for (var i = 0; i < ownedShareholdings.length; i++) {
             const shareholding = ownedShareholdings[i];
+            let remainingShares = shareholding.remainingAmount;
+            if (editOrder) {
+                // "Frigjør" antallet aksjer reservert av denne ordren hvis vi editerer en
+                remainingShares += editOrder.amount;
+            }
             if (shareholding.companyId === companyId) {
-                return amountSell <= shareholding.remainingAmount;
+                return amountSell <= remainingShares;
             }
         }
         return false;
+    }
+
+    const sendEditOrder = () => {
+        if (validateOrder()) {
+
+            const order: EditOrder = {
+                id: editOrder?.id || -1,
+                price: price,
+                amount: amount
+            }
+
+            fetch('stock/changeOrder', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(order)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        navigate('/overview');
+                    }
+                    else {
+                        setError(true);
+                        setErrorText("Feil ved endring av ordre, noe er ugyldig");
+
+                    }
+                })
+                .catch(error => {
+                    setError(true);
+                    setErrorText("Feil på server -prøv igjen senere");
+                });
+        };
     }
 
     const registerOrder = () => {
@@ -154,7 +190,6 @@ export const OrderForm = (props: OrderFormProps) => {
                 .then(response => {
                     if (response.ok) {
                         navigate('/overview');
-                        //return redirect('/overview');
                     }
                     else {
                         setError(true);
@@ -165,8 +200,6 @@ export const OrderForm = (props: OrderFormProps) => {
                 .catch(error => {
                     setError(true);
                     setErrorText("Feil på server -prøv igjen senere");
-
-                    isFetchingShareholdings = false;
                 });
         };
     }
@@ -180,28 +213,28 @@ export const OrderForm = (props: OrderFormProps) => {
             <h2>Disponibelt beløp</h2>
             <div>{selectedPortfolio?.purchasingPower}</div>
 
-            <PortfolioSelect />
+            <PortfolioSelect disabled={isEditOrder} />
 
-            <CompanySelect selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany} />
+            <CompanySelect disabled={isEditOrder} selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany} />
 
             <div>
                 <label>Type</label>
                 <div form-group>
-                    <input checked={orderType === "buy"} type="radio" id="type-buy" name="type" value="buy" onClick={() => setOrderType("buy")} />
+                    <input disabled={isEditOrder } checked={orderType === "buy"} type="radio" id="type-buy" name="type" value="buy" onClick={() => setOrderType("buy")} />
                     <label htmlFor="buy">Kjøp</label>
                 </div>
                 <div form-group>
-                    <input checked={orderType === "sell"} type="radio" id="type-sell" name="type" value="sell" onClick={() => setOrderType("sell")} />
+                    <input disabled={isEditOrder} checked={orderType === "sell"} type="radio" id="type-sell" name="type" value="sell" onClick={() => setOrderType("sell")} />
                     <label htmlFor="sell">Salg</label>
                 </div>
             </div>
 
-            <PriceInput onPriceSet={onPriceChange} />
+            <PriceInput price={price} onPriceSet={onPriceChange} />
 
-            <AmountInput onAmountSet={onAmountChange} />
+            <AmountInput amount={amount} onAmountSet={onAmountChange} />
 
             <div className="form-group">
-                <input type="button" id="reg" value="Registrer" onClick={registerOrder} className="btn btn-primary" />
+                <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" />
             </div>
 
             <div className="form-group">

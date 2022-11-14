@@ -2,7 +2,6 @@
 import { Container } from 'reactstrap';
 import { PortfolioSelect } from "../components/portfolio-select";
 import { PortfolioContext } from "../context/portfolio-context";
-import { Portfolio } from "../types/portfolio";
 import './home.css';
 
 

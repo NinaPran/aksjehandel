@@ -38,7 +38,6 @@ export class OrderTable extends Component<OrderTableProps, OrderTableState> {
         fetch("stock/getAllOrders?portfolioId=" + this.props.selectedPortfolio.id)
             .then(response => response.json())
             .then(response => {
-                console.log(response);
                 this.setState({
                     orders: response,
                     loading: false
@@ -85,7 +84,7 @@ export class OrderTable extends Component<OrderTableProps, OrderTableState> {
                                         <td> {order.type} </td>
                                         <td> {order.price} </td>
                                         <td> {order.amount} </td>
-                                        <td> <Link className='btn btn-primary' to={"/new-order"} state={{ orderId: order.id, type: order.type }}>Endre</Link></td>
+                                        <td> <Link className='btn btn-primary' to={"/edit-order"} state={{ editOrder: order }}>Endre</Link></td>
                                         <td> <button className='btn btn-danger'>Slett</button></td> {/*onclick='deleteOrder(  order.id  )'*/}
                                     </tr>
                                 )}

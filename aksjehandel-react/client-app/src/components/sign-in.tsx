@@ -27,9 +27,6 @@ export class SignIn extends Component<SignInProps, SignInState> {
     }
 
     loginclick = () => {
-        console.log(this.usernameref.current?.value);
-        console.log(this.passwordref.current?.value);
-
         const usernameOk = this.validateUser();
         const passwordOk = this.validatePassword();
 
