@@ -5,8 +5,10 @@ import { Layout } from './Layout';
 import { Portfolio } from './types/portfolio';
 import { Overview } from './pages/overview';
 import { MarketOverview } from './pages/marketOverview';
-import { Order } from './pages/order';
+import { OrderForm } from './pages/order';
 import { PortfolioContext } from './context/portfolio-context';
+import { Company } from './types/company';
+import { CompanyContext } from './context/company-context';
 
 interface AppProps {
 }
@@ -14,32 +16,44 @@ interface AppProps {
 interface AppState {
     error: boolean;
     errorMessage?: string;
-    loading: boolean;
     selectedPortfolio?: Portfolio;
     portfolios?: Portfolio[];
+    companies?: Company[];
 }
 
 export class AppLoggedIn extends Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            loading: true,
             error: false,
         }
     }
 
     componentDidMount() {
+        this.fetchCompanies();
         fetch('stock/getAllPortfolios')
             .then(response => response.json())
             .then(response => {
                 console.log(response);
                 this.setState({
                     portfolios: response,
-                    loading: false
                 })
             })
             .catch(error => this.setState({
-                loading: false,
+                error: true
+            }));
+    }
+
+    fetchCompanies = () => {
+        fetch("stock/getAllCompanies")
+            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                this.setState({
+                    companies: response,
+                })
+            })
+            .catch(error => this.setState({
                 error: true
             }));
     }
@@ -49,24 +63,26 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
     }
 
     render() {
-        const { loading, portfolios, selectedPortfolio } = this.state;
+        const { portfolios, companies, selectedPortfolio } = this.state;
         return (
             <>
-                {!portfolios && <div id="loading">
-                    <p>Henter porteføljer, venligst vent...</p>
+                {(!portfolios || !companies) && <div id="loading">
+                    <p>Henter porteføljer og selskap, venligst vent...</p>
                 </div>}
 
-                {portfolios &&
+                {portfolios && companies &&
                     <BrowserRouter>
                         <PortfolioContext.Provider value={{ portfolios, selectedPortfolio, setSelectedPortfolio: this.setSelectedPortfolio }}>
-                            <Layout>
-                                <Routes>
-                                    <Route path="/" element={<Home/>}></Route>
-                                    <Route path="/overview" element={<Overview />}></Route>
-                                    <Route path="/marketOverview" element={<MarketOverview />}></Route>
-                                    <Route path="/order" element={<Order />}></Route>
-                                </Routes>
-                            </Layout>
+                            <CompanyContext.Provider value={{ companies }}>
+                                <Layout>
+                                    <Routes>
+                                        <Route path="/" element={<Home />}></Route>
+                                        <Route path="/overview" element={<Overview />}></Route>
+                                        <Route path="/marketOverview" element={<MarketOverview />}></Route>
+                                        <Route path="/order" element={<OrderForm />}></Route>
+                                    </Routes>
+                                </Layout>
+                            </CompanyContext.Provider>
                         </PortfolioContext.Provider>
                     </BrowserRouter>
                 }

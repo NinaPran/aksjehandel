@@ -5,14 +5,8 @@ import { OrderTable } from "../components/order-table";
 import { PortfolioContext } from "../context/portfolio-context";
 import { Portfolio } from "../types/portfolio";
 
-interface OverviewProps {
-}
-
-interface OverviewState {
-    error: boolean;
-}
-
-export const Overview: FC<PropsWithChildren> = (props) => {
+// dette er en funksjonell komponent
+export const Overview = () => {
     return (
         <PortfolioContext.Consumer>
             {({ portfolios, selectedPortfolio }) => (

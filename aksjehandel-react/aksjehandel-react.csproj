@@ -28,7 +28,9 @@
   <ItemGroup>
     <None Remove="client-app\src\components\order-table.tsx" />
     <None Remove="client-app\src\components\shareholding-table.tsx" />
+    <None Remove="client-app\src\context\company-context.tsx" />
     <None Remove="client-app\src\context\portfolio-context.tsx" />
+    <None Remove="client-app\src\types\company.ts" />
     <None Remove="client-app\src\types\order.ts" />
     <None Remove="client-app\src\types\portfolio.ts" />
     <None Remove="client-app\src\types\shareholding.ts" />
@@ -39,7 +41,11 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="client-app\src\components\shareholding-table.tsx" />
+    <TypeScriptCompile Include="client-app\src\context\company-context.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="client-app\src\context\portfolio-context.tsx" />
+    <TypeScriptCompile Include="client-app\src\types\company.ts" />
     <TypeScriptCompile Include="client-app\src\types\order.ts" />
     <TypeScriptCompile Include="client-app\src\types\shareholding.ts" />
     <TypeScriptCompile Include="client-app\src\types\portfolio.ts" />
