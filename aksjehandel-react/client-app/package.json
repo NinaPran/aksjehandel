@@ -26,7 +26,6 @@
     "prestart": "node --loader ts-node/esm ./src/aspnetcore-https.ts && node --loader ts-node/esm ./src/aspnetcore-react.ts",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

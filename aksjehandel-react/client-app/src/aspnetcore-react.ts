@@ -18,10 +18,12 @@ const certFilePath = path.join(baseFolder, `${certName}.pem`);
 const keyFilePath = path.join(baseFolder, `${certName}.key`);
 
 if (!fs.existsSync('.env.development.local')) {
+
     fs.writeFileSync(
         '.env.development.local',
         `SSL_CRT_FILE=${certFilePath}
-         SSL_KEY_FILE=${keyFilePath}`,
+SSL_KEY_FILE=${keyFilePath}
+WDS_SOCKET_PORT=0`, // For å fikse websocket for auto-refresh ved endringer https://stackoverflow.com/a/72814800
     );
 } else {
     let lines = fs.readFileSync('.env.development.local')
