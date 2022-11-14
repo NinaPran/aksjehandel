@@ -29,7 +29,7 @@ namespace aksjehandel.Controllers
             _db = db;
             _log = log;
         }
-        public async Task<ActionResult> regOrder(Order newOrder)
+        public async Task<ActionResult> regOrder([FromBody] Order newOrder)
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {

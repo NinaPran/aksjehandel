@@ -5,7 +5,7 @@ import { Layout } from './Layout';
 import { Portfolio } from './types/portfolio';
 import { Overview } from './pages/overview';
 import { MarketOverview } from './pages/marketOverview';
-import { OrderForm } from './pages/order';
+import { NewOrderPage } from './pages/new-order';
 import { PortfolioContext } from './context/portfolio-context';
 import { Company } from './types/company';
 import { CompanyContext } from './context/company-context';
@@ -79,7 +79,7 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
                                         <Route path="/" element={<Home />}></Route>
                                         <Route path="/overview" element={<Overview />}></Route>
                                         <Route path="/marketOverview" element={<MarketOverview />}></Route>
-                                        <Route path="/order" element={<OrderForm />}></Route>
+                                        <Route path="/new-order" element={<NewOrderPage />}></Route>
                                     </Routes>
                                 </Layout>
                             </CompanyContext.Provider>
