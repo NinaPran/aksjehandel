@@ -1,7 +1,7 @@
 ﻿import { error } from 'console';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Order } from '../types/order';
+import { ServerOrder } from '../types/order';
 import { Portfolio } from '../types/portfolio';
 
 interface OrderTableProps {
@@ -12,7 +12,7 @@ interface OrderTableState {
     error: boolean;
     errorMessage?: string;
     loading: boolean;
-    orders?: Order[];
+    orders?: ServerOrder[];
 }
 
 export class OrderTable extends Component<OrderTableProps, OrderTableState> {

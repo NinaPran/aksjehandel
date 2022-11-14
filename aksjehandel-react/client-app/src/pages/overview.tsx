@@ -1,5 +1,5 @@
 ﻿import { FC, PropsWithChildren } from "react";
-import { PortfolioSelect } from "../components/portfolioSelect";
+import { PortfolioSelect } from "../components/portfolio-select";
 import { ShareholdingTable } from "../components/shareholding-table";
 import { OrderTable } from "../components/order-table";
 import { PortfolioContext } from "../context/portfolio-context";

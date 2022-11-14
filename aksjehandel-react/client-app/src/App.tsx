@@ -7,7 +7,7 @@ import { Layout } from './Layout';
 import { Portfolio } from './types/portfolio';
 import { Overview } from './pages/overview';
 import { MarketOverview } from './pages/marketOverview';
-import { Order } from './pages/order';
+import { OrderForm } from './pages/order';
 import { AppLoggedIn } from './app-logged-in';
 import { SignIn } from './components/sign-in';
 
