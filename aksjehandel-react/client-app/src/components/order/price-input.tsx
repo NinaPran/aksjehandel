@@ -34,7 +34,7 @@ export class PriceInput extends Component<PriceInputProps, PriceInputState> {
             this.props.onPriceSet(Number.parseFloat(price), true);
         }
     }
-
+    
     render() {
         const { price } = this.props;
         const { priceError } = this.state;

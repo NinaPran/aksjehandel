@@ -31,6 +31,8 @@ export const OrderForm = (props: OrderFormProps) => {
 
     const [selectedPortfolioId, setSelectedPortfolioId] = useState(-1);
 
+    setSelectedPortfolioId(5);
+
     const [amount, setAmount] = useState(editOrder ? editOrder.amount : 0);
     const [amountValid, setAmountValid] = useState(isEditOrder); // Antar at edit-order er gyldig 
 
@@ -92,15 +94,13 @@ export const OrderForm = (props: OrderFormProps) => {
     }
 
     useEffect(() => {
-        const currentSelectedPortfolioId = portfolioContext.selectedPortfolio?.id ?? -1;
-        console.log("AAA", currentSelectedPortfolioId, selectedPortfolioId, selectedPortfolioId !== currentSelectedPortfolioId);
-        if (currentSelectedPortfolioId >=0 && selectedPortfolioId !== currentSelectedPortfolioId) {
-            console.log("Fetching");
-            setSelectedPortfolioId(currentSelectedPortfolioId);
-            getOwnedShareholdings(currentSelectedPortfolioId);
+        if (portfolioContext.selectedPortfolio) {
+            console.log("Henter shareholdings for portfolio " + portfolioContext.selectedPortfolio.displayName);
+            getOwnedShareholdings(portfolioContext.selectedPortfolio.id);
 
         }
-    }, [portfolioContext])
+    }, [portfolioContext.selectedPortfolio]) // Kalles kun når selectedPortfolio endres
+
 
     const getOwnedShareholdings = (portfolioId: number) => {
 
@@ -220,7 +220,7 @@ export const OrderForm = (props: OrderFormProps) => {
             <div>
                 <label>Type</label>
                 <div form-group>
-                    <input disabled={isEditOrder } checked={orderType === "buy"} type="radio" id="type-buy" name="type" value="buy" onClick={() => setOrderType("buy")} />
+                    <input disabled={isEditOrder} checked={orderType === "buy"} type="radio" id="type-buy" name="type" value="buy" onClick={() => setOrderType("buy")} />
                     <label htmlFor="buy">Kjøp</label>
                 </div>
                 <div form-group>

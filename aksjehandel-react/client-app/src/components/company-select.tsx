@@ -12,7 +12,7 @@ interface CompanySelectProps {
 
 }
 
-export const CompanySelect = (props: CompanySelectProps) => {
+export const CompanySelect: React.FC<CompanySelectProps> = (props) => {
     const disabled = props.disabled === true;
     const companyContext = useContext(CompanyContext);
 
