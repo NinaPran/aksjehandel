@@ -31,8 +31,6 @@ export const OrderForm = (props: OrderFormProps) => {
 
     const [selectedPortfolioId, setSelectedPortfolioId] = useState(-1);
 
-    setSelectedPortfolioId(5);
-
     const [amount, setAmount] = useState(editOrder ? editOrder.amount : 0);
     const [amountValid, setAmountValid] = useState(isEditOrder); // Antar at edit-order er gyldig 
 
