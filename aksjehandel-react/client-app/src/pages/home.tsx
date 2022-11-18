@@ -38,7 +38,7 @@ export class Home extends Component<HomeProps, HomeState> {
                                 <button className="btn btn-primary" >Min oversikt</button>
                             </div>
                             <div className="form-group">
-                                <a href="marketOverview.html" className="btn btn-primary">Markedsoversikt</a>
+                                <a href="market-overview.html" className="btn btn-primary">Markedsoversikt</a>
                             </div>
                             <div className="form-group">
                                 <button className="btn btn-primary">Logg ut</button>

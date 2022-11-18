@@ -4,7 +4,7 @@ import { Home } from './pages/home';
 import { Layout } from './Layout';
 import { Portfolio } from './types/portfolio';
 import { Overview } from './pages/overview';
-import { MarketOverview } from './pages/marketOverview';
+import { MarketOverview } from './pages/market-overview';
 import { NewOrderPage } from './pages/new-order';
 import { PortfolioContext } from './context/portfolio-context';
 import { Company } from './types/company';
@@ -68,7 +68,7 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
         return (
             <>
                 {(!portfolios || !companies) && <div id="loading">
-                    <p>Henter porteføljer og selskap, venligst vent...</p>
+                    <p>Henter portef?ljer og selskap, venligst vent...</p>
                 </div>}
 
                 {portfolios && companies &&
@@ -79,7 +79,7 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
                                     <Routes>
                                         <Route path="/" element={<Home />}></Route>
                                         <Route path="/overview" element={<Overview />}></Route>
-                                        <Route path="/marketOverview" element={<MarketOverview />}></Route>
+                                        <Route path="/market-overview" element={<MarketOverview />}></Route>
                                         <Route path="/new-order" element={<NewOrderPage />}></Route>
                                         <Route path="/edit-order" element={<EditOrderPage />}></Route>
                                     </Routes>
