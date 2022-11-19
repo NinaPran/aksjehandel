@@ -29,8 +29,6 @@ export const OrderForm = (props: OrderFormProps) => {
 
     const [priceValid, setPriceValid] = useState(isEditOrder); // Antar at edit-order er gyldig 
 
-    const [selectedPortfolioId, setSelectedPortfolioId] = useState(-1);
-
     const [amount, setAmount] = useState(editOrder ? editOrder.amount : 0);
     const [amountValid, setAmountValid] = useState(isEditOrder); // Antar at edit-order er gyldig 
 
@@ -170,7 +168,7 @@ export const OrderForm = (props: OrderFormProps) => {
 
     const registerOrder = () => {
         if (validateOrder()) {
-            const portfolioId = selectedPortfolioId;
+            const portfolioId = portfolioContext.selectedPortfolio?.id || -1;
 
             const order: NewOrder = {
                 portfolioId: portfolioId,

@@ -1,38 +1,40 @@
-import { Component } from 'react';
+import { FC, useState } from 'react';
 import './App.css';
 import { AppLoggedIn } from './app-logged-in';
 import { SignIn } from './components/sign-in';
 
-interface AppProps {
-}
+export const App: FC = () => {
+    const [signedIn, setSignedIn] = useState(false);
+    const [hasCheckedSignIn, setHasCheckedSignIn] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-interface AppState {
-    error: boolean;
-    errorMessage?: string;
-    signedIn: boolean;
-}
+    if (!hasCheckedSignIn) {
+        fetch('stock/TestValidSession', {
+            method: 'post'
+        })
+            .then(response => {
+                if (response.status == 200) {
+                    setSignedIn(true);
+                }
+                setHasCheckedSignIn(true);
 
-export class App extends Component<AppProps, AppState> {
-    constructor(props: AppProps) {
-        super(props);
-        this.state = {
-            error: false,
-            signedIn: false,
-        }
+            })
+            .catch(error => setErrorMessage("Feil på server -prøv igjen senere")
+            );
     }
 
-    render() {
-        const { signedIn } = this.state;
-        return (
-            <>
-                {!signedIn &&
-                    <SignIn onSignedIn={() => this.setState({ signedIn: true })}></SignIn>
-                }
+    return (
+        <>
+            {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
 
-                {signedIn &&
-                    <AppLoggedIn/>
-                }
-            </>
-        );
-    }
+            {hasCheckedSignIn && !signedIn &&
+                <SignIn onSignedIn={() => setSignedIn(true)}></SignIn>
+            }
+
+            {hasCheckedSignIn && signedIn &&
+                <AppLoggedIn />
+            }
+        </>
+    );
 }
+

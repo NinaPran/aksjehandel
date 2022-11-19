@@ -10,6 +10,7 @@ import { PortfolioContext } from './context/portfolio-context';
 import { Company } from './types/company';
 import { CompanyContext } from './context/company-context';
 import { EditOrderPage } from './pages/edit-order';
+import { SignOut } from './pages/sign-out';
 
 interface AppProps {
 }
@@ -82,6 +83,7 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
                                         <Route path="/market-overview" element={<MarketOverview />}></Route>
                                         <Route path="/new-order" element={<NewOrderPage />}></Route>
                                         <Route path="/edit-order" element={<EditOrderPage />}></Route>
+                                        <Route path="/sign-out" element={<SignOut />}></Route>
                                     </Routes>
                                 </Layout>
                             </CompanyContext.Provider>

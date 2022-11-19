@@ -167,5 +167,17 @@ namespace aksjehandel.Controllers
             HttpContext.Session.SetString(_signedIn, _notSignedIn);
         }
 
+        public ActionResult TestValidSession()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            {
+                return Unauthorized("Ikke logget inn");
+            }
+            else
+            {
+                return Ok();
+            }
+        }
+
     }
 }
