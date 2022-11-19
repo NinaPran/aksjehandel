@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import './App.css';
+import './app.css';
 import { AppLoggedIn } from './app-logged-in';
 import { SignIn } from './components/sign-in';
 
