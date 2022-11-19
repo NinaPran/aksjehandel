@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home } from './pages/home';
-import { Layout } from './Layout';
+import { Layout } from './layout';
 import { Portfolio } from './types/portfolio';
 import { Overview } from './pages/overview';
 import { MarketOverview } from './pages/market-overview';
