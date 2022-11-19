@@ -13,6 +13,7 @@ namespace aksjehandel.DAL
         Task<Order> GetOneOrder(int id);
         Task<List<Order>> GetAllOrders(int portfolioId);
         Task<List<Shareholding>> GetAllShareholdings(int portfolioId);
+        Task<Portfolio> GetOnePortfolio(int portfolioId);
         Task<List<Portfolio>> GetAllPortfolios();
         Task<List<Company>> GetAllCompanies();
         Task<List<Trade>> GetAllTrades();

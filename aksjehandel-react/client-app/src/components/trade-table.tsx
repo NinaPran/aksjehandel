@@ -28,7 +28,6 @@ export class TradeTable extends Component<TradeTableProps, TradeTableState> {
         fetch("stock/getAllTrades")
             .then(response => response.json())
             .then(response => {
-                console.log(response);
                 this.setState({
                     trades: response,
                 })

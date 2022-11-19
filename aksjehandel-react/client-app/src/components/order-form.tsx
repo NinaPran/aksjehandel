@@ -9,6 +9,7 @@ import { PortfolioContext } from "../context/portfolio-context";
 import { Company } from "../types/company";
 import { EditOrder, NewOrder, ServerOrder } from "../types/order";
 import { Shareholding } from "../types/shareholding";
+import { PurchasingPower } from "./purchasing-power";
 
 
 interface OrderFormProps {
@@ -40,6 +41,10 @@ export const OrderForm = (props: OrderFormProps) => {
 
     const [orderType, setOrderType] = useState<NewOrder["type"]>(editOrder ? editOrder.type : props.orderType || "buy");
     const [shareholdings, setShareholdings] = useState<Shareholding[]>([]);
+
+    const [availableAmount, setAvailableAmount] = useState(0);
+
+    const selectedPortfolio = portfolioContext.selectedPortfolio
 
 
     const onPriceChange = (price: number, priceValid: boolean) => {
@@ -81,7 +86,11 @@ export const OrderForm = (props: OrderFormProps) => {
     }
 
     const validateEnoughPurchasePower = () => {
-        const purchasePower = portfolioContext.selectedPortfolio?.purchasingPower || 0;
+        let purchasePower = portfolioContext.selectedPortfolio?.purchasingPower || 0;
+        if (editOrder) {
+            // "Frigjør" kjøpekraft reservert av denne ordren hvis vi editerer en ordre
+            purchasePower += editOrder.amount * editOrder.price;
+        }
         if ((purchasePower - (price * amount) < 0)) {
             return false;
         } else {
@@ -95,7 +104,7 @@ export const OrderForm = (props: OrderFormProps) => {
             getOwnedShareholdings(portfolioContext.selectedPortfolio.id);
 
         }
-    }, [portfolioContext.selectedPortfolio]) // Kalles kun når selectedPortfolio endres
+    }, [selectedPortfolio]) // Kalles kun når selectedPortfolio endres
 
 
     const getOwnedShareholdings = (portfolioId: number) => {
@@ -111,28 +120,33 @@ export const OrderForm = (props: OrderFormProps) => {
             });
     }
 
+    useEffect(() => {
+        setAvailableAmount(getAvailableStockAmount());
+    }, [selectedPortfolio, selectedCompany, orderType])
 
+    const getAvailableStockAmount = () => {
+        // Returnerer hvor mange tilgjengelige aksjer det er med nånærende valg
+        const companyId = selectedCompany?.id;
+        if (companyId === undefined) {
+            return 0;
+        }
+        const matchingShareholding = shareholdings.find((shareholding) => shareholding.companyId === companyId);
+        if (!matchingShareholding) {
+            return 0;
+        }
+        let availableShares = matchingShareholding.remainingAmount;
+        if (editOrder) {
+            // "Frigjør" antallet aksjer reservert av denne ordren hvis vi editerer en ordre
+            availableShares += editOrder.amount;
+        }
+        return availableShares;
+    }
 
     const validateEnoughStocks = () => {
-        const companyId = selectedCompany?.id;
-        const amountSell = amount;
-        const ownedShareholdings = shareholdings;
-        if (companyId === undefined || ownedShareholdings.length === 0) {
-            return false;
-        }
 
-        for (var i = 0; i < ownedShareholdings.length; i++) {
-            const shareholding = ownedShareholdings[i];
-            let remainingShares = shareholding.remainingAmount;
-            if (editOrder) {
-                // "Frigjør" antallet aksjer reservert av denne ordren hvis vi editerer en
-                remainingShares += editOrder.amount;
-            }
-            if (shareholding.companyId === companyId) {
-                return amountSell <= remainingShares;
-            }
-        }
-        return false;
+        const availableShares = getAvailableStockAmount();
+        return amount <= availableShares;
+
     }
 
     const sendEditOrder = () => {
@@ -200,14 +214,13 @@ export const OrderForm = (props: OrderFormProps) => {
         };
     }
 
-
-    const selectedPortfolio = portfolioContext.selectedPortfolio;
+    const showAvailableAmount = selectedPortfolio && selectedCompany && orderType === "sell";
 
     return (
         <form className="form">
 
             <h2>Disponibelt beløp</h2>
-            <div>{selectedPortfolio?.purchasingPower}</div>
+            <PurchasingPower />
 
             <PortfolioSelect disabled={isEditOrder} />
 
@@ -227,7 +240,8 @@ export const OrderForm = (props: OrderFormProps) => {
 
             <PriceInput price={price} onPriceSet={onPriceChange} />
 
-            <AmountInput amount={amount} onAmountSet={onAmountChange} />
+            {/*TODO: Send med available amount inn i AmountInput istedet*/}
+            <AmountInput amount={amount} onAmountSet={onAmountChange} /> {showAvailableAmount && <span>Tilgjengelige aksjer: {availableAmount}</span>}
 
             <div className="form-group">
                 <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" />

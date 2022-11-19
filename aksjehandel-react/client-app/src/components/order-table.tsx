@@ -53,7 +53,6 @@ export class OrderTable extends Component<OrderTableProps, OrderTableState> {
         const { loading, orders, error } = this.state;
         return (
             <>
-                {this.props.selectedPortfolio.displayName}
                 {!orders && !error && <div id="loading">
                     <p>Henter Ordre, venligst vent...</p>
                 </div>}

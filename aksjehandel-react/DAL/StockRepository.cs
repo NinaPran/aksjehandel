@@ -214,11 +214,16 @@ namespace aksjehandel.DAL
 
         }
 
-        private async Task<bool> ValidateOrder(bool isBuyOrder, Portfolios portfolio, int companyId, int amount, double price)
+        private async Task<bool> ValidateOrder(bool isBuyOrder, Portfolios portfolio, int companyId, int amount, double price, Orders originalOrder = null)
         {
             if (isBuyOrder)
             {
                 double purchasingPower = CalculatePurchasingPower(portfolio, _db);
+                if (originalOrder != null)
+                {
+                    // Hvis vi editerer en ordre må vi legge til summen av den originale ordren siden den vil forsvinne
+                    purchasingPower += originalOrder.Price * originalOrder.Amount;
+                }
                 double orderValue = price * amount;
                 if (purchasingPower < orderValue)
                 {
@@ -230,6 +235,11 @@ namespace aksjehandel.DAL
             {
                 Shareholdings shareholding = await GetShareholdingByCompany(portfolio.Id, companyId);
                 int remainingAmount = CalculateRemainingAmount(portfolio, shareholding, _db);
+                if (originalOrder != null)
+                {
+                    // Hvis vi editerer en ordre må vi legge til antallet fra den originale ordren siden den vil forsvinne
+                    remainingAmount += originalOrder.Amount;
+                }
                 if (remainingAmount < amount)
                 {
                     _log.LogInformation("Antallet aksjer i ordren overskrider antall eide");
@@ -286,8 +296,14 @@ namespace aksjehandel.DAL
             try
             {
                 Orders oneOrder = await _db.Orders.FindAsync(changeOrder.Id);
+                if (oneOrder == null)
+                {
+                    _log.LogInformation("Feil i change Order: Fant ikke ordre med id: " + changeOrder.Id);
+                    return false;
+                }
 
-                await ValidateOrder(oneOrder.Type == "buy", oneOrder.Portfolio, oneOrder.Company.Id, oneOrder.Amount, oneOrder.Price);
+
+                await ValidateOrder(oneOrder.Type == "buy", oneOrder.Portfolio, oneOrder.Company.Id, changeOrder.Amount, changeOrder.Price, oneOrder);
                 // Tar vare på den gamle prisen
                 double oldPrice = oneOrder.Price;
 
@@ -296,13 +312,13 @@ namespace aksjehandel.DAL
                 oneOrder.Amount = changeOrder.Amount;
 
                 // Kaller funksjon som sjekker om det er mulighet for å utføre trade og gjennomfører dette om mulige hvis man nå krever lavere pris på salgsordre
-                if (oneOrder.Price < oldPrice && oneOrder.Type == "sell")
+                if (oneOrder.Type == "sell" && oneOrder.Price < oldPrice)
                 {
                     oneOrder = await CheckForAndExecuteTrade(oneOrder);
                 }
 
                 // Kaller funksjon som sjekker om det er mulighet for å utføre trade og gjennomfører dette om mulige hvis man nå tilbyr høyere pris på kjøpsordre
-                if (oneOrder.Price > oldPrice && oneOrder.Type == "buy")
+                if (oneOrder.Type == "buy" && oneOrder.Price > oldPrice)
                 {
                     oneOrder = await CheckForAndExecuteTrade(oneOrder);
                 }
@@ -422,6 +438,33 @@ namespace aksjehandel.DAL
                 _log.LogInformation("Fant ingen shareholding for portfolioId: " + portfolioId + " og companyId: " + companyId);
 
                 throw new ArgumentException("Fant ingen shareholding for portfolioId: " + portfolioId + " og companyId: " + companyId);
+            }
+
+        }
+        public async Task<Portfolio> GetOnePortfolio(int id)
+        {
+            try
+            {
+                Portfolios onePortfolio = await _db.Portfolios.FindAsync(id);
+                if(onePortfolio == null)
+                {
+                    _log.LogInformation("Feil i GetOnePortfolio: fant ikke portfolio med id: " + id);
+                    return null;
+
+                }
+                
+                return new Portfolio
+                {
+                    Id = onePortfolio.Id,
+                    DisplayName = onePortfolio.DisplayName,
+                    Cash = onePortfolio.Cash,
+                    PurchasingPower = StockRepository.CalculatePurchasingPower(onePortfolio, _db)
+                };
+            }
+            catch (Exception e)
+            {
+                _log.LogInformation("Feil i GetOnePortfolio: " + e.Message);
+                return null;
             }
 
         }

@@ -115,12 +115,27 @@ namespace aksjehandel.Controllers
             List<Shareholding> allShareholdings = await _db.GetAllShareholdings(portfolioId);
             return Ok(allShareholdings);
         }
-        public async Task<ActionResult> GetAllPortfolios()
+        public async Task<ActionResult> GetPurchasingPower(int id)
         {
-            /* if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
             {
                 return Unauthorized("Ikke logget inn");
-            }*/
+            }
+            Portfolio portfolio = await _db.GetOnePortfolio(id);
+
+            if (portfolio == null)
+            {
+                _log.LogInformation("Fant ikke portefølgen");
+                return NotFound("Fant ikke portefølgen");
+            }
+            return Ok(portfolio.PurchasingPower);
+        }
+        public async Task<ActionResult> GetAllPortfolios()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_signedIn)))
+            {
+                return Unauthorized("Ikke logget inn");
+            }
             List<Portfolio> allPortfolios = await _db.GetAllPortfolios();
             return Ok(allPortfolios);
         }

@@ -13,6 +13,7 @@ export const EditOrderPage = () => {
     const location = useLocation();
     const order: ServerOrder = location.state.editOrder;
     const company = companyContext.companies.find((company) => company.id === order.companyId);
+    console.log("Render edit-order");
     return (
         <div className="container">
             <h1>Endre ordre</h1>

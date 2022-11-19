@@ -11,7 +11,6 @@ interface ShareholdingTableProps {
 interface ShareholdingTableState {
     error: boolean;
     errorMessage?: string;
-    loading: boolean;
     shareholdings?: Shareholding[];
 }
 
@@ -19,7 +18,6 @@ export class ShareholdingTable extends Component<ShareholdingTableProps, Shareho
     constructor(props: ShareholdingTableProps) {
         super(props);
         this.state = {
-            loading: true,
             error: false,
         }
     }
@@ -40,20 +38,17 @@ export class ShareholdingTable extends Component<ShareholdingTableProps, Shareho
             .then(response => {
                 this.setState({
                     shareholdings: response,
-                    loading: false
                 })
             })
             .catch(error => this.setState({
-                loading: false,
                 error: true
             }));
     }
 
     render() {
-        const { loading, shareholdings, error } = this.state;
+        const { shareholdings, error } = this.state;
         return (
             <>
-                {this.props.selectedPortfolio.displayName}
                 {!shareholdings && !error && <div id="loading">
                     <p>Henter Akjseposter, venligst vent...</p>
                 </div>}

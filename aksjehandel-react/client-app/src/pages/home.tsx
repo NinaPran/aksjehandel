@@ -25,29 +25,25 @@ export class Home extends Component<HomeProps, HomeState> {
 
     render() {
         return (
-            <PortfolioContext.Consumer>
-                {({ portfolios, selectedPortfolio }) => (
-                    <Container>
-                        <h1>Velkommen!</h1>{selectedPortfolio?.displayName}
-                        <div id="mainContent">
-                            <PortfolioSelect></PortfolioSelect>
-                            <div className="form-group">
-                                <button className="btn btn-primary">Ny ordre</button>
-                            </div>
-                            <div className="form-group">
-                                <button className="btn btn-primary" >Min oversikt</button>
-                            </div>
-                            <div className="form-group">
-                                <a href="market-overview.html" className="btn btn-primary">Markedsoversikt</a>
-                            </div>
-                            <div className="form-group">
-                                <button className="btn btn-primary">Logg ut</button>
-                            </div>
-                        </div>
-                    </Container>
-                )}
-            </PortfolioContext.Consumer>
+            <Container>
+                <h1>Velkommen!</h1>
+                <div id="mainContent">
+                    <PortfolioSelect></PortfolioSelect>
+                    <div className="form-group">
+                        <button className="btn btn-primary">Ny ordre</button>
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary" >Min oversikt</button>
+                    </div>
+                    <div className="form-group">
+                        <a href="market-overview.html" className="btn btn-primary">Markedsoversikt</a>
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary">Logg ut</button>
+                    </div>
+                </div>
+            </Container>
         );
     }
-  
+
 }
