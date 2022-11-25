@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace xUnitTestProject1
 {
+    [ExcludeFromCodeCoverage]
     internal class MockHttpSession : ISession
     {
         Dictionary<string, object> sessionStorage = new Dictionary<string, object>();
