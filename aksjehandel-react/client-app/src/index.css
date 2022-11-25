@@ -47,16 +47,15 @@ a.btn-success {
     width: 200px;
     text-align: center;
     padding-top: 10px;
-    background-color: #7b9a6d;
-    border-color: #7b9a6d;
+    background-color: rgba(123, 154, 109, 0.3);
+    border-color: rgba(123, 154, 109, 0.3);
 }
 
 .underlinetext {
-    text-decoration: underline; 
-    color: white;
+    color: black;
 }
 
 .smalltext {
     font-weight: bold;
-    color: white;
+    color: black;
 }

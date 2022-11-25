@@ -41,7 +41,7 @@ export class PriceInput extends Component<PriceInputProps, PriceInputState> {
 
         return (
             <div className="form-group">
-                <label style={{ marginRight: "10px" }}>Pris</label>
+                <label style={{ marginRight: "25px" }}>Pris</label>
                 <input type="text" ref={this.priceInput} onChange={this.validatePrice} defaultValue={price} />
                 <span style={{ color: "red" }}>{priceError}</span>
             </div>

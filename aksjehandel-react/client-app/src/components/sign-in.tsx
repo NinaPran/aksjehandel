@@ -107,13 +107,13 @@ export class SignIn extends Component<SignInProps, SignInState> {
                     </FormGroup>
 
                     <FormGroup>
-                        <label style={{ marginRight: "10px" }}>Passord</label>
+                        <label style={{ marginRight: "34px" }}>Passord</label>
                         <input ref={this.passwordref} onChange={this.validatePassword} type="password" />
                         <span style={{ color: "red" }}>{passwordError}</span>
                     </FormGroup>
 
                     <FormGroup>
-                        <input type="button" value="Logg inn" onClick={this.loginclick} className="btn btn-primary" />
+                        <input type="button" value="Logg inn" onClick={this.loginclick} className="btn btn-primary" style={{ backgroundColor: "#528AAE", color: "white", borderColor: "#528AAE" }} />
                     </FormGroup>
 
                     <div style={{ color: "red" }}>{signInError}</div>

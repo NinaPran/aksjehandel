@@ -28,7 +28,7 @@ export const SignOut: FC = () => {
 
         <Container>
             <div className="form-group">
-                <p>Signing you out...</p>
+                <p>Logger ut...</p>
             </div>
         </Container>
     );

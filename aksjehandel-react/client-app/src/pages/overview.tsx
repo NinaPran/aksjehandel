@@ -44,10 +44,6 @@ export const Overview = () => {
                                     <OrderTable selectedPortfolio={selectedPortfolio}></OrderTable>
                                 </FormGroup>
 
-                                <FormGroup>
-                                    <Link to="/new-order" className="btn btn-primary">Ny ordre</Link>
-                                </FormGroup>
-
                             </>
 
                         }
