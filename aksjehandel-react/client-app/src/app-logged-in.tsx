@@ -69,9 +69,9 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
         return (
             <>
                 {(!portfolios || !companies) && <div id="loading">
-                    <p>Henter porteføljer og selskap, venligst vent...</p>
+                    <p>Henter resurser, venligst vent...</p>
                 </div>}
-
+                
                 {portfolios && companies &&
                     <BrowserRouter>
                         <PortfolioContext.Provider value={{ portfolios, selectedPortfolio, setSelectedPortfolio: this.setSelectedPortfolio }}>
