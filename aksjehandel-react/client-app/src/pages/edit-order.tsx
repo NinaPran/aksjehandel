@@ -16,7 +16,7 @@ export const EditOrderPage = () => {
     console.log("Render edit-order");
     return (
         <div className="container">
-            <h1>Endre ordre</h1>
+            <h1 style={{ marginBottom: "30px" }}>Endre ordre</h1>
             <OrderForm editOrder={order} company={company}></OrderForm>
         </div>
     );

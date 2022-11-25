@@ -1,5 +1,5 @@
 ﻿import { Component, PropsWithChildren } from "react";
-import { Container } from 'reactstrap';
+import { Container, Form, FormGroup } from 'reactstrap';
 import { PortfolioSelect } from "../components/portfolio-select";
 import { PortfolioContext } from "../context/portfolio-context";
 import './home.css';
@@ -26,22 +26,20 @@ export class Home extends Component<HomeProps, HomeState> {
     render() {
         return (
             <Container>
-                <h1>Velkommen!</h1>
-                <div id="mainContent">
-                    <PortfolioSelect></PortfolioSelect>
-                    <div className="form-group">
+                <h1 style={{ marginBottom: "30px" }}>Velkommen!</h1>
+                <Form id="mainContent">
+                    <FormGroup>
+                        <PortfolioSelect></PortfolioSelect>
+                    </FormGroup>
+
+                    <FormGroup>
                         <button className="btn btn-primary">Ny ordre</button>
-                    </div>
-                    <div className="form-group">
+                    </FormGroup>
+
+                    <FormGroup>
                         <button className="btn btn-primary" >Min oversikt</button>
-                    </div>
-                    <div className="form-group">
-                        <a href="market-overview.html" className="btn btn-primary">Markedsoversikt</a>
-                    </div>
-                    <div className="form-group">
-                        <button className="btn btn-primary">Logg ut</button>
-                    </div>
-                </div>
+                    </FormGroup>
+                </Form>
             </Container>
         );
     }

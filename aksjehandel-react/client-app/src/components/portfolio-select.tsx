@@ -25,7 +25,7 @@ export const PortfolioSelect = (props: PortfolioSelectProps) => {
     return (
 
         <Container>
-            <div className="form-group">
+            <div>
                 <label htmlFor="portfolioSelect">Portefølje</label>
                 <select className="form-control" disabled={disabled} name="portfolioSelect" value={selectedPortfolioIndex} onChange={onPortfolioChange}>
                     <option key="-1" value="-1" disabled hidden>Velg portefølje</option>

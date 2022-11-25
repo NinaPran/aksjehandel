@@ -1,6 +1,7 @@
 ﻿import React, { Component, createRef, FC, PropsWithChildren, useContext, useEffect, useRef, useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import { create } from "ts-node";
+import { Form, FormGroup } from 'reactstrap';
 import { CompanySelect } from "../components/company-select";
 import { AmountInput } from "../components/order/amount-input";
 import { PriceInput } from "../components/order/price-input";
@@ -219,14 +220,22 @@ export const OrderForm = (props: OrderFormProps) => {
     return (
         <form className="form">
 
-            <h2>Disponibelt beløp</h2>
-            <PurchasingPower />
+            <Form>
+                
+                <FormGroup>
+                    <div>Disponibelt beløp</div>
+                    <PurchasingPower />
+                </FormGroup>
 
-            <PortfolioSelect disabled={isEditOrder} />
+                <FormGroup>
+                    <PortfolioSelect disabled={isEditOrder} />
+                </FormGroup>
 
-            <CompanySelect disabled={isEditOrder} selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany} />
+                <FormGroup>
+                    <CompanySelect disabled={isEditOrder} selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany} />
+                </FormGroup>
 
-            <div>
+                <FormGroup>
                 <label>Type</label>
                 <div form-group>
                     <input disabled={isEditOrder} checked={orderType === "buy"} type="radio" id="type-buy" name="type" value="buy" onClick={() => setOrderType("buy")} />
@@ -235,22 +244,27 @@ export const OrderForm = (props: OrderFormProps) => {
                 <div form-group>
                     <input disabled={isEditOrder} checked={orderType === "sell"} type="radio" id="type-sell" name="type" value="sell" onClick={() => setOrderType("sell")} />
                     <label htmlFor="sell">Salg</label>
-                </div>
-            </div>
+                    </div>
+                </FormGroup>
 
-            <PriceInput price={price} onPriceSet={onPriceChange} />
+                <FormGroup>
+                    <PriceInput price={price} onPriceSet={onPriceChange} />
+                </FormGroup>
 
-            {/*TODO: Send med available amount inn i AmountInput istedet*/}
-            <AmountInput amount={amount} onAmountSet={onAmountChange} /> {showAvailableAmount && <span>Tilgjengelige aksjer: {availableAmount}</span>}
+                <FormGroup>
+                {/*TODO: Send med available amount inn i AmountInput istedet*/}
+                    <AmountInput amount={amount} onAmountSet={onAmountChange} /> {showAvailableAmount && <span>Tilgjengelige aksjer: {availableAmount}</span>}
+                </FormGroup>
 
-            <div className="form-group">
-                <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" />
-            </div>
+                <FormGroup>
+                    <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" />
+                </FormGroup>
 
             <div className="form-group">
                 <span style={{ color: "red" }}>{errorText}</span>
                 <div id="test"></div>
-            </div>
+                </div>
+            </Form>
         </form>
     );
 }

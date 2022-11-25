@@ -96,7 +96,7 @@ export class SignIn extends Component<SignInProps, SignInState> {
 
         return (
             <div className="container">
-                <h1>Logg inn</h1>
+                <h1 style={{ marginBottom: "30px" }}>Logg inn</h1>
                 <form className="form">
                     <div className="form-group">
                         <label>Brukernavn</label>
