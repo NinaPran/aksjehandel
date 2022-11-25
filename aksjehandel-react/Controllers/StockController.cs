@@ -103,6 +103,10 @@ namespace aksjehandel.Controllers
                 return Unauthorized("Ikke logget inn");
             }
             List<Order> allOrders = await _db.GetAllOrders(portfolioId);
+            if (allOrders == null)
+            {
+                return StatusCode(500);
+            }
             return Ok(allOrders);
 
         }
@@ -142,6 +146,10 @@ namespace aksjehandel.Controllers
                 return Unauthorized("Ikke logget inn");
             }
             List<Portfolio> allPortfolios = await _db.GetAllPortfolios();
+            if (allPortfolios == null)
+            {
+                return StatusCode(500);
+            }
             return Ok(allPortfolios);
         }
         public async Task<ActionResult> GetAllCompanies()
@@ -151,6 +159,10 @@ namespace aksjehandel.Controllers
                 return Unauthorized("Ikke logget inn");
             }
             List<Company> allCompanies = await _db.GetAllCompanies();
+            if (allCompanies == null)
+            {
+                return StatusCode(500);
+            }
             return Ok(allCompanies);
 
         }
@@ -161,6 +173,10 @@ namespace aksjehandel.Controllers
                 return Unauthorized("Ikke logget inn");
             }
             List<Trade> allTrades = await _db.GetAllTrades();
+            if (allTrades == null)
+            {
+                return StatusCode(500);
+            }
             return Ok(allTrades);
         }
 

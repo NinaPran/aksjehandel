@@ -376,6 +376,7 @@ namespace TestProjectAksjehandel
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
             Assert.Equal<Order>(oneOrder, (Order)result.Value);
         }
+
         [Fact]
         public async Task GetOneOrderTestNotSignedIn()
         {
@@ -436,6 +437,78 @@ namespace TestProjectAksjehandel
             Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
             Assert.Equal("Fant ikke ordren", result.Value);
         }
+        [Fact]
+        public async Task GetPurchasingPowerTestNotSignedIn()
+        {
+            // Arrange
+            var portfolio1 = new Portfolio
+            {
+                Id = 1,
+                DisplayName = "Axis",
+                Cash = 100300,
+                PurchasingPower = 100200
+            };
+
+            mockRep.Setup(k => k.GetOnePortfolio(1)).ReturnsAsync(portfolio1);
+
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+
+            mockSession[_signedIn] = _notSignedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.GetPurchasingPower(1) as UnauthorizedObjectResult;
+            // Assert 
+            Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
+            Assert.Equal("Ikke logget inn", result.Value);
+            // Forventer ikke at GetOneOrder skal kalles hvis innlogging feiler
+            mockRep.Verify(mock => mock.GetOnePortfolio(1), Times.Never());
+        }
+        [Fact]
+        public async Task GetPurchasingPowerTestSignedInAndOK()
+        {
+            // Arrange
+            var portfolio1 = new Portfolio
+            {
+                Id = 1,
+                DisplayName = "Axis",
+                Cash = 100300,
+                PurchasingPower = 100200
+            };
+
+            mockRep.Setup(k => k.GetOnePortfolio(1)).ReturnsAsync(portfolio1);
+
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.GetPurchasingPower(1) as OkObjectResult;
+            // Assert 
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(portfolio1.PurchasingPower, (double)result.Value);
+        }
+        [Fact]
+        public async Task GetPurchasingPowerTestError()
+        {
+            // Arrange
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+            mockRep.Setup(k => k.GetOnePortfolio(It.IsAny<int>())).ReturnsAsync(() => null);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.GetPurchasingPower(It.IsAny<int>()) as StatusCodeResult;
+
+            // Assert
+            Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
 
         [Fact]
         public async Task GetAllOrdersTestSignedInAndOK()
@@ -477,7 +550,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.GetAllOrders(It.IsAny<int>())).ReturnsAsync(orderList);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -501,21 +573,39 @@ namespace TestProjectAksjehandel
             var orderList = new List<Order>();
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            mockRep.Setup(k => k.GetAllOrders(It.IsAny<int>())).ReturnsAsync(() => null);
-            //stockControllerMock.CallBase = true;
+            mockRep.Setup(k => k.GetAllOrders(It.IsAny<int>())).ReturnsAsync(() => new List<Order>());
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.getAllOrders(It.IsAny<int>()) as NotFoundObjectResult;
+            var result = await stockController.getAllOrders(It.IsAny<int>()) as OkObjectResult;
 
             // Assert
-            Assert.IsType<OkObjectResult>(result); // SKAL DEN RETURNERE DETTE?
+            Assert.IsType<OkObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal<List<Order>>((List<Order>)result.Value, orderList);
+            Assert.Equal(orderList, result.Value);
 
+        }
+       
+        [Fact]
+        public async Task GetAllOrdersTestError()
+        {
+            // Arrange
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+            mockRep.Setup(k => k.GetAllOrders(It.IsAny<int>())).ReturnsAsync(() => null);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.getAllOrders(It.IsAny<int>()) as StatusCodeResult;
+
+            // Assert
+            Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
 
@@ -559,7 +649,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.GetAllOrders(It.IsAny<int>())).ReturnsAsync(orderList);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _notSignedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -580,7 +669,6 @@ namespace TestProjectAksjehandel
         public async Task GetAllShareholdingsTestSignedInAndOK()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var sharehodling1 = new Shareholding
             {
                 Id = 1,
@@ -630,7 +718,6 @@ namespace TestProjectAksjehandel
         public async Task GetAllShareholdingsTestNotSignedIn()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var sharehodling1 = new Shareholding
             {
                 Id = 1,
@@ -660,7 +747,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.GetAllShareholdings(It.IsAny<int>())).ReturnsAsync(shareholdingList);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _notSignedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -684,7 +770,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.GetAllShareholdings(It.IsAny<int>())).ReturnsAsync(() => new List<Shareholding>());
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -723,7 +808,6 @@ namespace TestProjectAksjehandel
         public async Task GetAllPortfoliosTestSignedInAndOK()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var portfolio1 = new Portfolio
             {
                 Id = 1,
@@ -773,32 +857,48 @@ namespace TestProjectAksjehandel
         public async Task GetAllPortfoliosTestEmptyList()
         {
             // Arrange
-
             var portfolioList = new List<Portfolio>();
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            mockRep.Setup(k => k.GetAllPortfolios()).ReturnsAsync(() => null);
-            //stockControllerMock.CallBase = true;
+            mockRep.Setup(k => k.GetAllPortfolios()).ReturnsAsync(() => new List<Portfolio>());
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.GetAllPortfolios() as NotFoundObjectResult;
+            var result = await stockController.GetAllPortfolios() as OkObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal<List<Portfolio>>((List<Portfolio>)result.Value, portfolioList); // ER DETTE RIKTIG
+            Assert.Equal(portfolioList, result.Value);
 
         }
+        [Fact]
+        public async Task GetAllPortfoliosTestErorr()
+        {
+            // Arrange
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+            mockRep.Setup(k => k.GetAllPortfolios()).ReturnsAsync(() => null);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.GetAllPortfolios() as StatusCodeResult;
+
+            // Assert
+            Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
+
 
         [Fact]
         public async Task GetAllPortfoliosTestNotSignedIn()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var portfolio1 = new Portfolio
             {
                 Id = 1,
@@ -850,7 +950,6 @@ namespace TestProjectAksjehandel
         public async Task GetAllCompaniesTestSignedInAndOK()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var company1 = new Company
             {
                 Id = 1,
@@ -901,31 +1000,49 @@ namespace TestProjectAksjehandel
         public async Task GetAllCompaniesTestEmptyList()
         {
             // Arrange
-
             var companyList = new List<Company>();
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            mockRep.Setup(k => k.GetAllCompanies()).ReturnsAsync(() => null);
-            //stockControllerMock.CallBase = true;
+            mockRep.Setup(k => k.GetAllCompanies()).ReturnsAsync(() => new List<Company>());
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
             // Act
-            var result = await stockController.GetAllCompanies() as NotFoundObjectResult;
+            var result = await stockController.GetAllCompanies() as OkObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal<List<Company>>((List<Company>)result.Value, companyList); // ER DETTE RIKTIG ASSERT
+            Assert.Equal(companyList, result.Value);
+        }
 
+        [Fact]
+        public async Task GetAllCompaniesTestError()
+        {
+            // Arrange
+            var companyList = new List<Company>();
+
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+            mockRep.Setup(k => k.GetAllCompanies()).ReturnsAsync(() => null);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.GetAllCompanies() as StatusCodeResult;
+
+            // Assert
+            Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
         [Fact]
         public async Task GetAllCompaniesTestNotSignedIn()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var company1 = new Company
             {
                 Id = 1,
@@ -1043,27 +1160,44 @@ namespace TestProjectAksjehandel
             var tradeList = new List<Trade>();
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            mockRep.Setup(k => k.GetAllTrades()).ReturnsAsync(() => null);
-            //stockControllerMock.CallBase = true;
+            mockRep.Setup(k => k.GetAllTrades()).ReturnsAsync(() => new List<Trade>());
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.GetAllTrades() as NotFoundObjectResult;
+            var result = await stockController.GetAllTrades() as OkObjectResult;
 
             // Assert
-            Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode); // SKAL DENNE ASSERTES SLIK?
+            Assert.IsType<OkObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(tradeList, result.Value);
+        }
 
+        [Fact]
+        public async Task GetAllTradesTestError()
+        {
+            // Arrange
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+            mockRep.Setup(k => k.GetAllTrades()).ReturnsAsync(() => null);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.GetAllTrades() as StatusCodeResult;
+
+            // Assert
+            Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
         [Fact]
         public async Task GetAllTraidsTestNotSignedIn()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var trade1 = new Trade
             {
                 Id = 1,
@@ -1172,7 +1306,6 @@ namespace TestProjectAksjehandel
 
         }
 
-        // FEIL PÅ TEST
         [Fact]
         public async Task SignInTestValidationFailed()
         {
@@ -1215,6 +1348,38 @@ namespace TestProjectAksjehandel
 
             // Assert
             Assert.Equal(_notSignedIn, mockSession[_signedIn]);
+        }
+
+        [Fact]
+        public void TestValidationSessionTestNotSignedIn()
+        {
+            // Arrange
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+
+            mockSession[_signedIn] = _notSignedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = stockController.TestValidSession() as UnauthorizedObjectResult;
+            // Assert 
+            Assert.Equal((int)HttpStatusCode.Unauthorized, result.StatusCode);
+            Assert.Equal("Ikke logget inn", result.Value);
+        }
+
+        [Fact]
+        public void TestValidationSessionTestSignedInnAndOK()
+        {
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = stockController.TestValidSession() as OkResult;
+            // Assert 
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
         }
 
     }
