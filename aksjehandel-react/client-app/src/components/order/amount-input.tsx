@@ -43,7 +43,7 @@ export class AmountInput extends Component<AmountInputProps, AmountInputState> {
 
         return (
             <div className="form-group">
-                <label>Antall</label>
+                <label style={{ marginRight: "10px" }}>Antall</label>
                 <input type="text" ref={this.amountInput} onChange={this.validateAmount} defaultValue={ amount } />
                 <span style={{ color: "red" }}>{amountError}</span>
             </div>
