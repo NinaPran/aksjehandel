@@ -18,6 +18,6 @@ namespace aksjehandel.DAL
         Task<List<Portfolio>> GetAllPortfolios();
         Task<List<Company>> GetAllCompanies();
         Task<List<Trade>> GetAllTrades();
-        Task<bool>SignIn(User user);
+        Task<bool> SignIn(User user);
     }
 }

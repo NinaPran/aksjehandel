@@ -576,7 +576,7 @@ namespace TestProjectAksjehandel
             Assert.Equal(orderList, result.Value);
 
         }
-       
+
         [Fact]
         public async Task GetAllOrdersTestError()
         {
