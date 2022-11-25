@@ -32,7 +32,7 @@ export const CompanyTable: FC<CompanyTableProps> = (props) => {
                                         <td> {company.name} </td>
                                         <td> {company.maxPrice} </td>
                                         <td> {company.minPrice} </td>
-                                        <td> <Link className='btn btn-primary' to={"/new-order"} state={{ company: company }}>Kjøp</Link></td>
+                                        <td> <Link className='btn btn-success' to={"/new-order"} state={{ company: company }}>Kjøp</Link></td>
                                     </tr>
                                 )}
                             </tbody>
