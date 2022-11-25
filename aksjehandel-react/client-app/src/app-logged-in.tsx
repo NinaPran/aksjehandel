@@ -69,7 +69,7 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
         return (
             <>
                 {(!portfolios || !companies) && <div id="loading">
-                    <p>Henter portef?ljer og selskap, venligst vent...</p>
+                    <p>Henter porteføljer og selskap, venligst vent...</p>
                 </div>}
 
                 {portfolios && companies &&
