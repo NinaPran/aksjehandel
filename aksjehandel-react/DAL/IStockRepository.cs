@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 namespace aksjehandel.DAL
 {
     // Oppsett av denne klassen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+
     public interface IStockRepository
     {
         Task<bool> RegOrder(Order newOrder);
@@ -17,6 +18,6 @@ namespace aksjehandel.DAL
         Task<List<Portfolio>> GetAllPortfolios();
         Task<List<Company>> GetAllCompanies();
         Task<List<Trade>> GetAllTrades();
-        Task<bool>SignIn(User user);
+        Task<bool> SignIn(User user);
     }
 }

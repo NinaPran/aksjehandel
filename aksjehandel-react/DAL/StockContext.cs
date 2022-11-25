@@ -1,12 +1,15 @@
-﻿  using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace aksjehandel.DAL
 {
     // Oppsett av disse klassene er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+
+    [ExcludeFromCodeCoverage]
     public class Companies
     {
         public int Id { get; set; }
@@ -14,6 +17,7 @@ namespace aksjehandel.DAL
         public string Name { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class Orders
     {
         public int Id { get; set; }
@@ -23,12 +27,16 @@ namespace aksjehandel.DAL
         virtual public Companies Company { get; set; }
         virtual public Portfolios Portfolio { get; set; }
     }
+
+    [ExcludeFromCodeCoverage]
     public class Portfolios
     {
         public int Id { get; set; }
         public string DisplayName { get; set; }
         public double Cash { get; set; }
     }
+
+    [ExcludeFromCodeCoverage]
     public class Shareholdings
     {
         public int Id { get; set; }
@@ -37,10 +45,12 @@ namespace aksjehandel.DAL
         virtual public Portfolios Portfolio { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
+
     public class Trades
     {
         public int Id { get; set; }
-        public DateTime Date { get; set;}
+        public DateTime Date { get; set; }
         public int Amount { get; set; }
         public double Price { get; set; }
         virtual public Companies Company { get; set; }
@@ -48,6 +58,7 @@ namespace aksjehandel.DAL
         virtual public Portfolios SellPortfolio { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class Users
     {
         public int Id { get; set; }
@@ -56,6 +67,7 @@ namespace aksjehandel.DAL
         public byte[] Salt { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class StockContext : DbContext
     {
         public StockContext(DbContextOptions<StockContext> options) : base(options)

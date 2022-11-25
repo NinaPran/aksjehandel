@@ -41,7 +41,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.RegOrder(newOrder)).ReturnsAsync(true);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -72,7 +71,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.RegOrder(newOrder)).ReturnsAsync(false);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -83,7 +81,6 @@ namespace TestProjectAksjehandel
 
             // Assert
             Assert.IsType<BadRequestObjectResult>(result);
-
         }
 
         [Fact]
@@ -102,7 +99,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.RegOrder(newOrder)).ReturnsAsync(true);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _notSignedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -135,7 +131,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.RegOrder(newOrder)).ReturnsAsync(true);
-            //stockControllerMock.CallBase = true;
 
             // Mock feil på Model-validation fra https://stackoverflow.com/a/30800110
             stockController.ModelState.AddModelError("fakeError", "fakeError");
@@ -161,7 +156,6 @@ namespace TestProjectAksjehandel
             // Arrange
             mockRep.Setup(k => k.DeleteOrder(It.IsAny<int>())).ReturnsAsync(true);
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -181,7 +175,6 @@ namespace TestProjectAksjehandel
             // Arrange
             mockRep.Setup(k => k.DeleteOrder(It.IsAny<int>())).ReturnsAsync(false);
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -201,7 +194,6 @@ namespace TestProjectAksjehandel
             // Arrange
             mockRep.Setup(k => k.DeleteOrder(1)).ReturnsAsync(true);
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _notSignedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -233,7 +225,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.ChangeOrder(changeOrder)).ReturnsAsync(true);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -264,7 +255,6 @@ namespace TestProjectAksjehandel
             };
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.ChangeOrder(changeOrder)).ReturnsAsync(false);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -276,7 +266,6 @@ namespace TestProjectAksjehandel
             // Assert
             Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
             Assert.Equal("Ordren ble ikke endret", result.Value);
-
         }
 
         [Fact]
@@ -295,7 +284,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.ChangeOrder(changeOrder)).ReturnsAsync(true);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _notSignedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -588,7 +576,7 @@ namespace TestProjectAksjehandel
             Assert.Equal(orderList, result.Value);
 
         }
-       
+
         [Fact]
         public async Task GetAllOrdersTestError()
         {
@@ -982,7 +970,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.GetAllCompanies()).ReturnsAsync(companyList);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -1075,7 +1062,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.GetAllCompanies()).ReturnsAsync(companyList);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _notSignedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);
@@ -1095,7 +1081,6 @@ namespace TestProjectAksjehandel
         public async Task GetAllTraidsTestSignedInAndOK()
         {
             // Arrange
-            // ER DET FEIL LAGT INN?
             var trade1 = new Trade
             {
                 Id = 1,
@@ -1239,7 +1224,6 @@ namespace TestProjectAksjehandel
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
             mockRep.Setup(k => k.GetAllTrades()).ReturnsAsync(tradeList);
-            //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _notSignedIn;
             mockHttpContext.Setup(s => s.Session).Returns(mockSession);

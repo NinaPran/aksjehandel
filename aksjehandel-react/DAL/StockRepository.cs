@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +18,8 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 namespace aksjehandel.DAL
 {
     // Oppsett av denne klassen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+
+    [ExcludeFromCodeCoverage]
     public class StockRepository : IStockRepository
     {
 
@@ -446,13 +449,13 @@ namespace aksjehandel.DAL
             try
             {
                 Portfolios onePortfolio = await _db.Portfolios.FindAsync(id);
-                if(onePortfolio == null)
+                if (onePortfolio == null)
                 {
                     _log.LogInformation("Feil i GetOnePortfolio: fant ikke portfolio med id: " + id);
                     return null;
 
                 }
-                
+
                 return new Portfolio
                 {
                     Id = onePortfolio.Id,

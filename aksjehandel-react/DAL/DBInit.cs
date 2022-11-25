@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace aksjehandel.DAL
 {
     // Oppsett av denne klassen er basert på KundeApp fra ITPE3200-1 22H, OsloMet
+
+    [ExcludeFromCodeCoverage]
     public static class DBInit
     {
         public static void Initializer(IApplicationBuilder app)
