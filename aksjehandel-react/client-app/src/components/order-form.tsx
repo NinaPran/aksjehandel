@@ -20,7 +20,7 @@ interface OrderFormProps {
 } {/* https://stackoverflow.com/a/70342010 for å hente ut attributter fra knappeklikk  */ }
 
 //export class OrderForm extends Component<OrderProps, OrderState> {
-export const OrderForm: FC<OrderFormProps> = (props) => {
+export const OrderForm = (props: OrderFormProps) => {
     const editOrder = props.editOrder;
     const isEditOrder = props.editOrder !== undefined;
 
@@ -257,7 +257,7 @@ export const OrderForm: FC<OrderFormProps> = (props) => {
                 </FormGroup>
 
                 <FormGroup>
-                    <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" />
+                    <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" style={{ backgroundColor: "#528AAE", color: "white", borderColor: "#528AAE" }} />
                 </FormGroup>
 
             <div className="form-group">

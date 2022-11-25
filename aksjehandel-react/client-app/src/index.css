@@ -19,18 +19,6 @@ code {
 }
 
 
-input.btn-primary {
-    background-color: #528AAE;
-    color: white;
-    border-color: #528AAE;
-}
-
-input.btn-primary:hover {
-    background-color: #39617A;
-    color: white;
-}
-
-
 a.btn-primary {
     background-color: #528AAE;
     color: white;
