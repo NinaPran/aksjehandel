@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace aksjehandel.Models
 {
-
     [ExcludeFromCodeCoverage]
     public class User
     {
