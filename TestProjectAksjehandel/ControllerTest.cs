@@ -683,7 +683,7 @@ namespace TestProjectAksjehandel
             var shareholdingList = new List<Shareholding>();
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            mockRep.Setup(k => k.GetAllShareholdings(It.IsAny<int>())).ReturnsAsync(() => null);
+            mockRep.Setup(k => k.GetAllShareholdings(It.IsAny<int>())).ReturnsAsync(() => new List<Shareholding>());
             //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
@@ -691,12 +691,12 @@ namespace TestProjectAksjehandel
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.GetAllShareholdings(It.IsAny<int>()) as NotFoundObjectResult;
+            var result = await stockController.GetAllShareholdings(It.IsAny<int>()) as OkObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal<List<Shareholding>>((List<Shareholding>)result.Value, shareholdingList);
+            Assert.Equal(shareholdingList, result.Value);
 
         }
         [Fact]

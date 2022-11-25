@@ -113,6 +113,7 @@ namespace aksjehandel.Controllers
                 return Unauthorized("Ikke logget inn");
             }
             List<Shareholding> allShareholdings = await _db.GetAllShareholdings(portfolioId);
+
             return Ok(allShareholdings);
         }
         public async Task<ActionResult> GetPurchasingPower(int id)
@@ -123,10 +124,9 @@ namespace aksjehandel.Controllers
             }
             Portfolio portfolio = await _db.GetOnePortfolio(id);
 
-            if (portfolio == null)
+            if (portfolio != null)
             {
-                _log.LogInformation("Fant ikke portefølgen");
-                return NotFound("Fant ikke portefølgen");
+                return StatusCode(500);
             }
             return Ok(portfolio.PurchasingPower);
         }
