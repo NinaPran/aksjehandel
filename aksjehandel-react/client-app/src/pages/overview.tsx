@@ -15,7 +15,7 @@ export const Overview = () => {
         <PortfolioContext.Consumer>
             {({ selectedPortfolio }) => (
                 <div className="container">
-                    <h1 style={{ marginBottom: "30px", fontWeight: "bold" }}>Min Oversikt</h1>
+                    <h1 className="header">Min Oversikt</h1>
                     <Form>
 
                         <FormGroup>

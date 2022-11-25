@@ -26,7 +26,7 @@ export class Home extends Component<HomeProps, HomeState> {
     render() {
         return (
             <Container>
-                <h1 style={{ marginBottom: "30px", fontWeight: "bold" }}>Velkommen!</h1>
+                <h1 className="header">Velkommen!</h1>
                 <Form id="mainContent">
                     <FormGroup>
                         <PortfolioSelect></PortfolioSelect>
