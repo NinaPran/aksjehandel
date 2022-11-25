@@ -43,9 +43,9 @@ export class SignIn extends Component<SignInProps, SignInState> {
                 method: 'post',
                 body: searchParams
             })
+                .then(response => response.json())
                 .then(response => {
-                    console.log(response);
-                    if (response.status == 200) {
+                    if (response == true) {
                         this.props.onSignedIn();
                     }
                     else {
