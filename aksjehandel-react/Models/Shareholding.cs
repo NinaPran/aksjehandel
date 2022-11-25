@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace aksjehandel.Models
 {
+        [ExcludeFromCodeCoverage]
     public class Shareholding
     {
         public int Id { get; set; }
