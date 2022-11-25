@@ -113,7 +113,7 @@ export class SignIn extends Component<SignInProps, SignInState> {
                     </FormGroup>
 
                     <FormGroup>
-                        <input type="button" value="Logg inn" onClick={this.loginclick} className="btn btn-primary" style={{ backgroundColor: "#528AAE", color: "white", borderColor: "#528AAE" }} />
+                        <input type="button" value="Logg inn" onClick={this.loginclick} className="btn btn-primary" />
                     </FormGroup>
 
                     <div style={{ color: "red" }}>{signInError}</div>
