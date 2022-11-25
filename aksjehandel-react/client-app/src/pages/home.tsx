@@ -6,8 +6,6 @@ import { PortfolioContext } from "../context/portfolio-context";
 import './home.css';
 
 
-// interface HomeProps {}
-
 export const Home: FC = () => {
     return (
         <Container>
