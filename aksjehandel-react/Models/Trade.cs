@@ -1,5 +1,8 @@
-﻿namespace aksjehandel.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace aksjehandel.Models
 {
+    [ExcludeFromCodeCoverage]
     public class Trade
     {
         public int Id { get; set; }
