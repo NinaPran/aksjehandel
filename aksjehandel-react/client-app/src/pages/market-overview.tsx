@@ -10,7 +10,7 @@ export const MarketOverview: FC = () => {
         <>
             <div className="container">
                 <Form>
-                    <h1 style={{ marginBottom: "30px" }}>Markedsoversikt</h1>
+                    <h1 style={{ marginBottom: "30px", fontWeight: "bold" }}>Markedsoversikt</h1>
 
                     <FormGroup>
                         <h2>Selskaper</h2>

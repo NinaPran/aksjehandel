@@ -74,8 +74,8 @@ export class ShareholdingTable extends Component<ShareholdingTableProps, Shareho
                                         <td> {shareholding.companySymbol} </td>
                                         <td> {shareholding.companyName} </td>
                                         <td> {shareholding.amount}({shareholding.amount - shareholding.remainingAmount})</td>
-                                        <td> <Link className='btn btn-success' to={"/new-order"} state={{ companyId: shareholding.companyId, type: "buy" }}>Kjøp</Link></td>
-                                        <td> <Link className='btn btn-primary' to={"/new-order"} state={{ companyId: shareholding.companyId, type: "sell" }}>Salg</Link></td>
+                                        <td> <Link className='btn btn-green'  to={"/new-order"} state={{ companyId: shareholding.companyId, type: "buy" }}>Kjøp</Link></td>
+                                        <td> <Link className='btn btn-blue' to={"/new-order"} state={{ companyId: shareholding.companyId, type: "sell" }}>Salg</Link></td>
                                         <td></td>
                                     </tr>
                                 )}

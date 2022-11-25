@@ -83,7 +83,7 @@ export class OrderTable extends Component<OrderTableProps, OrderTableState> {
                                         <td> {order.type} </td>
                                         <td> {order.price} </td>
                                         <td> {order.amount} </td>
-                                        <td> <Link className='btn btn-primary' to={"/edit-order"} state={{ editOrder: order }}>Endre</Link></td>
+                                        <td> <Link className='btn btn-blue' to={"/edit-order"} state={{ editOrder: order }}>Endre</Link></td>
                                         <td> <button className='btn btn-danger'>Slett</button></td> {/*onclick='deleteOrder(  order.id  )'*/}
                                     </tr>
                                 )}

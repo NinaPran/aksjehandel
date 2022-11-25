@@ -7,6 +7,7 @@ import { PortfolioContext } from "../context/portfolio-context";
 import { Portfolio } from "../types/portfolio";
 import { Link } from "react-router-dom";
 import { PurchasingPower } from "../components/purchasing-power";
+import './overview.css';
 
 // dette er en funksjonell komponent
 export const Overview = () => {
@@ -14,7 +15,7 @@ export const Overview = () => {
         <PortfolioContext.Consumer>
             {({ selectedPortfolio }) => (
                 <div className="container">
-                    <h1 style={{ marginBottom: "30px" }}>Min Oversikt</h1>
+                    <h1 style={{ marginBottom: "30px", fontWeight: "bold" }}>Min Oversikt</h1>
                     <Form>
 
                         <FormGroup>
@@ -45,7 +46,7 @@ export const Overview = () => {
                                 </FormGroup>
 
                                 <FormGroup>
-                                    <Link to="/new-order" className="btn btn-primary">Ny ordre</Link>
+                                <Link to="/new-order" className="btn btn-blue">Ny ordre</Link>
                                 </FormGroup>
 
                             </>

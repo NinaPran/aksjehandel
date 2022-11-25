@@ -11,7 +11,7 @@ export const NewOrderPage = () => {
     const orderType: NewOrder["type"] = location.state?.type || "buy";
     return (
         <div className="container">
-            <h1 style={{ marginBottom: "30px" }}>Lag en ny ordre</h1>
+            <h1 style={{ marginBottom: "30px", fontWeight: "bold" }}>Lag en ny ordre</h1>
             <OrderForm orderType={orderType}></OrderForm>
         </div>
     );
