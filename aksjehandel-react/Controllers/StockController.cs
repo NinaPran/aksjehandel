@@ -114,6 +114,11 @@ namespace aksjehandel.Controllers
             }
             List<Shareholding> allShareholdings = await _db.GetAllShareholdings(portfolioId);
 
+            if (allShareholdings == null)
+            {
+                return StatusCode(500);
+            }
+
             return Ok(allShareholdings);
         }
         public async Task<ActionResult> GetPurchasingPower(int id)
@@ -124,7 +129,7 @@ namespace aksjehandel.Controllers
             }
             Portfolio portfolio = await _db.GetOnePortfolio(id);
 
-            if (portfolio != null)
+            if (portfolio == null)
             {
                 return StatusCode(500);
             }
