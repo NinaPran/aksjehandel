@@ -683,7 +683,7 @@ namespace TestProjectAksjehandel
             var shareholdingList = new List<Shareholding>();
 
             var stockController = new StockController(mockRep.Object, mockLog.Object);
-            mockRep.Setup(k => k.GetAllShareholdings(It.IsAny<int>())).ReturnsAsync(() => null);
+            mockRep.Setup(k => k.GetAllShareholdings(It.IsAny<int>())).ReturnsAsync(() => new List<Shareholding>());
             //stockControllerMock.CallBase = true;
 
             mockSession[_signedIn] = _signedIn;
@@ -691,12 +691,32 @@ namespace TestProjectAksjehandel
             stockController.ControllerContext.HttpContext = mockHttpContext.Object;
 
             // Act
-            var result = await stockController.GetAllShareholdings(It.IsAny<int>()) as NotFoundObjectResult;
+            var result = await stockController.GetAllShareholdings(It.IsAny<int>()) as OkObjectResult;
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-            Assert.Equal<List<Shareholding>>((List<Shareholding>)result.Value, shareholdingList);
+            Assert.Equal(shareholdingList, result.Value);
+
+        }
+        [Fact]
+        public async Task GetAllShareholdingsTestSignedInAndError()
+        {
+            // Arrange          
+
+            var stockController = new StockController(mockRep.Object, mockLog.Object);
+            mockRep.Setup(k => k.GetAllShareholdings(It.IsAny<int>())).ReturnsAsync(() => null);
+
+            mockSession[_signedIn] = _signedIn;
+            mockHttpContext.Setup(s => s.Session).Returns(mockSession);
+            stockController.ControllerContext.HttpContext = mockHttpContext.Object;
+
+            // Act
+            var result = await stockController.GetAllShareholdings(It.IsAny<int>()) as StatusCodeResult;
+
+            // Assert
+            Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
 
         }
         [Fact]
@@ -1017,7 +1037,7 @@ namespace TestProjectAksjehandel
         }
 
         [Fact]
-        public async Task GetAllTraidsTestEmptyList()
+        public async Task GetAllTradesTestEmptyList()
         {
             // Arrange
             var tradeList = new List<Trade>();
