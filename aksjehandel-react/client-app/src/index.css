@@ -30,6 +30,17 @@ a.btn-primary {
         color: white;
     }
 
+input.btn-primary {
+    background-color: #528AAE;
+    color: white;
+    border-color: #528AAE;
+}
+
+    input.btn-primary:hover {
+        background-color: #39617A;
+        color: white;
+    }
+
 a.btn-success {
     background-color: #7b9a6d;
     color: white;
