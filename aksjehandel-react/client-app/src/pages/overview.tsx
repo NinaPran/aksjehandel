@@ -17,11 +17,15 @@ export const Overview = () => {
                     <h1 style={{ marginBottom: "30px" }}>Min Oversikt</h1>
                     <Form>
 
-                        <FormGroup><PortfolioSelect />
-                            {!selectedPortfolio &&
-                                <h2>Venligst velg portfølje</h2>
-                            }
+                        <FormGroup>
+                            <PortfolioSelect />
                         </FormGroup>
+
+                        {!selectedPortfolio &&
+                            <FormGroup>
+                                <div style={{ color: "red" }}> Venligst velg portefølje!</div>
+                            </FormGroup>
+                        }
 
                         {selectedPortfolio &&
                             <>

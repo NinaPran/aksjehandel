@@ -1,6 +1,7 @@
 ﻿import React, { Component, createRef, PropsWithChildren, useRef } from "react";
 import { Container } from 'reactstrap';
 import { Portfolio } from "../types/portfolio";
+import { Form, FormGroup } from 'reactstrap';
 
 
 interface SignInProps {
@@ -96,23 +97,28 @@ export class SignIn extends Component<SignInProps, SignInState> {
 
         return (
             <div className="container">
-                <h1 style={{ marginBottom: "30px" }}>Logg inn</h1>
-                <form className="form">
-                    <div className="form-group">
-                        <label>Brukernavn</label>
+                <h1 style={{ marginBottom: "30px", marginTop: "30px" }}>Logg inn</h1>
+                <Form>
+
+                    <FormGroup>
+                        <label style={{ marginRight: "10px" }}>Brukernavn</label>
                         <input ref={this.usernameref} onChange={this.validateUser} type="text" />
                         <span style={{ color: "red" }}>{usernameError}</span>
-                    </div>
-                    <div className="form-group">
-                        <label>Passord</label>
+                    </FormGroup>
+
+                    <FormGroup>
+                        <label style={{ marginRight: "10px" }}>Passord</label>
                         <input ref={this.passwordref} onChange={this.validatePassword} type="password" />
                         <span style={{ color: "red" }}>{passwordError}</span>
-                    </div>
-                    <div className="form-group">
+                    </FormGroup>
+
+                    <FormGroup>
                         <input type="button" value="Logg inn" onClick={this.loginclick} className="btn btn-primary" />
-                    </div>
+                    </FormGroup>
+
                     <div style={{ color: "red" }}>{signInError}</div>
-                </form>
+
+                </Form>
             </div>
         );
     }
