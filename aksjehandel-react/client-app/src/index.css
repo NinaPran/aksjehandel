@@ -17,3 +17,46 @@ code {
     margin-bottom: 30px;
     font-weight: bold;
 }
+
+
+a.btn-primary {
+    background-color: #528AAE;
+    color: white;
+    border-color: #528AAE;
+}
+
+    a.btn-primary:hover {
+        background-color: #39617A;
+        color: white;
+    }
+
+a.btn-success {
+    background-color: #7b9a6d;
+    color: white;
+    border-color: #7b9a6d;
+}
+
+    a.btn-success:hover {
+        background-color: #576E4C;
+        color: white;
+    }
+
+.borderbox {
+    border: solid;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+    padding-top: 10px;
+    background-color: #7b9a6d;
+    border-color: #7b9a6d;
+}
+
+.underlinetext {
+    text-decoration: underline; 
+    color: white;
+}
+
+.smalltext {
+    font-weight: bold;
+    color: white;
+}

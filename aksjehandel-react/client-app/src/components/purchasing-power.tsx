@@ -29,7 +29,7 @@ export const PurchasingPower: FC = () => {
 
     return (
         <>
-            <p>{!errorMessage && purchasingPower} </p>
+            <p className="smalltext">{!errorMessage && purchasingPower} </p>
             {errorMessage &&
                 <span style={{ color: "red" }}>{errorMessage}</span>
             }

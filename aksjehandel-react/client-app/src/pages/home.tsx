@@ -1,4 +1,5 @@
 ﻿import { Component, PropsWithChildren } from "react";
+import { Link } from "react-router-dom";
 import { Container, Form, FormGroup } from 'reactstrap';
 import { PortfolioSelect } from "../components/portfolio-select";
 import { PortfolioContext } from "../context/portfolio-context";
@@ -33,11 +34,11 @@ export class Home extends Component<HomeProps, HomeState> {
                     </FormGroup>
 
                     <FormGroup>
-                        <button className="btn btn-primary">Ny ordre</button>
+                        <Link to="/new-order" className="btn btn-primary">Ny ordre</Link>
                     </FormGroup>
 
                     <FormGroup>
-                        <button className="btn btn-primary" >Min oversikt</button>
+                        <Link to="/overview" className="btn btn-primary">Min oversikt</Link>
                     </FormGroup>
                 </Form>
             </Container>

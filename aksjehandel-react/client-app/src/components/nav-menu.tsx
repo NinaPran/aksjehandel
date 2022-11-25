@@ -28,8 +28,7 @@ export class NavMenu extends Component<{}, NavMenuState> {
 
     render() {
         return (
-            <header>
-                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light >
+                <Navbar sticky="top" className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light >
                     <Container>
                         <NavbarBrand tag={Link} to="/">AKSJEHANDEL</NavbarBrand>
                         <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
@@ -54,7 +53,6 @@ export class NavMenu extends Component<{}, NavMenuState> {
                         </Collapse>
                     </Container>
                 </Navbar>
-            </header>
         );
     }
 }

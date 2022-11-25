@@ -221,9 +221,9 @@ export const OrderForm = (props: OrderFormProps) => {
         <form className="form">
 
             <Form>
-                
-                <FormGroup>
-                    <div>Disponibelt beløp</div>
+
+                <FormGroup className="borderbox">
+                    <div className="underlinetext">Disponibelt beløp</div>
                     <PurchasingPower />
                 </FormGroup>
 
@@ -257,7 +257,7 @@ export const OrderForm = (props: OrderFormProps) => {
                 </FormGroup>
 
                 <FormGroup>
-                    <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" />
+                    <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" style={{ backgroundColor: "#528AAE", color: "white" }} />
                 </FormGroup>
 
             <div className="form-group">
