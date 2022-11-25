@@ -41,7 +41,7 @@ export const Overview = () => {
 
                                 <FormGroup>
                                     <h2>Dine ordrer</h2>
-                                    <OrderTable selectedPortfolio={selectedPortfolio}></OrderTable>
+                                    <OrderTable></OrderTable>
                                 </FormGroup>
 
                             </>
