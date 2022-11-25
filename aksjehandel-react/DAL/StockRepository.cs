@@ -449,13 +449,13 @@ namespace aksjehandel.DAL
             try
             {
                 Portfolios onePortfolio = await _db.Portfolios.FindAsync(id);
-                if(onePortfolio == null)
+                if (onePortfolio == null)
                 {
                     _log.LogInformation("Feil i GetOnePortfolio: fant ikke portfolio med id: " + id);
                     return null;
 
                 }
-                
+
                 return new Portfolio
                 {
                     Id = onePortfolio.Id,
