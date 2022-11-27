@@ -1,14 +1,8 @@
-﻿import { error } from 'console';
-import React, { Component, FC, useContext } from 'react';
+﻿import {  FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { ServerOrder } from '../types/order';
-import { Company } from '../types/company';
 import { CompanyContext } from '../context/company-context';
 
-interface CompanyTableProps {
-}
-
-export const CompanyTable: FC<CompanyTableProps> = (props) => {
+export const CompanyTable: FC = () => {
     const companyContext = useContext(CompanyContext);
     const companies = companyContext.companies;
         return (
@@ -32,7 +26,7 @@ export const CompanyTable: FC<CompanyTableProps> = (props) => {
                                         <td> {company.name} </td>
                                         <td> {company.maxPrice} </td>
                                         <td> {company.minPrice} </td>
-                                        <td> <Link className='btn btn-success' to={"/new-order"} state={{ company: company }}>Kjøp</Link></td>
+                                        <td> <Link className='btn btn-success' to={"/new-order"} state={{ companyId: company.id }}>Kjøp</Link></td>
                                     </tr>
                                 )}
                             </tbody>

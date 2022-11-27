@@ -5,7 +5,7 @@ import { ServerOrder } from '../types/order';
 
 
 export const OrderTable: FC = () => {
-    const [error, setError] = useState(false);
+    const [errorText, setErrorText] = useState("");
     const [orders, setOrders] = useState<ServerOrder[]>();
     const portfolioContext = useContext(PortfolioContext);
 
@@ -18,20 +18,39 @@ export const OrderTable: FC = () => {
             .then(response => response.json())
             .then(response => {
                 setOrders(response);
+                setErrorText("");
             })
             .catch(error => {
-                setError(true);
+                setErrorText("Feil ved henting av ordre");
             });
     }
 
+
+    const deleteOrder = (id: number) => {
+        fetch("stock/DeleteOrder?id=" + id)
+            .then(response => {
+                if (response.ok) {
+                    fetchOrders();
+                    setErrorText("");
+                }
+                else {
+                    setErrorText("Feil ved sletting av ordre");
+                }
+            })
+            .catch(error => {
+                setErrorText("Feil ved sletting av ordre");
+            });
+    }
+
+
     return (
         <>
-            {!orders && !error && <div id="loading">
+            {!orders && !errorText && <div id="loading">
                 <p>Henter Ordre, venligst vent...</p>
             </div>}
 
-            {error &&
-                <div>Feil ved henting av ordre</div>
+            {errorText &&
+                <div style={{ color: "red" }}>{errorText}</div>
             }
 
             {orders &&
@@ -57,7 +76,7 @@ export const OrderTable: FC = () => {
                                     <td> {order.price} </td>
                                     <td> {order.amount} </td>
                                     <td> <Link className='btn btn-primary' to={"/edit-order"} state={{ editOrder: order }}>Endre</Link></td>
-                                    <td> <button className='btn btn-danger'>Slett</button></td> {/*onclick='deleteOrder(  order.id  )'*/}
+                                    <td> <button onClick={() => deleteOrder(order.id)} className='btn btn-danger'>Slett</button></td>
                                 </tr>
                             )}
                         </tbody>

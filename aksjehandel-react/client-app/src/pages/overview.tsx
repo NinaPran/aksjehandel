@@ -15,39 +15,37 @@ export const Overview = () => {
             {({ selectedPortfolio }) => (
                 <div className="container">
                     <h1 className="header">Min Oversikt</h1>
-                    <Form>
 
+                    <FormGroup>
+                        <PortfolioSelect />
+                    </FormGroup>
+
+                    {!selectedPortfolio &&
                         <FormGroup>
-                            <PortfolioSelect />
+                            <div style={{ color: "red" }}> Venligst velg portefølje!</div>
                         </FormGroup>
+                    }
 
-                        {!selectedPortfolio &&
-                            <FormGroup>
-                                <div style={{ color: "red" }}> Venligst velg portefølje!</div>
-                            </FormGroup>
-                        }
-
-                        {selectedPortfolio &&
-                            <>
-                                <FormGroup className="borderbox">
+                    {selectedPortfolio &&
+                        <>
+                            <FormGroup className="borderbox">
                                 <div className="underlinetext">Disponibelt beløp</div>
-                                    <PurchasingPower />
-                                </FormGroup>
+                                <PurchasingPower />
+                            </FormGroup>
 
-                                <FormGroup>
-                                    <h2>Dine aksjeposter </h2>
-                                    <ShareholdingTable selectedPortfolio={selectedPortfolio} />
-                                </FormGroup>
+                            <FormGroup>
+                                <h2>Dine aksjeposter </h2>
+                                <ShareholdingTable selectedPortfolio={selectedPortfolio} />
+                            </FormGroup>
 
-                                <FormGroup>
-                                    <h2>Dine ordrer</h2>
-                                    <OrderTable></OrderTable>
-                                </FormGroup>
+                            <FormGroup>
+                                <h2>Dine ordrer</h2>
+                                <OrderTable></OrderTable>
+                            </FormGroup>
 
-                            </>
+                        </>
 
-                        }
-                    </Form>
+                    }
                 </div>
             )}
         </PortfolioContext.Consumer>

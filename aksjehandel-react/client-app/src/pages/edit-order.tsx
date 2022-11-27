@@ -12,8 +12,8 @@ export const EditOrderPage = () => {
     const companyContext = useContext(CompanyContext);
     const location = useLocation();
     const order: ServerOrder = location.state.editOrder;
-    const company = companyContext.companies.find((company) => company.id === order.companyId);
-    console.log("Render edit-order");
+    // Henter ut første company fra context-arrayet som matcher den valgte company-id'en
+    const company = companyContext.companies.find((company) => { return company.id === order.companyId });
     return (
         <div className="container">
             <h1 className="header">Endre ordre</h1>
