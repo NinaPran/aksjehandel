@@ -8,47 +8,52 @@ interface SignInProps {
     onSignedIn: () => void;
 }
 
-interface validateUserProps {
-    onUserValid: () => boolean;
-}
-
 export const SignIn: FC<SignInProps> = (props) => {
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [signInError, setSignInError] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
 
 
-    const loginclick = (e: any) => {
-        const searchParams = new URLSearchParams();
-        searchParams.append('username', username);
-        searchParams.append('password', password);
+    const loginclick = () => {
+        const usernameOk = validateUser();
+        const passwordOk = validatePassword();
 
-        setSignInError("");
+        if (usernameOk && passwordOk) {
+            const username = usernameRef.current?.value || '';
+            const password = passwordRef.current?.value || '';
+            const searchParams = new URLSearchParams();
+            searchParams.append('username', username);
+            searchParams.append('password', password);
 
-        fetch('stock/SignIn', {
-            method: 'post',
-            body: searchParams
-        })
-            .then(response => response.json())
-            .then(response => {
-                if (response == true) {
-                    props.onSignedIn();
-                }
-                else {
-                    setSignInError("Feil brukernavn eller passord");
-                }
+            setSignInError("");
 
+            fetch('stock/SignIn', {
+                method: 'post',
+                body: searchParams
             })
-            .catch(error => {
-                setSignInError("Feil på server -prøv igjen senere");
-            });
+                .then(response => response.json())
+                .then(response => {
+                    if (response == true) {
+                        props.onSignedIn();
+                    }
+                    else {
+                        setSignInError("Feil brukernavn eller passord");
+                    }
+
+                })
+                .catch(error => {
+                    setSignInError("Feil på server -prøv igjen senere");
+                });
+        }
     }
 
-    const validateUser = (event: React.ChangeEvent<HTMLInputElement> | undefined) => {
+    const validateUser = () => {
         const regexp = /^[a-zA-ZæøåÆØÅ\.\-]{2,20}$/;
-        const ok = event && regexp.test(event.target.value || "");
+        const usernameValue = usernameRef.current?.value || "";
+        const ok = regexp.test(usernameValue);
 
         if (!ok) {
             setUsernameError("Brukernavnet må bestå av 2 til 20 bokstaver");
@@ -56,15 +61,15 @@ export const SignIn: FC<SignInProps> = (props) => {
         }
         else {
             setUsernameError("");
-            setUsername(event.target.value);
             return true;
         }
 
     }
 
-    const validatePassword = (event: React.ChangeEvent<HTMLInputElement> | undefined) => {
+    const validatePassword = () => {
         const regexp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-        const ok = event && regexp.test(event.target.value || "");
+        const passwordValue = passwordRef.current?.value || "";
+        const ok = regexp.test(passwordValue);
 
         if (!ok) {
             setPasswordError("Passordet må bestå av minimum 6 tegn, minst en bokstav og et tall");
@@ -72,7 +77,6 @@ export const SignIn: FC<SignInProps> = (props) => {
         }
         else {
             setPasswordError("");
-            setPassword(event.target.value);
             return true;
         }
 
@@ -84,13 +88,13 @@ export const SignIn: FC<SignInProps> = (props) => {
 
                 <FormGroup>
                     <label style={{ marginRight: "10px" }}>Brukernavn</label>
-                    <input onChange={validateUser} type="text" />
+                    <input onChange={validateUser} type="text" ref={usernameRef} />
                     <span style={{ color: "red" }}>{usernameError}</span>
                 </FormGroup>
 
                 <FormGroup>
                     <label style={{ marginRight: "34px" }}>Passord</label>
-                    <input onChange={validatePassword} type="password" />
+                    <input onChange={validatePassword} type="password" ref={passwordRef} />
                     <span style={{ color: "red" }}>{passwordError}</span>
                 </FormGroup>
 
