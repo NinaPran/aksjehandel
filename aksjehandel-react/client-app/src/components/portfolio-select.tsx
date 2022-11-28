@@ -1,4 +1,4 @@
-﻿import React, { Component, PropsWithChildren, useContext } from "react";
+﻿import React, { Component, FC, PropsWithChildren, useContext } from "react";
 import { Container } from 'reactstrap';
 import { PortfolioContext } from "../context/portfolio-context";
 import { Portfolio } from "../types/portfolio";
@@ -8,7 +8,7 @@ interface PortfolioSelectProps {
     disabled?: boolean;
 }
 
-export const PortfolioSelect = (props: PortfolioSelectProps) => {
+export const PortfolioSelect: FC<PortfolioSelectProps> = (props) => {
     const disabled = props.disabled === true;
     const portfolioContext = useContext(PortfolioContext);
     const { portfolios, setSelectedPortfolio, selectedPortfolio } = portfolioContext;
