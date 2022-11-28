@@ -1,90 +1,67 @@
 ﻿import { error } from 'console';
-import React, { Component } from 'react';
+import React, { Component, FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { PortfolioContext } from '../context/portfolio-context';
 import { Portfolio } from '../types/portfolio';
 import { Shareholding } from '../types/shareholding';
 
-interface ShareholdingTableProps {
-    selectedPortfolio: Portfolio,
-}
+export const ShareholdingTable: FC = () => {
+    const [errorText, setErrorText] = useState("")
+    const [shareholdings, setShareholdings] = useState<Shareholding[]>();
+    const portfolioContext = useContext(PortfolioContext);
 
-interface ShareholdingTableState {
-    error: boolean;
-    errorMessage?: string;
-    shareholdings?: Shareholding[];
-}
+    useEffect(() => {
+        fetchShareholdings();
+    }, [portfolioContext.selectedPortfolio]);
 
-export class ShareholdingTable extends Component<ShareholdingTableProps, ShareholdingTableState> {
-    constructor(props: ShareholdingTableProps) {
-        super(props);
-        this.state = {
-            error: false,
-        }
-    }
-
-    componentDidMount() {
-        this.fetchShareholdings();
-    }
-
-    componentDidUpdate(prevProps: ShareholdingTableProps) {
-        if (prevProps.selectedPortfolio.id !== this.props.selectedPortfolio.id) {
-            this.fetchShareholdings();
-        }
-    }
-
-    fetchShareholdings = () => {
-        fetch("stock/getAllShareholdings?portfolioId=" + this.props.selectedPortfolio.id)
+    const fetchShareholdings = () => {
+        fetch("stock/getAllShareholdings?portfolioId=" + portfolioContext.selectedPortfolio?.id)
             .then(response => response.json())
             .then(response => {
-                this.setState({
-                    shareholdings: response,
-                })
+                setShareholdings(response);
+                setErrorText("");
             })
-            .catch(error => this.setState({
-                error: true
-            }));
+            .catch(error => {
+                setErrorText("Feil ved henting av aksjeposter")
+            });
     }
+    return (
+        <>
+            {!shareholdings && !errorText && <div id="loading">
+                <p>Henter Akjseposter, venligst vent...</p>
+            </div>}
 
-    render() {
-        const { shareholdings, error } = this.state;
-        return (
-            <>
-                {!shareholdings && !error && <div id="loading">
-                    <p>Henter Akjseposter, venligst vent...</p>
-                </div>}
+            {errorText &&
+                <div style={{ color: "red" }}>{errorText}</div>
+            }
 
-                {error &&
-                    <div>Feil ved henting av shareholdings</div>
-                }
-
-                {shareholdings &&
-                    <table className='table table-striped'>
-                        <>
-                            <thead>
-                                <tr>
-                                    <th>Symbol</th>
-                                    <th>Selskap</th>
-                                    <th>Antall (Reservert i ordre)</th>
-                                    <th></th><th></th><th></th>
+            {shareholdings &&
+                <table className='table table-striped'>
+                    <>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Selskap</th>
+                                <th>Antall (Reservert i ordre)</th>
+                                <th></th><th></th><th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {shareholdings.map((shareholding) =>
+                                <tr key={shareholding.id}>
+                                    <td> {shareholding.companySymbol} </td>
+                                    <td> {shareholding.companyName} </td>
+                                    <td> {shareholding.amount}({shareholding.amount - shareholding.remainingAmount})</td>
+                                    <td> <Link className='btn btn-success' to={"/new-order"} state={{ companyId: shareholding.companyId, type: "buy" }}>Kjøp</Link></td>
+                                    <td> <Link className='btn btn-primary' to={"/new-order"} state={{ companyId: shareholding.companyId, type: "sell" }}>Salg</Link></td>
+                                    <td></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {shareholdings.map((shareholding) =>
-                                    <tr key={shareholding.id}>
-                                        <td> {shareholding.companySymbol} </td>
-                                        <td> {shareholding.companyName} </td>
-                                        <td> {shareholding.amount}({shareholding.amount - shareholding.remainingAmount})</td>
-                                        <td> <Link className='btn btn-success'  to={"/new-order"} state={{ companyId: shareholding.companyId, type: "buy" }}>Kjøp</Link></td>
-                                        <td> <Link className='btn btn-primary' to={"/new-order"} state={{ companyId: shareholding.companyId, type: "sell" }}>Salg</Link></td>
-                                        <td></td>
-                                    </tr>
-                                )}
-                            </tbody>
+                            )}
+                        </tbody>
 
-                        </>
-                    </table>
-                }
-            </>
-        );
-    }
+                    </>
+                </table>
+            }
+        </>
+    );
 }
