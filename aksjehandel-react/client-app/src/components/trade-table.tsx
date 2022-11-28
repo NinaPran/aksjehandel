@@ -1,49 +1,29 @@
 ﻿import { error } from 'console';
-import React, { Component } from 'react';
+import React, { Component, FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ServerOrder } from '../types/order';
 import { Trade } from '../types/trade';
 import { Company } from '../types/company';
 
 
-interface TradeTableProps {
-   
-}
+export const TradeTable: FC = () => {
+    const [trades, setTrades] = useState<Trade[]>();
 
-interface TradeTableState {
-    trades?: Trade[];
-}
+    useEffect(() => {
+        fetchTrades();
+    }, []);
 
-export class TradeTable extends Component<TradeTableProps, TradeTableState> {
-    constructor(props: TradeTableProps) {
-        super(props);
-        this.state = {};
-    }
-
-    componentDidMount() {
-        this.fetchTrades();
-    }
-
-    fetchTrades = () => {
+    const fetchTrades = () => {
         fetch("stock/getAllTrades")
             .then(response => response.json())
             .then(response => {
-                this.setState({
-                    trades: response,
-                })
+                setTrades(response);
             })
-            .catch(error => this.setState({
-                trades: undefined,
-            }));
+            .catch(error => { 
+                setTrades(undefined)
+            });
     }
-
-    componentDidUpdate(prevProps: TradeTableProps) {
         
-    }
-
-    
-    render() {
-        const { trades } = this.state;
         return (
             <>
                 {trades &&
@@ -77,4 +57,3 @@ export class TradeTable extends Component<TradeTableProps, TradeTableState> {
             </>
         );
     }
-}
