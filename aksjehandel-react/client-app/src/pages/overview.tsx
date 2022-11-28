@@ -35,7 +35,7 @@ export const Overview = () => {
 
                             <FormGroup>
                                 <h2>Dine aksjeposter </h2>
-                                <ShareholdingTable selectedPortfolio={selectedPortfolio} />
+                                <ShareholdingTable />
                             </FormGroup>
 
                             <FormGroup>
