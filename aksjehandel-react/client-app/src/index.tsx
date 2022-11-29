@@ -6,13 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement
 );
 
 root.render(
     // TODO: Husk å kommentere ut StrictMode før vi leverer for at ikke useEffect/componentDidMount skal kalles to ganger
-    <React.StrictMode> 
-    <App />
+    <React.StrictMode>
+        <App />
     </React.StrictMode>
 );
 

@@ -70,7 +70,7 @@ export class AppLoggedIn extends Component<AppProps, AppState> {
             <>
                 {(!portfolios || !companies) && <div id="loading">
                     <p>Henter resurser, venligst vent...</p>
-                </div>}                
+                </div>}
                 {portfolios && companies &&
                     <BrowserRouter>
                         <PortfolioContext.Provider value={{ portfolios, selectedPortfolio, setSelectedPortfolio: this.setSelectedPortfolio }}>

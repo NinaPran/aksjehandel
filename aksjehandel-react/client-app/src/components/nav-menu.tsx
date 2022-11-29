@@ -28,31 +28,31 @@ export class NavMenu extends Component<{}, NavMenuState> {
 
     render() {
         return (
-                <Navbar sticky="top" className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light >
-                    <Container>
-                        <NavbarBrand tag={Link} to="/">AKSJEHANDEL</NavbarBrand>
-                        <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-                        <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-                            <ul className="navbar-nav flex-grow">
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-light" to="/">Hjem</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-light" to="/overview">Min oversikt</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-light" to="/market-overview">Markedsoversikt</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-light" to="/new-order">Ny ordre</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-light" to="/sign-out">Logg ut</NavLink>
-                                </NavItem>
-                            </ul>
-                        </Collapse>
-                    </Container>
-                </Navbar>
+            <Navbar sticky="top" className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light >
+                <Container>
+                    <NavbarBrand tag={Link} to="/">AKSJEHANDEL</NavbarBrand>
+                    <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+                    <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
+                        <ul className="navbar-nav flex-grow">
+                            <NavItem>
+                                <NavLink tag={Link} className="text-light" to="/">Hjem</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-light" to="/overview">Min oversikt</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-light" to="/market-overview">Markedsoversikt</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-light" to="/new-order">Ny ordre</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-light" to="/sign-out">Logg ut</NavLink>
+                            </NavItem>
+                        </ul>
+                    </Collapse>
+                </Container>
+            </Navbar>
         );
     }
 }

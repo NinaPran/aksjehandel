@@ -19,41 +19,41 @@ export const TradeTable: FC = () => {
             .then(response => {
                 setTrades(response);
             })
-            .catch(error => { 
+            .catch(error => {
                 setTrades(undefined)
             });
     }
-        
-        return (
-            <>
-                {trades &&
-                    <table className='table table-striped'>
-                        <>
-                            <thead>
-                                <tr>
-                                    <th>Dato</th>
-                                    <th>Selskap</th>
-                                    <th>Kjøper portofolio</th>
-                                    <th>Selger portofolio</th>
-                                    <th>Antall</th>
-                                    <th>Pris</th>
+
+    return (
+        <>
+            {trades &&
+                <table className='table table-striped'>
+                    <>
+                        <thead>
+                            <tr>
+                                <th>Dato</th>
+                                <th>Selskap</th>
+                                <th>Kjøper portofolio</th>
+                                <th>Selger portofolio</th>
+                                <th>Antall</th>
+                                <th>Pris</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {trades.map((trade) =>
+                                <tr key={trade.id}>
+                                    <td> {trade.date} </td>
+                                    <td> {trade.companyName} </td>
+                                    <td> {trade.buyerPortfolioId} </td>
+                                    <td> {trade.sellerPortfolioId} </td>
+                                    <td> {trade.amount} </td>
+                                    <td> {trade.price} </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {trades.map((trade) =>
-                                    <tr key={trade.id}>
-                                        <td> {trade.date} </td>
-                                        <td> {trade.companyName} </td>
-                                        <td> {trade.buyerPortfolioId} </td>
-                                        <td> {trade.sellerPortfolioId} </td>
-                                        <td> {trade.amount} </td>
-                                        <td> {trade.price} </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </>
-                    </table>
-                }
-            </>
-        );
-    }
+                            )}
+                        </tbody>
+                    </>
+                </table>
+            }
+        </>
+    );
+}

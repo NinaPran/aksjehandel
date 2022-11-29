@@ -6,7 +6,7 @@
     portfolioId: number;
     portfolioDisplayName: string;
     portfolioCash: number;
-    type: "buy"|"sell";
+    type: "buy" | "sell";
     price: number;
     amount: number;
 }

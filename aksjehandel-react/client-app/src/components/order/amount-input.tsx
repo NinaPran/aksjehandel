@@ -26,12 +26,12 @@ export const AmountInput: FC<AmountInputProps> = (props) => {
         }
     }
 
-        return (
-            <div className="form-group">
-                <label style={{ marginRight: "10px" }}>Antall</label>
-                <input type="text" onChange={validateAmount} defaultValue={ amount } />
-                <span style={{ color: "red" }}>{amountError}</span>
-            </div>
-        );
+    return (
+        <div className="form-group">
+            <label style={{ marginRight: "10px" }}>Antall</label>
+            <input type="text" onChange={validateAmount} defaultValue={amount} />
+            <span style={{ color: "red" }}>{amountError}</span>
+        </div>
+    );
 }
 

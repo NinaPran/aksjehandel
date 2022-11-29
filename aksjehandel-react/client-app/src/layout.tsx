@@ -5,10 +5,10 @@ import { NavMenu } from './components/nav-menu';
 export const Layout: FC<PropsWithChildren> = (props) => {
     return (
         <div>
-        <NavMenu />
-        <div>
-          {props.children}
+            <NavMenu />
+            <div>
+                {props.children}
+            </div>
         </div>
-      </div>
     );
 }

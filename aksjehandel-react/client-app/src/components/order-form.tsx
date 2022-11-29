@@ -236,14 +236,14 @@ export const OrderForm: FC<OrderFormProps> = (props) => {
                 </FormGroup>
 
                 <FormGroup>
-                <label>Type</label>
-                <div form-group>
-                    <input disabled={isEditOrder} checked={orderType === "buy"} type="radio" id="type-buy" name="type" value="buy" onClick={() => setOrderType("buy")} />
-                    <label htmlFor="buy">Kjøp</label>
-                </div>
-                <div form-group>
-                    <input disabled={isEditOrder} checked={orderType === "sell"} type="radio" id="type-sell" name="type" value="sell" onClick={() => setOrderType("sell")} />
-                    <label htmlFor="sell">Salg</label>
+                    <label>Type</label>
+                    <div form-group>
+                        <input disabled={isEditOrder} checked={orderType === "buy"} type="radio" id="type-buy" name="type" value="buy" onClick={() => setOrderType("buy")} />
+                        <label htmlFor="buy">Kjøp</label>
+                    </div>
+                    <div form-group>
+                        <input disabled={isEditOrder} checked={orderType === "sell"} type="radio" id="type-sell" name="type" value="sell" onClick={() => setOrderType("sell")} />
+                        <label htmlFor="sell">Salg</label>
                     </div>
                 </FormGroup>
 
@@ -252,7 +252,6 @@ export const OrderForm: FC<OrderFormProps> = (props) => {
                 </FormGroup>
 
                 <FormGroup>
-                {/*TODO: Send med available amount inn i AmountInput istedet*/}
                     <AmountInput amount={amount} onAmountSet={onAmountChange} /> {showAvailableAmount && <span>Tilgjengelige aksjer: {availableAmount}</span>}
                 </FormGroup>
 
@@ -260,9 +259,9 @@ export const OrderForm: FC<OrderFormProps> = (props) => {
                     <input type="button" id="reg" value="Registrer" onClick={isEditOrder ? sendEditOrder : registerOrder} className="btn btn-primary" />
                 </FormGroup>
 
-            <div className="form-group">
-                <span style={{ color: "red" }}>{errorText}</span>
-                <div id="test"></div>
+                <div className="form-group">
+                    <span style={{ color: "red" }}>{errorText}</span>
+                    <div id="test"></div>
                 </div>
             </Form>
         </form>
