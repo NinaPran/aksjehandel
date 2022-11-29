@@ -11,9 +11,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
     // TODO: Husk å kommentere ut StrictMode før vi leverer for at ikke useEffect/componentDidMount skal kalles to ganger
-    <React.StrictMode>
+    //<React.StrictMode>
         <App />
-    </React.StrictMode>
+   // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
