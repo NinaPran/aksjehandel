@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Container, Form, FormGroup } from 'reactstrap';
 import { PortfolioSelect } from "../components/portfolio-select";
 import { PortfolioContext } from "../context/portfolio-context";
-import './home.css';
 
 
 export const Home: FC = () => {
